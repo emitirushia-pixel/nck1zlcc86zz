@@ -1,11 +1,12 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ja" data-theme="jarvis">
   <head>
 <meta name="robots" content="noindex, nofollow" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="dark" />
     <meta http-equiv="refresh" content="1800" />
+    <script>try{var _t=localStorage.getItem('hud-theme');if(_t==='jarvis'||_t==='cyberpunk'||_t==='control')document.documentElement.setAttribute('data-theme',_t);}catch(e){}</script>
     <link rel="icon" href="data:," />
     <title>ゲーム情報ダッシュボード PC版</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -30,6 +31,64 @@
         --ink-dim:#a5cbdd;
         --ink-faint:#6f97ab;
       }
+      /* ===== THEMES ===== */
+      html[data-theme="cyberpunk"]{
+        --bg:#0a0016; --bg2:#16002b;
+        --panel:rgba(24,0,42,.88);
+        --edge:rgba(255,46,196,.55); --edge-dim:rgba(255,46,196,.28);
+        --cyan:#ff2ec4; --cyan-hi:#ff9ae6; --cyan-dim:#c4009a;
+        --teal:#00f0ff; --amber:#ffe600; --red:#ff3860;
+        --green:#00ffcc; --term-green:#00ffcc;
+        --ink:#fff0fb; --ink-dim:#e8b8ff; --ink-faint:#9d7bb8;
+      }
+      html[data-theme="control"]{
+        --bg:#0b0e11; --bg2:#101418;
+        --panel:rgba(16,20,24,.96);
+        --edge:rgba(120,144,164,.42); --edge-dim:rgba(120,144,164,.22);
+        --cyan:#8ab4d6; --cyan-hi:#c7d9e8; --cyan-dim:#4a6a84;
+        --teal:#7fb069; --amber:#d9a441; --red:#c1666b;
+        --green:#7fb069; --term-green:#8bc48a;
+        --ink:#d6dde3; --ink-dim:#9aa8b3; --ink-faint:#6b7a86;
+      }
+      /* theme switcher */
+      .theme-switch{display:flex;align-items:center;gap:0;border:1px solid var(--edge);background:rgba(0,0,0,.35);padding:3px}
+      .theme-switch .ts-label{font-family:"Share Tech Mono",monospace;font-size:10px;letter-spacing:.14em;color:var(--ink-faint);padding:0 8px 0 6px;white-space:nowrap}
+      .theme-switch button{min-height:34px;padding:6px 11px;cursor:pointer;border:1px solid transparent;background:transparent;color:var(--ink-dim);font-family:"Share Tech Mono","Noto Sans JP",monospace;font-size:12px;letter-spacing:.06em;white-space:nowrap}
+      .theme-switch button:hover{color:#fff;background:rgba(255,255,255,.06)}
+      .theme-switch button[aria-pressed="true"]{color:#041018;background:var(--cyan);border-color:var(--cyan);font-weight:700;box-shadow:0 0 14px rgba(83,217,255,.35)}
+      html[data-theme="cyberpunk"] .theme-switch button[aria-pressed="true"]{background:#ff2ec4;color:#fff;box-shadow:0 0 16px rgba(255,46,196,.7),0 0 8px rgba(0,240,255,.5)}
+      html[data-theme="control"] .theme-switch button[aria-pressed="true"]{background:#2e3d4d;color:#e8eef2;box-shadow:none;border-color:#5a7186}
+      .theme-switch button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+      /* cyberpunk body & panels */
+      html[data-theme="cyberpunk"] body{background:radial-gradient(900px 500px at 85% -10%,rgba(255,46,196,.22),transparent 60%),radial-gradient(800px 500px at 5% 110%,rgba(0,240,255,.14),transparent 60%),linear-gradient(180deg,#1a0033,#0a0016)}
+      html[data-theme="cyberpunk"] .hud{box-shadow:0 0 0 1px rgba(0,0,0,.6),0 0 22px rgba(255,46,196,.14),inset 0 0 26px rgba(255,46,196,.06),inset 0 1px 0 rgba(255,154,230,.12)}
+      html[data-theme="cyberpunk"] .topbar h1{text-shadow:2px 0 0 rgba(0,240,255,.7),-2px 0 0 rgba(255,46,196,.8),0 0 18px rgba(255,46,196,.5)}
+      html[data-theme="cyberpunk"] .gauge-center .count{text-shadow:2px 0 0 rgba(0,240,255,.45),-2px 0 0 rgba(255,46,196,.55),0 0 16px rgba(255,46,196,.8)}
+      html[data-theme="cyberpunk"] .hud-head{background:linear-gradient(90deg,rgba(255,46,196,.22),rgba(0,240,255,.08) 60%,transparent)}
+      /* control body & panels — flat, dense, no glow */
+      html[data-theme="control"] body{background:linear-gradient(180deg,#12161a,#0b0e11)}
+      html[data-theme="control"] body::before{background:repeating-linear-gradient(0deg,rgba(255,255,255,.022) 0 1px,transparent 1px 28px),repeating-linear-gradient(90deg,rgba(255,255,255,.022) 0 1px,transparent 1px 28px)}
+      html[data-theme="control"] body::after{background:repeating-linear-gradient(0deg,rgba(0,0,0,.12) 0 1px,transparent 1px 3px)}
+      html[data-theme="control"] .bg-rings{opacity:.12}
+      html[data-theme="control"] .hud{box-shadow:none;background:linear-gradient(180deg,#151a1f,#101418)}
+      html[data-theme="control"] .hud::before,html[data-theme="control"] .hud::after,html[data-theme="control"] .hud .brk::before,html[data-theme="control"] .hud .brk::after{filter:none;width:10px;height:10px}
+      html[data-theme="control"] .topbar{box-shadow:none;background:#151a1f}
+      html[data-theme="control"] .topbar h1{text-shadow:none;letter-spacing:.02em}
+      html[data-theme="control"] .clockbox .time{text-shadow:none}
+      html[data-theme="control"] .gauge-center .count{text-shadow:none}
+      html[data-theme="control"] .hud-head{background:#1a2128}
+      html[data-theme="control"] .hbtn,html[data-theme="control"] .copybtn{clip-path:none}
+      html[data-theme="control"] .game .ver{clip-path:none;box-shadow:none}
+      /* control-only metrics strip */
+      .control-strip{display:none}
+      html[data-theme="control"] .control-strip{flex:none;display:flex;gap:0;flex-wrap:wrap;margin-top:10px;border:1px solid var(--edge-dim);background:#101418;font-family:"Share Tech Mono",monospace;font-size:11.5px}
+      .control-strip .cs-item{flex:1 1 140px;padding:7px 12px;border-right:1px solid var(--edge-dim);display:flex;justify-content:space-between;gap:10px;white-space:nowrap}
+      .control-strip .cs-item:last-child{border-right:none}
+      .control-strip .cs-k{color:var(--ink-faint);letter-spacing:.08em}
+      .control-strip .cs-v{color:var(--cyan-hi)}
+      .control-strip .cs-v.ok{color:var(--green)} .control-strip .cs-v.warn{color:var(--amber)}
+      .wave{display:inline-flex;align-items:flex-end;gap:2px;height:14px;vertical-align:middle}
+      .wave i{display:block;width:3px;background:var(--teal)}
       *{ box-sizing:border-box; }
       html,body{ margin:0; padding:0; }
       html{ height:100%; }
@@ -458,6 +517,12 @@
         </div>
         <div class="spacer"></div>
         <div class="top-actions">
+          <div class="theme-switch" role="group" aria-label="テーマ切替">
+            <span class="ts-label">THEME</span>
+            <button type="button" data-theme-btn="jarvis" aria-pressed="true">JARVIS</button>
+            <button type="button" data-theme-btn="cyberpunk" aria-pressed="false">CYBERPUNK</button>
+            <button type="button" data-theme-btn="control" aria-pressed="false">管制</button>
+          </div>
           <button class="hbtn" id="btn-download" type="button">⬇ PC用ファイルを保存</button>
           <button class="hbtn" id="btn-full" type="button">⛶ フルスクリーン</button>
         </div>
@@ -467,6 +532,15 @@
         </div>
       </header>
       <p class="snapshot">データ取得：<b>2026年11月23日（月）時点</b>の公式発表ベース。ファイル版はこの時点の内容で固定されます。新しい情報は夜のゲーム情報チェックでお知らせします。</p>
+      <div class="control-strip" aria-label="モニタリング概要">
+        <div class="cs-item"><span class="cs-k">STATUS</span><span class="cs-v ok">● ONLINE</span></div>
+        <div class="cs-item"><span class="cs-k">TITLES</span><span class="cs-v">6</span></div>
+        <div class="cs-item"><span class="cs-k">DEADLINES</span><span class="cs-v">10</span></div>
+        <div class="cs-item"><span class="cs-k">COUPONS</span><span class="cs-v">8 CODES</span></div>
+        <div class="cs-item"><span class="cs-k">ROTATION</span><span class="cs-v">3P / 25s</span></div>
+        <div class="cs-item"><span class="cs-k">SIGNAL</span><span class="wave" aria-hidden="true"><i style="height:5px"></i><i style="height:10px"></i><i style="height:7px"></i><i style="height:13px"></i><i style="height:9px"></i><i style="height:12px"></i><i style="height:6px"></i><i style="height:11px"></i></span></div>
+        <div class="cs-item"><span class="cs-k">NEXT MAINT</span><span class="cs-v warn" id="cs-next">―</span></div>
+      </div>
 
       <!-- ===== ターミナルログ（このページ自身の起動ログ） ===== -->
       <section class="hud term-log" aria-label="システムログ">
@@ -663,6 +737,7 @@
           <li><b>フルスクリーンで眺める</b>：「⛶ フルスクリーン」ボタンで全画面表示。サブモニターに置いておくのもおすすめです。</li>
           <li><b>モジュールの自動切替</b>：ゲーム情報は3ページに分かれ、25秒ごとにフェードで自動で切り替わります（締切リストとカウントダウンは常に表示）。モジュール上部の <span class="mono">PAGE 01 / 03</span> 表示と ◀ ▶・丸いページボタンで手動でも送れます。❚❚ で自動切替を止められます。</li>
           <li><b>カウントダウンについて</b>：左上のゲージは<b>黒い砂漠の定期メンテナンス（毎週木曜 08:00〜12:00 JST）</b>までの残り時間を、日付から自動で計算して表示します。メンテ中は「メンテ中」表示になり、終了予定までのカウントに切り替わります。メンテがない週や時間が変わる週は、公式のお知らせが優先です。</li>
+          <li><b>テーマ切替</b>：上部の <span class="mono">THEME [JARVIS / CYBERPUNK / 管制]</span> ボタンで見た目をその場で切り替えられます。選んだテーマはこのブラウザに保存され、次回も同じテーマで開きます（壁紙でもクリックで切り替え可能です）。</li>
         </ol>
         <p>※ 中身は2026年11月23日時点の情報で固定されています。クーポン期限やイベント日程は公式のお知らせでも確認してください。</p>
       </section>
@@ -798,6 +873,8 @@
           var mw = bdoMaintWindow(now);
           var targetDate = mw.target;
           if (logNext) logNext.textContent = fmtDate(mw.start) + "〜12:00 黒い砂漠 定期メンテ" + (mw.during ? "（メンテ中・終了まで " + remainText(targetDate - now) + "）" : "（開始まで " + remainText(targetDate - now) + "）");
+          var csNext = document.getElementById("cs-next");
+          if (csNext) csNext.textContent = fmtDate(mw.start) + (mw.during ? " メンテ中" : "");
           var ms = targetDate - now;
           var span = mw.during ? (mw.end - mw.start) : WINDOW;
           var frac = Math.max(0, Math.min(1, ms / span));
@@ -994,6 +1071,22 @@
             document.documentElement.requestFullscreen();
           }
         });
+
+        /* ===== テーマ切替（JARVIS / CYBERPUNK / CONTROL） ===== */
+        (function(){
+          var btns = document.querySelectorAll('[data-theme-btn]');
+          function applyTheme(name){
+            document.documentElement.setAttribute('data-theme', name);
+            try{ localStorage.setItem('hud-theme', name); }catch(e){}
+            btns.forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-theme-btn')===name ? 'true':'false'); });
+          }
+          var cur = document.documentElement.getAttribute('data-theme') || 'jarvis';
+          btns.forEach(function(b){
+            b.setAttribute('aria-pressed', b.getAttribute('data-theme-btn')===cur ? 'true':'false');
+            b.addEventListener('click', function(){ applyTheme(b.getAttribute('data-theme-btn')); });
+          });
+          window.__applyHudTheme = applyTheme;
+        })();
 
         /* ===== PC用ファイルとして保存（このページ自身を単体HTMLで書き出す） ===== */
         document.getElementById("btn-download").addEventListener("click", function(){
