@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="data:," />
+    <title>ゲーム情報ダッシュボード PC版</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+      :root{
+        --bg:#020507;
+        --bg2:#040a10;
+        --panel:rgba(4,13,20,.92);
+        --panel-edge:rgba(77,216,255,.38);
+        --term-bar:#081826;
+        --term-body:#02080d;
+        --cyan:#4dd8ff;
+        --cyan-dim:#1d7ea6;
+        --cyan-pale:#aee9ff;
+        --amber:#ffb648;
+        --red:#ff5d73;
+        --green:#3dffc8;
+        --term-green:#57ff9a;
+        --ink:#e2f5ff;
+        --ink-dim:#93bccd;
+        --ink-faint:#64879a;
+      }
+      *{ box-sizing:border-box; }
+      html,body{ margin:0; padding:0; }
+      body{
+        background:
+          radial-gradient(1100px 600px at 85% -10%, rgba(29,126,166,.13), transparent 60%),
+          radial-gradient(900px 500px at -10% 110%, rgba(29,126,166,.08), transparent 60%),
+          var(--bg);
+        color:var(--ink);
+        font-family:"Noto Sans JP", system-ui, sans-serif;
+        min-height:100vh;
+        overflow-x:hidden;
+      }
+      /* 細いグリッド＋走査線の背景レイヤー */
+      body::before{
+        content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+        background:
+          repeating-linear-gradient(0deg, rgba(77,216,255,.035) 0 1px, transparent 1px 56px),
+          repeating-linear-gradient(90deg, rgba(77,216,255,.035) 0 1px, transparent 1px 56px);
+      }
+      /* CRT走査線＋周辺減光（画面の質感のみ・情報は持たない） */
+      body::after{
+        content:""; position:fixed; inset:0; pointer-events:none; z-index:60;
+        background:
+          radial-gradient(120% 90% at 50% 40%, transparent 62%, rgba(0,0,0,.38) 100%),
+          repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px),
+          repeating-linear-gradient(0deg, rgba(160,235,255,.016) 0 1px, transparent 1px 6px);
+      }
+      .mono{ font-family:"Share Tech Mono", monospace; }
+      .disp{ font-family:"Rajdhani","Noto Sans JP",sans-serif; }
+
+      .wrap{ position:relative; z-index:1; max-width:1560px; margin:0 auto; padding:18px 22px 30px; }
+
+      /* ===== 上部ステータスバー ===== */
+      .topbar{
+        display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+        border:1px solid var(--panel-edge);
+        background:linear-gradient(180deg, #071626, #040c15);
+        padding:12px 18px;
+        box-shadow:0 0 0 1px rgba(0,0,0,.6), 0 0 24px rgba(77,216,255,.07), inset 0 1px 0 rgba(174,233,255,.08);
+      }
+      /* ターミナルウィンドウの信号ドット */
+      .win-dots{ display:inline-flex; gap:7px; flex:none; align-items:center; }
+      .win-dots i{ width:11px; height:11px; border-radius:50%; display:block; }
+      .win-dots i:nth-child(1){ background:#ff5d73; box-shadow:0 0 6px rgba(255,93,115,.6); }
+      .win-dots i:nth-child(2){ background:#ffb648; box-shadow:0 0 6px rgba(255,182,72,.6); }
+      .win-dots i:nth-child(3){ background:#3dffc8; box-shadow:0 0 6px rgba(61,255,200,.6); }
+      /* 点滅ブロックカーソル */
+      .cursor{
+        display:inline-block; width:.62em; height:1em; margin-left:.18em;
+        background:var(--cyan); vertical-align:-.12em;
+        box-shadow:0 0 10px rgba(77,216,255,.8);
+        animation:blink 1.06s steps(1) infinite;
+      }
+      .cursor.green{ background:var(--term-green); box-shadow:0 0 10px rgba(87,255,154,.8); }
+      @keyframes blink{ 0%,55%{opacity:1} 56%,100%{opacity:0} }
+      @media (prefers-reduced-motion: reduce){ .cursor{ animation:none; } }
+      .sys-dot{ width:9px; height:9px; border-radius:50%; background:var(--green); box-shadow:0 0 10px var(--green); flex:none; animation:pulse 2.4s infinite; }
+      @keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:.45} }
+      @media (prefers-reduced-motion: reduce){ .sys-dot{ animation:none; } }
+      .topbar .sys{ font-size:12px; letter-spacing:.18em; color:var(--cyan-pale); }
+      .topbar h1{
+        font-family:"Rajdhani","Noto Sans JP",sans-serif; font-weight:700;
+        font-size:clamp(20px,2.4vw,30px); letter-spacing:.06em; margin:0; color:#fff;
+      }
+      .topbar h1 .accent{ color:var(--cyan); }
+      .topbar .spacer{ flex:1; }
+      .clockbox{ text-align:right; }
+      .clockbox .time{ font-family:"Share Tech Mono",monospace; font-size:clamp(24px,3vw,38px); color:#fff; line-height:1; text-shadow:0 0 14px rgba(77,216,255,.55); }
+      .clockbox .date{ font-size:12px; color:var(--ink-dim); letter-spacing:.14em; margin-top:4px; }
+      .top-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+      .hbtn{
+        min-height:40px; padding:8px 16px; cursor:pointer;
+        background:rgba(77,216,255,.06); color:var(--cyan-pale);
+        border:1px solid var(--panel-edge); border-radius:2px;
+        font-family:"Share Tech Mono","Noto Sans JP",monospace; font-weight:400; font-size:13.5px; letter-spacing:.04em;
+      }
+      .hbtn::before{ content:"$ "; color:var(--term-green); }
+      .hbtn:hover{ background:rgba(77,216,255,.16); color:#fff; }
+      .hbtn:focus-visible{ outline:2px solid var(--cyan); outline-offset:2px; }
+
+      .snapshot{ margin:12px 2px 0; font-size:12.5px; color:var(--ink-faint); letter-spacing:.05em; }
+      .snapshot b{ color:var(--ink-dim); font-weight:500; }
+
+      /* ===== レイアウト ===== */
+      .layout{ display:grid; grid-template-columns:340px 1fr; gap:18px; margin-top:16px; align-items:start; }
+      @media (max-width:1080px){ .layout{ grid-template-columns:1fr; } }
+
+      /* HUDパネル共通：ターミナルウィンドウ（角ブラケット＋タイトルバー） */
+      .hud{
+        position:relative; background:var(--panel);
+        border:1px solid rgba(77,216,255,.26);
+        padding:18px; padding-top:14px;
+        box-shadow:0 0 0 1px rgba(0,0,0,.55), inset 0 1px 0 rgba(174,233,255,.05);
+      }
+      .hud::before,.hud::after,
+      .hud .brk::before,.hud .brk::after{
+        content:""; position:absolute; width:14px; height:14px; border:2px solid var(--cyan); z-index:2;
+      }
+      .hud::before{ top:-2px; left:-2px; border-right:none; border-bottom:none; }
+      .hud::after{ top:-2px; right:-2px; border-left:none; border-bottom:none; }
+      .hud .brk::before{ bottom:-2px; left:-2px; border-right:none; border-top:none; }
+      .hud .brk::after{ bottom:-2px; right:-2px; border-left:none; border-top:none; }
+      /* タイトルバー：信号ドット＋パス風表記 */
+      .hud-head{
+        display:flex; align-items:center; gap:10px;
+        margin:-14px -18px 12px; padding:8px 12px;
+        background:linear-gradient(180deg, #0a1e33, var(--term-bar));
+        border-bottom:1px solid rgba(77,216,255,.30);
+      }
+      .hud-head::before{
+        content:""; flex:none; width:8px; height:8px; border-radius:50%;
+        background:#ff5d73; box-shadow:15px 0 0 #ffb648, 30px 0 0 #3dffc8;
+        margin-right:30px;
+      }
+      .hud-head::after{
+        content:"—  □  ×"; flex:none; margin-left:2px;
+        font-family:"Share Tech Mono",monospace; font-size:11px; color:var(--ink-faint); letter-spacing:.18em;
+      }
+      .hud-head .idx{ font-family:"Share Tech Mono",monospace; color:var(--cyan); font-size:12px; letter-spacing:.08em; white-space:nowrap; }
+      .hud-head h2{ margin:0; font-size:16.5px; font-weight:700; letter-spacing:.04em; color:#fff; font-family:"Rajdhani","Noto Sans JP",sans-serif; white-space:nowrap; }
+      .hud-head h2::before{ content:">_ "; font-family:"Share Tech Mono",monospace; font-weight:400; color:var(--term-green); }
+      .hud-head .tag{ margin-left:auto; font-size:10.5px; color:var(--ink-dim); letter-spacing:.1em; font-family:"Share Tech Mono",monospace; text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+      /* コマンドライン行（見出し下のプロンプト表記） */
+      .cmdline{
+        font-family:"Share Tech Mono",monospace; font-size:12px; line-height:1.5;
+        color:var(--ink-dim); margin:-4px 0 10px; word-break:break-all;
+      }
+      .cmdline .u{ color:var(--term-green); }
+      .cmdline .p{ color:var(--cyan); }
+      .cmdline .c{ color:#fff; }
+
+      /* ===== 左カラム：ゲージ＋締切 ===== */
+      .gauge-box{ text-align:center; }
+      .gauge-wrap{ position:relative; width:230px; height:230px; margin:6px auto 4px; }
+      .gauge-wrap svg{ transform:rotate(-90deg); }
+      .gauge-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; }
+      .gauge-center .label{ font-size:11px; letter-spacing:.22em; color:var(--ink-dim); }
+      .gauge-center .target{ font-size:14px; font-weight:700; color:#fff; max-width:180px; line-height:1.35; }
+      .gauge-center .count{ font-family:"Share Tech Mono",monospace; font-size:25px; color:var(--cyan); text-shadow:0 0 12px rgba(77,216,255,.6); }
+      .gauge-center .when{ font-size:11.5px; color:var(--ink-faint); }
+      .ticks{ display:flex; justify-content:space-between; font-family:"Share Tech Mono",monospace; font-size:10px; color:var(--ink-faint); padding:0 6px; }
+
+      .deadline-list{ list-style:none; margin:6px 0 0; padding:0; }
+      .deadline-list li{
+        display:grid; grid-template-columns:108px 1fr auto; gap:10px; align-items:baseline;
+        padding:9px 2px; border-bottom:1px dashed rgba(77,216,255,.14); font-size:13.5px;
+      }
+      .deadline-list li:last-child{ border-bottom:none; }
+      .deadline-list .d{ font-family:"Share Tech Mono",monospace; color:var(--cyan-pale); font-size:12.5px; white-space:nowrap; }
+      .deadline-list .what{ color:var(--ink); line-height:1.45; }
+      .deadline-list .what small{ display:block; color:var(--ink-faint); font-size:11.5px; }
+      .deadline-list .left{ font-family:"Share Tech Mono",monospace; font-size:12px; color:var(--ink-dim); white-space:nowrap; }
+      .deadline-list li.hot .d, .deadline-list li.hot .left{ color:var(--amber); }
+      .deadline-list li.done{ opacity:.42; }
+      .deadline-list li.done .what{ text-decoration:line-through; }
+
+      /* ===== ゲームモジュール ===== */
+      .grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:18px; }
+      @media (min-width:1500px){ .grid{ grid-template-columns:repeat(3, 1fr); } }
+      @media (max-width:720px){ .grid{ grid-template-columns:1fr; } }
+      .game .ver{
+        display:inline-block; font-family:"Share Tech Mono",monospace; font-size:11.5px;
+        color:var(--bg); background:var(--cyan); padding:2px 8px; letter-spacing:.06em; font-weight:700;
+      }
+      .game .ver.soon{ background:var(--amber); }
+      .game ul{ list-style:none; margin:10px 0 0; padding:0; }
+      .game li{ position:relative; padding:7px 0 7px 18px; font-size:13.5px; line-height:1.55; color:var(--ink); border-bottom:1px dashed rgba(77,216,255,.10); }
+      .game li:last-child{ border-bottom:none; }
+      .game li::before{ content:"▸"; position:absolute; left:0; color:var(--cyan); }
+      .game li b{ color:#fff; }
+      .game li .dl{ color:var(--amber); font-weight:700; white-space:nowrap; }
+      .game li small{ color:var(--ink-faint); }
+      .src{ margin-top:10px; font-size:12px; }
+      .src a{ color:var(--cyan); text-decoration:none; border-bottom:1px dotted var(--cyan-dim); padding:4px 0; display:inline-block; min-height:32px; }
+      .src a:hover{ color:#fff; }
+
+      .coupon{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:6px; }
+      .coupon code{
+        font-family:"Share Tech Mono",monospace; font-size:14px; color:var(--green);
+        background:rgba(61,255,200,.07); border:1px dashed rgba(61,255,200,.4); padding:5px 10px; letter-spacing:.03em;
+      }
+      .coupon .exp{ font-size:11.5px; color:var(--ink-dim); }
+      .copybtn{
+        min-height:36px; padding:6px 12px; cursor:pointer; font-size:12.5px; font-weight:700; letter-spacing:.06em;
+        background:transparent; color:var(--cyan-pale); border:1px solid var(--panel-edge);
+        font-family:"Rajdhani","Noto Sans JP",sans-serif;
+      }
+      .copybtn:hover{ background:rgba(77,216,255,.14); color:#fff; }
+      .copybtn:focus-visible{ outline:2px solid var(--cyan); outline-offset:2px; }
+      .copybtn.copied{ color:var(--green); border-color:rgba(61,255,200,.5); }
+
+      /* ===== 使い方 ===== */
+      .howto{ margin-top:18px; }
+      .howto ol{ margin:6px 0 0; padding-left:20px; font-size:13.5px; line-height:1.8; color:var(--ink); }
+      .howto ol b{ color:#fff; }
+      .howto p{ font-size:13px; color:var(--ink-dim); line-height:1.7; margin:8px 0 0; }
+      footer{ margin-top:16px; text-align:center; font-size:11.5px; color:var(--ink-faint); letter-spacing:.14em; }
+
+      /* ===== ターミナルログ（このページ自身の起動ログ表示） ===== */
+      .term-log{ margin-top:14px; }
+      .log-body{
+        margin:0; background:var(--term-body);
+        border:1px solid rgba(77,216,255,.20);
+        padding:12px 14px 13px;
+        font-family:"Share Tech Mono",monospace; font-size:12.5px; line-height:1.85;
+        color:#9fd8ef; white-space:pre-wrap; word-break:break-word; overflow-wrap:anywhere;
+        max-height:264px; overflow-y:auto;
+      }
+      .log-body .t{ color:var(--ink-faint); }
+      .log-body .ok{ color:var(--term-green); }
+      .log-body .inf{ color:var(--cyan); }
+      .log-body .wrn{ color:var(--amber); }
+      .log-body .jp{ font-family:"Share Tech Mono","Noto Sans JP",monospace; }
+      .log-note{ margin:8px 2px 0; font-size:11.5px; color:var(--ink-faint); line-height:1.6; }
+
+      /* ===== 装飾：左右端の16進レール（装飾のみ） ===== */
+      .hexrail{
+        position:fixed; top:0; bottom:0; width:22px; z-index:0; pointer-events:none;
+        font-family:"Share Tech Mono",monospace; font-size:9.5px; line-height:2.1;
+        color:rgba(77,216,255,.20); writing-mode:vertical-rl; overflow:hidden;
+        letter-spacing:.32em; white-space:nowrap; user-select:none;
+      }
+      .hexrail.l{ left:2px; } .hexrail.r{ right:2px; transform:rotate(180deg); }
+      @media (max-width:1640px){ .hexrail{ display:none; } }
+
+      /* ゲーム項目のマーカーをターミナル風に */
+      .game li::before{ content:">"; font-family:"Share Tech Mono",monospace; color:var(--term-green); font-size:13px; }
+      .game .ver{ border-radius:1px; box-shadow:inset 0 0 0 1px rgba(0,0,0,.25); }
+      .coupon code{ border-radius:1px; }
+      .copybtn{ border-radius:2px; font-family:"Share Tech Mono","Noto Sans JP",monospace; }
+      .copybtn::before{ content:"$ "; color:var(--term-green); }
+      .snapshot{ font-family:"Share Tech Mono","Noto Sans JP",monospace; }
+      .snapshot::before{ content:"[SNAPSHOT] "; color:var(--cyan); }
+
+      /* 狭幅：タイトルバーを詰めて横スクロールを防ぐ */
+      @media (max-width:560px){
+        .wrap{ padding:12px 12px 24px; }
+        .hud{ padding:14px 12px; padding-top:12px; }
+        .hud-head{ margin:-12px -12px 10px; padding:7px 9px; gap:7px; }
+        .hud-head::after{ display:none; }
+        .hud-head::before{ margin-right:26px; }
+        .hud-head h2{ font-size:15px; }
+        .hud-head .tag{ display:none; }
+        .topbar{ gap:12px; padding:10px 12px; }
+        .clockbox{ text-align:left; }
+        .deadline-list li{ grid-template-columns:96px 1fr auto; gap:7px; }
+        .log-body{ font-size:11.5px; max-height:220px; }
+      }
+
+      /* ===== モジュール自動ローテーション ===== */
+      .rotator{ display:flex; flex-direction:column; min-height:0; height:100%; }
+      .rot-bar{
+        flex:none; display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+        border:1px solid rgba(77,216,255,.30); border-bottom:none;
+        background:linear-gradient(180deg, #0a1e33, var(--term-bar));
+        padding:7px 12px;
+      }
+      .rot-bar .rot-title{ font-family:"Share Tech Mono",monospace; font-size:12px; letter-spacing:.1em; color:var(--cyan-pale); white-space:nowrap; }
+      .rot-bar .rot-title b{ color:var(--term-green); font-weight:400; }
+      .rot-bar .rot-status{ font-family:"Share Tech Mono",monospace; font-size:11px; letter-spacing:.08em; color:var(--amber); white-space:nowrap; }
+      .rot-bar .spacer{ flex:1; }
+      .rot-pager{ display:flex; align-items:center; gap:8px; }
+      .rot-page-num{ font-family:"Share Tech Mono",monospace; font-size:13px; color:#fff; letter-spacing:.1em; white-space:nowrap; }
+      .rot-page-num span{ color:var(--ink-faint); }
+      .rot-dots{ display:flex; gap:6px; align-items:center; }
+      .rot-dots button{
+        width:22px; height:22px; padding:0; cursor:pointer;
+        background:transparent; border:1px solid rgba(77,216,255,.35); color:var(--ink-dim);
+        font-family:"Share Tech Mono",monospace; font-size:11px; line-height:1;
+      }
+      .rot-dots button[aria-current="true"]{ background:var(--cyan); color:var(--bg); border-color:var(--cyan); font-weight:700; }
+      .rot-dots button:hover{ color:#fff; border-color:var(--cyan); }
+      .rot-dots button[aria-current="true"]:hover{ color:var(--bg); }
+      .rot-nav{
+        min-width:32px; height:26px; padding:2px 8px; cursor:pointer;
+        background:rgba(77,216,255,.06); color:var(--cyan-pale);
+        border:1px solid var(--panel-edge); border-radius:2px;
+        font-family:"Share Tech Mono",monospace; font-size:13px; line-height:1;
+      }
+      .rot-nav:hover{ background:rgba(77,216,255,.16); color:#fff; }
+      .rot-nav:focus-visible, .rot-dots button:focus-visible{ outline:2px solid var(--cyan); outline-offset:2px; }
+      .rot-progress{ flex:none; height:3px; background:rgba(77,216,255,.14); position:relative; overflow:hidden; }
+      .rot-progress i{ display:block; height:100%; width:0%; background:var(--cyan); box-shadow:0 0 8px rgba(77,216,255,.8); }
+      .rot-progress i.run{ transition:width 25s linear; width:100%; }
+      @media (prefers-reduced-motion: reduce){ .rot-progress i.run{ transition:none; } }
+      .rot-pages{ flex:1 1 auto; min-height:0; display:grid; }
+      .rot-page{
+        grid-area:1 / 1; min-height:0; height:100%;
+        opacity:0; visibility:hidden; pointer-events:none;
+        transition:opacity .7s ease, visibility 0s linear .7s;
+      }
+      .rot-page.is-active{
+        opacity:1; visibility:visible; pointer-events:auto;
+        transition:opacity .7s ease, visibility 0s;
+      }
+      @media (prefers-reduced-motion: reduce){
+        .rot-page{ transition:none; }
+        .rot-page.is-active{ transition:none; }
+      }
+      .rot-page .grid{ height:100%; grid-template-columns:repeat(2, 1fr); }
+      @media (max-width:720px){ .rot-page .grid{ grid-template-columns:1fr; } }
+      @media (max-width:1080px){
+        .rotator{ height:auto; }
+        .rot-pages{ display:grid; }
+        .rot-page{ height:auto; }
+        .rot-page .grid{ height:auto; }
+      }
+      @media (max-width:560px){
+        .rot-bar{ gap:8px; padding:7px 9px; }
+        .rot-bar .rot-status{ display:none; }
+      }
+
+      /* ===== 全画面レイアウト（壁紙前提：画面いっぱいに敷き詰める） ===== */
+      html{ height:100%; }
+      body{ min-height:100vh; min-height:100dvh; }
+      .wrap{
+        max-width:none; width:100%;
+        min-height:100vh; min-height:100dvh;
+        padding:10px 12px 12px;
+        display:flex; flex-direction:column;
+      }
+      .hexrail{ display:none; }
+      .topbar{ flex:none; }
+      .snapshot{ flex:none; }
+      .term-log{ flex:none; }
+      .layout{ flex:1 1 auto; align-items:stretch; margin-top:12px; min-height:0; }
+      .layout > div:first-child{ min-height:0; }
+      .layout > div:first-child > section{ flex:1 1 auto; display:flex; flex-direction:column; }
+      .gauge-box .gauge-wrap{ margin-top:auto; margin-bottom:auto; }
+      .gauge-box .ticks{ margin-top:auto; }
+      .grid{ height:100%; grid-auto-rows:1fr; }
+      .grid > section{ display:flex; flex-direction:column; }
+      .grid > section .src{ margin-top:auto; padding-top:10px; }
+      .howto{ flex:none; margin-top:12px; }
+      footer{ flex:none; margin-top:10px; }
+      @media (max-width:1080px){
+        .grid{ height:auto; grid-auto-rows:auto; }
+        .layout > div:first-child > section{ flex:none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hexrail l" aria-hidden="true">0x47 0x41 0x4D 0x45 0x5F 0x49 0x4E 0x54 0x45 0x4C 0x5F 0x48 0x55 0x44 0x00 0xFF 0x10 0x2A 0xC3 0x9E 0x47 0x41 0x4D 0x45 0x5F 0x49 0x4E 0x54 0x45 0x4C 0x5F 0x48 0x55 0x44 0x00 0xFF 0x10 0x2A 0xC3 0x9E 0x47 0x41 0x4D 0x45</div>
+    <div class="hexrail r" aria-hidden="true">0x47 0x41 0x4D 0x45 0x5F 0x49 0x4E 0x54 0x45 0x4C 0x5F 0x48 0x55 0x44 0x00 0xFF 0x10 0x2A 0xC3 0x9E 0x47 0x41 0x4D 0x45 0x5F 0x49 0x4E 0x54 0x45 0x4C 0x5F 0x48 0x55 0x44 0x00 0xFF 0x10 0x2A 0xC3 0x9E 0x47 0x41 0x4D 0x45</div>
+    <div class="wrap">
+
+      <!-- ===== ステータスバー ===== -->
+      <header class="topbar">
+        <span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="sys-dot" aria-hidden="true"></span>
+        <div>
+          <div class="sys mono">game-intel@hud:~$ ./game_intel_hud --mode=wallpaper</div>
+          <h1>ゲーム情報<span class="accent">ダッシュボード</span><span class="cursor" aria-hidden="true"></span></h1>
+        </div>
+        <div class="spacer"></div>
+        <div class="top-actions">
+          <button class="hbtn" id="btn-download" type="button">⬇ PC用ファイルを保存</button>
+          <button class="hbtn" id="btn-full" type="button">⛶ フルスクリーン</button>
+        </div>
+        <div class="clockbox">
+          <div class="time" id="clock">--:--:--</div>
+          <div class="date mono" id="dateline">----</div>
+        </div>
+      </header>
+      <p class="snapshot">データ取得：<b>2026年11月23日（月）時点</b>の公式発表ベース。ファイル版はこの時点の内容で固定されます。新しい情報は夜のゲーム情報チェックでお知らせします。</p>
+
+      <!-- ===== ターミナルログ（このページ自身の起動ログ） ===== -->
+      <section class="hud term-log" aria-label="システムログ">
+        <span class="brk"></span>
+        <div class="hud-head"><span class="idx">SYS-LOG</span><h2>SYSTEM.LOG</h2><span class="tag">game-intel@hud: ~/system.log</span></div>
+        <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~</span>$ <span class="c">cat system.log --follow=local</span></div>
+        <pre class="log-body" aria-label="このページの起動ログ"><span class="t">[boot]</span> game-intel-hud <span class="inf">v2026.11.23</span> — standalone file build
+<span class="t">[init]</span> display mode ......... <span class="ok">WALLPAPER / FULLSCREEN READY</span>
+<span class="t">[init]</span> clock sync (JST) ..... <span class="ok" id="log-clock">SYNCING…</span>
+<span class="t">[load]</span> snapshot ............. <span class="jp">2026年11月23日（月）時点の公式発表ベース</span>
+<span class="t">[load]</span> modules .............. <span class="ok">6 TITLES LOADED</span> <span class="jp">[エンドフィールド / 黒い砂漠 / ゼンゼロ / 鳴潮 / AION2 / アーキエイジクロニクル]</span>
+<span class="t">[load]</span> deadlines ............ <span class="ok">10 ENTRIES</span> <span class="jp">締切順にソート済み</span>
+<span class="t">[load]</span> rotation ............. <span class="ok">AUTO</span> <span class="jp">モジュール 3ページ / 25秒間隔（締切・カウントダウンは固定表示）</span>
+<span class="t">[load]</span> coupons .............. <span class="ok">8 CODES</span> <span class="jp">黒い砂漠（コピーボタン有効）</span>
+<span class="t">[next]</span> <span class="jp">次の締切</span> ............. <span class="wrn" id="log-next">―</span>
+<span class="t">[note]</span> <span class="jp">このログはこのページ自身の表示用です。PC本体の状態（CPU/GPU等）は取得していません。</span>
+<span class="t">[ ok ]</span> <span class="ok">ALL MODULES READY</span> — awaiting input<span class="cursor green" aria-hidden="true"></span></pre>
+        <p class="log-note mono">// local boot log — generated from this page's own data only</p>
+      </section>
+
+      <div class="layout">
+        <!-- ===== 左カラム ===== -->
+        <div style="display:flex; flex-direction:column; gap:18px;">
+          <section class="hud gauge-box" aria-label="次の締切までのカウントダウン">
+            <span class="brk"></span>
+            <div class="hud-head"><span class="idx">MOD-00</span><h2>NEXT DEADLINE</h2><span class="tag">~/modules/gauge</span></div>
+            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/gauge</span>$ <span class="c">./countdown --target=next --window=7d</span></div>
+            <div class="gauge-wrap">
+              <svg width="230" height="230" viewBox="0 0 230 230" aria-hidden="true">
+                <circle cx="115" cy="115" r="100" fill="none" stroke="rgba(77,216,255,.12)" stroke-width="10"/>
+                <circle cx="115" cy="115" r="86" fill="none" stroke="rgba(77,216,255,.08)" stroke-width="1.5" stroke-dasharray="3 6"/>
+                <circle id="gauge-arc" cx="115" cy="115" r="100" fill="none" stroke="#4dd8ff" stroke-width="10"
+                        stroke-linecap="butt" stroke-dasharray="628.3" stroke-dashoffset="0"
+                        style="filter:drop-shadow(0 0 6px rgba(77,216,255,.7))"/>
+              </svg>
+              <div class="gauge-center">
+                <div class="label">COUNTDOWN</div>
+                <div class="target" id="gauge-target">―</div>
+                <div class="count" id="gauge-count">--:--:--</div>
+                <div class="when" id="gauge-when">―</div>
+              </div>
+            </div>
+            <div class="ticks"><span>T-MAX 7D</span><span id="gauge-pct">---%</span><span>T-0</span></div>
+          </section>
+
+          <section class="hud" aria-label="締切一覧">
+            <span class="brk"></span>
+            <div class="hud-head"><span class="idx">MOD-01</span><h2>DEADLINES</h2><span class="tag">~/modules/deadlines</span></div>
+            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/deadlines</span>$ <span class="c">./deadlines --sort=asc --tz=JST</span></div>
+            <ul class="deadline-list" id="deadline-list"></ul>
+          </section>
+        </div>
+
+        <!-- ===== ゲームモジュール群（自動ローテーション） ===== -->
+        <div class="rotator" id="rotator">
+          <div class="rot-bar">
+            <span class="rot-title"><b>&gt;_</b> MODULES // AUTO-ROTATE</span>
+            <span class="rot-status" id="rot-status">AUTO · 25s</span>
+            <div class="spacer"></div>
+            <div class="rot-pager" aria-label="モジュールのページ切替">
+              <button class="rot-nav" id="rot-prev" type="button" aria-label="前のページへ">◀</button>
+              <div class="rot-dots" id="rot-dots" role="tablist" aria-label="ページ番号"></div>
+              <span class="rot-page-num" id="rot-pagenum" aria-live="polite">PAGE 01 <span>/ 03</span></span>
+              <button class="rot-nav" id="rot-next" type="button" aria-label="次のページへ">▶</button>
+              <button class="rot-nav" id="rot-pause" type="button" aria-label="自動切替を一時停止">❚❚</button>
+            </div>
+          </div>
+          <div class="rot-progress" aria-hidden="true"><i id="rot-progress-fill"></i></div>
+          <div class="rot-pages" id="rot-pages">
+
+          <div class="rot-page is-active" data-rot-page>
+          <div class="grid">
+
+          <section class="hud game" aria-label="アークナイツ エンドフィールド">
+            <span class="brk"></span>
+            <div class="hud-head"><span class="idx">MOD-02</span><h2>エンドフィールド</h2><span class="tag">~/modules/endfield</span></div>
+            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/endfield</span>$ <span class="c">cat intel.txt</span> <span aria-hidden="true"># ARKNIGHTS: ENDFIELD</span></div>
+            <span class="ver soon">11/25 新バージョン</span>
+            <ul>
+              <li>新バージョン<b>「キノコ菌グ！？君との大冒険！」</b>が<b>11/25（水）</b>配信。新オペレーター「ケイ」登場、ログインで「ミミノ」無料配布</li>
+              <li>メンテナンス <span class="dl">11/25 07:00〜13:00</span><small>（予定）</small></li>
+              <li>現バージョンの<b>ガイド報酬の受け取りは11/25 07:00まで</b>。まだの人はメンテ前に</li>
+              <li>次期Ver.2.0（ロドス・アイランド登場）も予告済み</li>
+            </ul>
+            <p class="src">出典：<a href="https://www.gamespress.com/en-US/The-Game-Awards-Nominee-Arknights-Endfield-Launches-Meeting-You-in-the" target="_blank" rel="noopener">GRYPHLINE発表（GamesPress）</a></p>
+          </section>
+
+          <section class="hud game" aria-label="黒い砂漠">
+            <span class="brk"></span>
+            <div class="hud-head"><span class="idx">MOD-03</span><h2>黒い砂漠</h2><span class="tag">~/modules/bdo</span></div>
+            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/bdo</span>$ <span class="c">cat intel.txt coupons.txt</span> <span aria-hidden="true"># BLACK DESERT</span></div>
+            <span class="ver">クーポン大量配布中</span>
+            <ul>
+              <li>ハイデル宴会クーポン2種は <span class="dl">11/26 23:59まで</span>。入力忘れ注意
+                <div class="coupon"><code>BEYONDTHEJOURNEY</code><button class="copybtn" type="button" data-copy="BEYONDTHEJOURNEY">コピー</button><span class="exp">〜11/26 23:59</span></div>
+                <div class="coupon"><code>TYALLADVENTURERS</code><button class="copybtn" type="button" data-copy="TYALLADVENTURERS">コピー</button><span class="exp">〜11/26 23:59</span></div>
+              </li>
+              <li>Master Class記念クーポン2種は <span class="dl">12/3 メンテ前まで</span>
+                <div class="coupon"><code>NEXT26MCVS25MC</code><button class="copybtn" type="button" data-copy="NEXT26MCVS25MC">コピー</button><span class="exp">〜12/3 メンテ前</span></div>
+                <div class="coupon"><code>26BDMCFINALDAY1</code><button class="copybtn" type="button" data-copy="26BDMCFINALDAY1">コピー</button><span class="exp">〜12/3 メンテ前</span></div>
+              </li>
+              <li>日本代表応援など4種は <span class="dl">12/10 メンテ前まで</span>（クロン石1,000個など）
+                <div class="coupon"><code>JapanBDMCWinner</code><button class="copybtn" type="button" data-copy="JapanBDMCWinner">コピー</button><span class="exp">〜12/10 メンテ前</span></div>
+                <div class="coupon"><code>Next27WorldFinal</code><button class="copybtn" type="button" data-copy="Next27WorldFinal">コピー</button><span class="exp">〜12/10 メンテ前</span></div>
+                <div class="coupon"><code>25MCVS26MC</code><button class="copybtn" type="button" data-copy="25MCVS26MC">コピー</button><span class="exp">〜12/10 メンテ前</span></div>
+                <div class="coupon"><code>SHAREYOURREWARDS</code><button class="copybtn" type="button" data-copy="SHAREYOURREWARDS">コピー</button><span class="exp">〜12/10 メンテ前</span></div>
+              </li>
+              <li><small>入力場所：ゲーム内 [メニュー(ESC) − 支援センター(F11) − クーポン使用]、報酬はメール(B)へ</small></li>
+            </ul>
+            <p class="src">出典：<a href="https://www.jp.playblackdesert.com/ja-JP/News/Detail?boardNo=7211" target="_blank" rel="noopener">公式「現在使えるクーポンまとめ」（11/23 18:00更新）</a></p>
+          </section>
+          </div>
+          </div>
+
+          <div class="rot-page" data-rot-page>
+          <div class="grid">
+          <section class="hud game" aria-label="ゼンレスゾーンゼロ">
+            <span class="brk"></span>
+            <div class="hud-head"><span class="idx">MOD-04</span><h2>ゼンレスゾーンゼロ</h2><span class="tag">~/modules/zzz</span></div>
+            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/zzz</span>$ <span class="c">cat intel.txt</span> <span aria-hidden="true"># ZENLESS ZONE ZERO</span></div>
+            <span class="ver">Ver.3.3 開催中</span>
+            <ul>
+              <li>Ver.3.3「もう一度、空へと飛び立って」開催中。<b>第2期変調</b>（セヴェリアン／ノーマ復刻）は <span class="dl">12/1まで</span></li>
+              <li>イベント「あやかしおどかしオバケ屋敷」は <span class="dl">11/30 04:59まで</span></li>
+              <li>Ver.3.3は <span class="dl">12/2 07:00</span> 終了。次はVer.3.4「The Finality of the Day」</li>
+              <li>ログインボーナス「棚から『ンナンナ』」（ボンプチケット×10）は12/1 04:59まで</li>
+            </ul>
+            <p class="src">出典：<a href="https://steamcommunity.com/app/4162040?l=japanese" target="_blank" rel="noopener">Steam公式ニュース（HoYoverse告知）</a></p>
+          </section>
+
+          <section class="hud game" aria-label="鳴潮">
+            <span class="brk"></span>
+            <div class="hud-head"><span class="idx">MOD-05</span><h2>鳴潮</h2><span class="tag">~/modules/wuwa</span></div>
+            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/wuwa</span>$ <span class="c">cat intel.txt</span> <span aria-hidden="true"># WUTHERING WAVES</span></div>
+            <span class="ver">Ver.3.8 開催中</span>
+            <ul>
+              <li>Ver.3.8「旧夢で朽ちゆく小百合花」（11/12配信）。潮汐任務 第四章第五幕が開放</li>
+              <li>前半の限定集音は新★5共鳴者<b>「リリー」</b>＋★5拳銃「ララバイ」、シグリカ・仇遠も復刻中</li>
+              <li>後半は<b>秧秧・玄翎／穂穂／緋雪</b>が登場予定。追憶集音ではツバキ・ロココ・フィービー・ブラントから1名選択可</li>
+              <li>学園ミニイベント「第二ソラリス：題なき夢」や7日間ログイン「過ぎし夢のプレゼント」も実施中</li>
+            </ul>
+            <p class="src">出典：<a href="https://www.4gamer.net/games/634/G063420/20261106056/index_2.html" target="_blank" rel="noopener">4Gamer（KURO GAMES公式発表）</a></p>
+          </section>
+          </div>
+          </div>
+
+          <div class="rot-page" data-rot-page>
+          <div class="grid">
+          <section class="hud game" aria-label="AION2">
+            <span class="brk"></span>
+            <div class="hud-head"><span class="idx">MOD-06</span><h2>AION2</h2><span class="tag">~/modules/aion2</span></div>
+            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/aion2</span>$ <span class="c">cat intel.txt</span> <span aria-hidden="true"># AION 2</span></div>
+            <span class="ver">11/18 アプデ適用</span>
+            <ul>
+              <li>聖域「深淵の再錬：ルドラ」に<b>難易度[簡単]</b>が追加。ルドラ装備の獲得率も上方調整</li>
+              <li><b>ルドラ討伐イベント</b>（[難しい]を20番目までにクリアで限定タイトル）は <span class="dl">11/25 メンテ前まで</span></li>
+              <li><b>アビスポイントブースト</b>（対象コンテンツの報酬3倍）は <span class="dl">12/16 メンテ前まで</span></li>
+              <li>新規外形「ブラック キャット」などの販売は11/25 メンテ開始前まで</li>
+            </ul>
+            <p class="src">出典：<a href="https://aion2.plaync.com/ja-jp/board/update/view?articleId=6afd5b00e96a444182a29de9" target="_blank" rel="noopener">公式 11月18日アップデートノート</a></p>
+          </section>
+
+          <section class="hud game" aria-label="アーキエイジクロニクル">
+            <span class="brk"></span>
+            <div class="hud-head"><span class="idx">MOD-07</span><h2>アーキエイジクロニクル</h2><span class="tag">~/modules/aac</span></div>
+            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/aac</span>$ <span class="c">cat intel.txt</span> <span aria-hidden="true"># ARCHEAGE CHRONICLES</span></div>
+            <span class="ver">早期アクセス中</span>
+            <ul>
+              <li>11/20メンテで<b>ハードモード</b>（Crimson Rift／Brutal Nightmare）追加。各地域都市に<b>ボスバウンティボード</b>も設置</li>
+              <li>11/12アプデで素材・衣装などの<b>重量軽量化</b>、ボスUnique武器はキャラごとに1回までの制限に変更</li>
+              <li><b>12月に初の大型アップデート</b>予告：Azhraレイド、新クラス系（Female Warrior／Gladius）など</li>
+              <li>クリエイターイベント（PlayCamp連携、〜12/6）開催中</li>
+            </ul>
+            <p class="src">出典：<a href="https://archeageworld.com/ja/noticias.html" target="_blank" rel="noopener">公式告知まとめ（ArcheAge World）</a></p>
+          </section>
+          </div>
+          </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 使い方 ===== -->
+      <section class="hud howto" aria-label="PCでの使い方">
+        <span class="brk"></span>
+        <div class="hud-head"><span class="idx">MOD-08</span><h2>SETUP</h2><span class="tag">~/setup — PCでの使い方</span></div>
+        <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/setup</span>$ <span class="c">cat README.txt</span> <span aria-hidden="true"># PCでの使い方</span></div>
+        <ol>
+          <li><b>ファイルとして置く</b>：上の「⬇ PC用ファイルを保存」ボタンで <span class="mono">game-hud.html</span> をダウンロードして、デスクトップなど好きな場所へ。ダブルクリックでブラウザが開きます（ネット接続時のみフォント表示が完全になります）。</li>
+          <li><b>Wallpaper EngineのWeb壁紙にする</b>：Wallpaper Engineで「壁紙を作成／編集」→ Web壁紙を選び、保存した <span class="mono">game-hud.html</span> ファイルを指定すると、デスクトップ背景として常時表示できます。時計とカウントダウンは開いたまま自動で進みます。</li>
+          <li><b>フルスクリーンで眺める</b>：「⛶ フルスクリーン」ボタンで全画面表示。サブモニターに置いておくのもおすすめです。</li>
+          <li><b>モジュールの自動切替</b>：ゲーム情報は3ページに分かれ、25秒ごとにフェードで自動で切り替わります（締切リストとカウントダウンは常に表示）。モジュール上部の <span class="mono">PAGE 01 / 03</span> 表示と ◀ ▶・数字ボタンで手動でも送れます。❚❚ で自動切替を止められます。</li>
+        </ol>
+        <p>※ 中身は2026年11月23日時点の情報で固定されています。クーポン期限やイベント日程は公式のお知らせでも確認してください。</p>
+      </section>
+
+      <footer class="mono">game-intel@hud:~$ exit 0 <span aria-hidden="true">//</span> GAME INTEL HUD — STANDALONE FILE BUILD 2026.11.23</footer>
+    </div>
+
+    <script>
+      (function(){
+        "use strict";
+        var JST = "+09:00";
+        function D(s){ return new Date(s); }
+
+        /* ===== 締切データ（2026-11-23時点） ===== */
+        var deadlines = [
+          { t: D("2026-11-25T07:00:00"+JST), label:"エンドフィールド メンテ開始", sub:"ガイド報酬の受け取りもここまで", gauge:true },
+          { t: D("2026-11-25T07:00:00"+JST), label:"AION2 ルドラ討伐イベント終了", sub:"11/25 定期メンテナンス前まで" },
+          { t: D("2026-11-25T13:00:00"+JST), label:"エンドフィールド メンテ終了予定", sub:"新バージョン「キノコ菌グ！？君との大冒険！」開始" },
+          { t: D("2026-11-26T23:59:00"+JST), label:"黒い砂漠 ハイデル宴会クーポン2種", sub:"BEYONDTHEJOURNEY / TYALLADVENTURERS" },
+          { t: D("2026-11-30T04:59:00"+JST), label:"ゼンゼロ「オバケ屋敷」終了", sub:"イベント報酬の取り忘れ注意" },
+          { t: D("2026-12-01T15:59:00"+JST), label:"ゼンゼロ 第2期変調 終了", sub:"セヴェリアン／ノーマ復刻" },
+          { t: D("2026-12-02T07:00:00"+JST), label:"ゼンゼロ Ver.3.3 終了", sub:"次はVer.3.4" },
+          { t: D("2026-12-03T09:00:00"+JST), label:"黒い砂漠 Master Classクーポン2種", sub:"12/3 定期メンテナンス前まで" },
+          { t: D("2026-12-10T09:00:00"+JST), label:"黒い砂漠 クーポン4種 終了", sub:"JapanBDMCWinner など（12/10 メンテ前）" },
+          { t: D("2026-12-16T09:00:00"+JST), label:"AION2 アビスポイントブースト終了", sub:"12/16 定期メンテナンス前まで" }
+        ];
+
+        var WD = ["日","月","火","水","木","金","土"];
+        /* 表示は端末のタイムゾーンに依らず常に日本時間（JST）に固定する */
+        function toJST(d){ return new Date(d.getTime() + 9*3600*1000); }
+        function fmtDate(d){
+          var j = toJST(d);
+          return (j.getUTCMonth()+1)+"/"+j.getUTCDate()+"（"+WD[j.getUTCDay()]+"）"+
+                 ("0"+j.getUTCHours()).slice(-2)+":"+("0"+j.getUTCMinutes()).slice(-2);
+        }
+        function remainText(ms){
+          if (ms <= 0) return "終了";
+          var s = Math.floor(ms/1000);
+          var d = Math.floor(s/86400); s -= d*86400;
+          var h = Math.floor(s/3600); s -= h*3600;
+          var m = Math.floor(s/60);
+          if (d > 0) return "あと"+d+"日"+h+"時間";
+          if (h > 0) return "あと"+h+"時間"+m+"分";
+          return "あと"+m+"分";
+        }
+        function hms(ms){
+          if (ms <= 0) return "00:00:00";
+          var s = Math.floor(ms/1000);
+          var d = Math.floor(s/86400); s -= d*86400;
+          var h = Math.floor(s/3600); s -= h*3600;
+          var m = Math.floor(s/60); var ss = s - m*60;
+          var core = ("0"+h).slice(-2)+":"+("0"+m).slice(-2)+":"+("0"+ss).slice(-2);
+          return d > 0 ? d+"D " + core : core;
+        }
+
+        /* ===== 締切リスト描画 ===== */
+        var listEl = document.getElementById("deadline-list");
+        function renderList(){
+          var now = new Date();
+          listEl.innerHTML = "";
+          deadlines.forEach(function(item){
+            var li = document.createElement("li");
+            var ms = item.t - now;
+            if (ms <= 0) li.className = "done";
+            else if (ms < 48*3600*1000) li.className = "hot";
+            var d = document.createElement("span"); d.className = "d"; d.textContent = fmtDate(item.t);
+            var w = document.createElement("span"); w.className = "what"; w.textContent = item.label;
+            var sm = document.createElement("small"); sm.textContent = item.sub; w.appendChild(sm);
+            var l = document.createElement("span"); l.className = "left"; l.textContent = remainText(ms);
+            li.appendChild(d); li.appendChild(w); li.appendChild(l);
+            listEl.appendChild(li);
+          });
+        }
+
+        /* ===== 時計＋ゲージ ===== */
+        var clockEl = document.getElementById("clock");
+        var dateEl = document.getElementById("dateline");
+        var arc = document.getElementById("gauge-arc");
+        var gTarget = document.getElementById("gauge-target");
+        var gCount = document.getElementById("gauge-count");
+        var gWhen = document.getElementById("gauge-when");
+        var gPct = document.getElementById("gauge-pct");
+        var logClock = document.getElementById("log-clock");
+        var logNext = document.getElementById("log-next");
+        var CIRC = 628.3, WINDOW = 7*24*3600*1000;
+
+        function nextDeadline(now){
+          for (var i=0;i<deadlines.length;i++){ if (deadlines[i].t > now) return deadlines[i]; }
+          return null;
+        }
+        function tick(){
+          var now = new Date();
+          var j = toJST(now);
+          clockEl.textContent = ("0"+j.getUTCHours()).slice(-2)+":"+("0"+j.getUTCMinutes()).slice(-2)+":"+("0"+j.getUTCSeconds()).slice(-2);
+          dateEl.textContent = j.getUTCFullYear()+"."+("0"+(j.getUTCMonth()+1)).slice(-2)+"."+("0"+j.getUTCDate()).slice(-2)+" ("+WD[j.getUTCDay()]+") JST";
+          if (logClock) logClock.textContent = "OK — " + clockEl.textContent + " JST";
+          var nx = nextDeadline(now);
+          if (nx){
+            var ms = nx.t - now;
+            var frac = Math.max(0, Math.min(1, ms / WINDOW));
+            arc.style.strokeDashoffset = String(CIRC * (1 - frac));
+            gTarget.textContent = nx.label;
+            gCount.textContent = hms(ms);
+            gWhen.textContent = fmtDate(nx.t) + " まで";
+            gPct.textContent = Math.round(frac*100) + "% LEFT";
+            if (logNext) logNext.textContent = fmtDate(nx.t) + " " + nx.label + "（" + remainText(ms) + "）";
+          } else {
+            gTarget.textContent = "全締切を通過";
+            gCount.textContent = "--:--:--";
+            gWhen.textContent = "次の更新をお待ちください";
+            arc.style.strokeDashoffset = String(CIRC);
+            gPct.textContent = "0% LEFT";
+          }
+        }
+        renderList(); tick();
+        setInterval(tick, 1000);
+        setInterval(renderList, 60000);
+
+        /* ===== クーポンコピー ===== */
+        document.querySelectorAll(".copybtn").forEach(function(btn){
+          btn.addEventListener("click", function(){
+            var code = btn.getAttribute("data-copy");
+            function done(){
+              var old = btn.textContent;
+              btn.textContent = "コピー済み ✓";
+              btn.classList.add("copied");
+              setTimeout(function(){ btn.textContent = old; btn.classList.remove("copied"); }, 1600);
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText){
+              navigator.clipboard.writeText(code).then(done, function(){ fallback(); });
+            } else { fallback(); }
+            function fallback(){
+              var ta = document.createElement("textarea");
+              ta.value = code; ta.style.position = "fixed"; ta.style.opacity = "0";
+              document.body.appendChild(ta); ta.select();
+              try { document.execCommand("copy"); } catch(e){}
+              document.body.removeChild(ta); done();
+            }
+          });
+        });
+
+        /* ===== モジュール自動ローテーション（25秒間隔・フェード） ===== */
+        (function(){
+          var ROT_MS = 25000;
+          var pages = Array.prototype.slice.call(document.querySelectorAll("[data-rot-page]"));
+          if (!pages.length) return;
+          var dotsWrap = document.getElementById("rot-dots");
+          var pageNum = document.getElementById("rot-pagenum");
+          var fill = document.getElementById("rot-progress-fill");
+          var statusEl = document.getElementById("rot-status");
+          var prevBtn = document.getElementById("rot-prev");
+          var nextBtn = document.getElementById("rot-next");
+          var pauseBtn = document.getElementById("rot-pause");
+          var current = 0;
+          var paused = false;
+          var timer = null;
+          var dots = [];
+          function pad(n){ return ("0"+n).slice(-2); }
+          pages.forEach(function(_, i){
+            var b = document.createElement("button");
+            b.type = "button";
+            b.textContent = String(i+1);
+            b.setAttribute("aria-label", (i+1) + "ページ目を表示");
+            b.addEventListener("click", function(){ goTo(i); restart(); });
+            dotsWrap.appendChild(b);
+            dots.push(b);
+          });
+          function render(){
+            pages.forEach(function(pg, i){
+              var on = i === current;
+              pg.classList.toggle("is-active", on);
+              pg.setAttribute("aria-hidden", on ? "false" : "true");
+              if (dots[i]) dots[i].setAttribute("aria-current", on ? "true" : "false");
+            });
+            if (pageNum) pageNum.innerHTML = "PAGE " + pad(current+1) + " <span>/ " + pad(pages.length) + "</span>";
+          }
+          function startProgress(){
+            if (!fill) return;
+            fill.classList.remove("run");
+            fill.style.width = "0%";
+            if (paused) return;
+            /* reflowを挟んでtransitionを最初から再生する */
+            void fill.offsetWidth;
+            fill.classList.add("run");
+          }
+          function schedule(){
+            clearTimeout(timer);
+            if (paused || pages.length < 2) return;
+            timer = setTimeout(function(){
+              goTo((current + 1) % pages.length);
+              startProgress();
+              schedule();
+            }, ROT_MS);
+          }
+          function restart(){ startProgress(); schedule(); }
+          function goTo(i){
+            current = (i + pages.length) % pages.length;
+            render();
+          }
+          if (prevBtn) prevBtn.addEventListener("click", function(){ goTo(current - 1); restart(); });
+          if (nextBtn) nextBtn.addEventListener("click", function(){ goTo(current + 1); restart(); });
+          if (pauseBtn) pauseBtn.addEventListener("click", function(){
+            paused = !paused;
+            pauseBtn.textContent = paused ? "▶" : "❚❚";
+            pauseBtn.setAttribute("aria-label", paused ? "自動切替を再開" : "自動切替を一時停止");
+            if (statusEl) statusEl.textContent = paused ? "PAUSED" : "AUTO · 25s";
+            restart();
+          });
+          /* 壁紙用途が主：ホバー中は勝手に切り替わらないよう一時停止する */
+          var rotator = document.getElementById("rotator");
+          if (rotator){
+            rotator.addEventListener("mouseenter", function(){
+              if (paused) return;
+              clearTimeout(timer);
+              if (fill){ fill.classList.remove("run"); }
+            });
+            rotator.addEventListener("mouseleave", function(){
+              if (paused) return;
+              restart();
+            });
+          }
+          document.addEventListener("visibilitychange", function(){
+            if (document.hidden){ clearTimeout(timer); }
+            else if (!paused){ restart(); }
+          });
+          render();
+          restart();
+        })();
+
+        /* ===== フルスクリーン ===== */
+        document.getElementById("btn-full").addEventListener("click", function(){
+          if (document.fullscreenElement){
+            document.exitFullscreen();
+          } else if (document.documentElement.requestFullscreen){
+            document.documentElement.requestFullscreen();
+          }
+        });
+
+        /* ===== PC用ファイルとして保存（このページ自身を単体HTMLで書き出す） ===== */
+        document.getElementById("btn-download").addEventListener("click", function(){
+          var html = "<!doctype html>\n" + document.documentElement.outerHTML;
+          var blob = new Blob([html], { type: "text/html;charset=utf-8" });
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement("a");
+          a.href = url; a.download = "game-hud.html";
+          document.body.appendChild(a); a.click();
+          document.body.removeChild(a);
+          setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+        });
+      })();
+    </script>
+  <script>setTimeout(function(){location.reload();},30*60*1000);</script>
+</body>
+</html>
