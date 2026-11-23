@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="dark" />
     <meta http-equiv="refresh" content="1800" />
-    <script>try{var _t=localStorage.getItem('hud-theme');if(_t==='jarvis'||_t==='cyberpunk'||_t==='control')document.documentElement.setAttribute('data-theme',_t);}catch(e){}</script>
+    <script>try{var _t=localStorage.getItem('hud-theme');if(_t==='jarvis'||_t==='cyberpunk'||_t==='control'||_t==='cute')document.documentElement.setAttribute('data-theme',_t);}catch(e){}</script>
     <link rel="icon" href="data:," />
     <title>ゲーム情報ダッシュボード PC版</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap" rel="stylesheet" />
     <style>
       :root{
         --bg:#010409;
@@ -89,6 +89,167 @@
       .control-strip .cs-v.ok{color:var(--green)} .control-strip .cs-v.warn{color:var(--amber)}
       .wave{display:inline-flex;align-items:flex-end;gap:2px;height:14px;vertical-align:middle}
       .wave i{display:block;width:3px;background:var(--teal)}
+      #gauge-arc{ filter:drop-shadow(0 0 7px rgba(83,217,255,.75)); }
+
+      /* ===== CUTE theme（パステルピンク×クリーム＋肉球） ===== */
+      html[data-theme="cute"]{
+        color-scheme:light;
+        --bg:#fff3e8; --bg2:#ffeef4;
+        --panel:rgba(255,250,246,.94);
+        --edge:rgba(244,143,171,.60); --edge-dim:rgba(244,143,171,.34);
+        --cyan:#ff8fab; --cyan-hi:#ef5f8b; --cyan-dim:#f2a7bb;
+        --teal:#5bb8a6; --amber:#d94f70; --red:#e5484d;
+        --green:#8fce8f; --term-green:#3e9e5f;
+        --ink:#66424e; --ink-dim:#9a5f70; --ink-faint:#b57e90;
+      }
+      html[data-theme="cute"] body{
+        background:
+          radial-gradient(900px 520px at 88% -10%, rgba(255,183,205,.55), transparent 62%),
+          radial-gradient(760px 520px at 4% 108%, rgba(255,214,165,.38), transparent 60%),
+          linear-gradient(180deg,#fff8f0,#ffeef4);
+        font-family:"M PLUS Rounded 1c","Noto Sans JP",system-ui,sans-serif;
+      }
+      /* ドット柄（水玉） */
+      html[data-theme="cute"] body::before{
+        background:
+          radial-gradient(rgba(255,143,171,.16) 2.4px, transparent 3px) 0 0/36px 36px,
+          radial-gradient(rgba(255,183,120,.13) 2.4px, transparent 3px) 18px 18px/36px 36px;
+      }
+      html[data-theme="cute"] body::after{
+        background:radial-gradient(125% 95% at 50% 42%, transparent 62%, rgba(255,158,181,.16) 100%);
+      }
+      html[data-theme="cute"] .bg-rings{ opacity:.4; }
+      html[data-theme="cute"] .bg-rings circle[stroke^="rgba(103,232,255"]{ stroke:rgba(255,150,175,.55); }
+      /* フォント：見出しと数字を丸ゴシックに */
+      html[data-theme="cute"] .topbar h1,
+      html[data-theme="cute"] .hud-head h2,
+      html[data-theme="cute"] .clockbox .time,
+      html[data-theme="cute"] .gauge-center .count,
+      html[data-theme="cute"] .gauge-center .label,
+      html[data-theme="cute"] .hud-head .idx,
+      html[data-theme="cute"] .rot-bar .rot-title,
+      html[data-theme="cute"] .rot-page-num{ font-family:"M PLUS Rounded 1c","Noto Sans JP",sans-serif; }
+      /* パネル：角丸たっぷり＋やわらかい影、コーナーブラケットは隠す */
+      html[data-theme="cute"] .hud{
+        background:linear-gradient(160deg,#fffdf9,#fff3f6);
+        border:1.5px solid var(--edge-dim);
+        border-radius:24px;
+        box-shadow:0 10px 26px rgba(239,95,139,.13), 0 2px 6px rgba(239,95,139,.08);
+        overflow:hidden;
+      }
+      html[data-theme="cute"] .hud::before,html[data-theme="cute"] .hud::after,
+      html[data-theme="cute"] .hud .brk::before,html[data-theme="cute"] .hud .brk::after{ display:none; }
+      html[data-theme="cute"] .grid > section{ overflow-y:auto; overflow-x:hidden; }
+      html[data-theme="cute"] .topbar{
+        background:linear-gradient(180deg,#fffdf9,#fff0f4);
+        border:1.5px solid var(--edge-dim); border-radius:22px;
+        box-shadow:0 10px 26px rgba(239,95,139,.13);
+      }
+      html[data-theme="cute"] .topbar h1{ color:#7c3f52; text-shadow:none; }
+      html[data-theme="cute"] .topbar h1 .accent{ color:var(--cyan-hi); }
+      html[data-theme="cute"] .topbar .sys{ color:var(--cyan-hi); }
+      html[data-theme="cute"] .core-mark{ filter:drop-shadow(0 0 6px rgba(255,143,171,.6)); }
+      html[data-theme="cute"] .core-mark circle[stroke^="rgba(103,232,255"]{ stroke:rgba(255,120,160,.75); }
+      html[data-theme="cute"] .core-mark circle[fill="#a5ecff"]{ fill:#ff8fab; }
+      html[data-theme="cute"] .cursor{ box-shadow:0 0 8px rgba(255,143,171,.8); }
+      html[data-theme="cute"] .cursor.green{ box-shadow:0 0 8px rgba(120,200,130,.8); }
+      html[data-theme="cute"] .clockbox::before{ box-shadow:0 0 8px rgba(255,143,171,.6), inset 0 0 4px rgba(255,143,171,.7); }
+      html[data-theme="cute"] .clockbox .time{ color:#7c3f52; text-shadow:none; }
+      /* 見出し：肉球ノード＋ピンクの帯 */
+      html[data-theme="cute"] .hud-head{
+        background:linear-gradient(90deg, rgba(255,183,205,.55), rgba(255,214,228,.22) 65%, transparent);
+        border-bottom:1.5px dashed rgba(244,143,171,.4);
+      }
+      html[data-theme="cute"] .hud-head::before{
+        width:19px; height:19px; border:none; border-radius:0; box-shadow:none;
+        background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23ef5f8b'%3E%3Cellipse cx='50' cy='67' rx='21' ry='16'/%3E%3Cellipse cx='23' cy='45' rx='9' ry='12' transform='rotate(-18 23 45)'/%3E%3Cellipse cx='41' cy='34' rx='9' ry='12' transform='rotate(-6 41 34)'/%3E%3Cellipse cx='59' cy='34' rx='9' ry='12' transform='rotate(6 59 34)'/%3E%3Cellipse cx='77' cy='45' rx='9' ry='12' transform='rotate(18 77 45)'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;
+      }
+      html[data-theme="cute"] .hud-head h2{ color:#7c3f52; text-shadow:none; }
+      html[data-theme="cute"] .hud-head .idx{ color:var(--cyan-hi); }
+      html[data-theme="cute"] .snapshot::before{
+        content:""; display:inline-block; width:15px; height:15px; margin-right:5px; vertical-align:-2px;
+        background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23ef5f8b'%3E%3Cellipse cx='50' cy='67' rx='21' ry='16'/%3E%3Cellipse cx='23' cy='45' rx='9' ry='12' transform='rotate(-18 23 45)'/%3E%3Cellipse cx='41' cy='34' rx='9' ry='12' transform='rotate(-6 41 34)'/%3E%3Cellipse cx='59' cy='34' rx='9' ry='12' transform='rotate(6 59 34)'/%3E%3Cellipse cx='77' cy='45' rx='9' ry='12' transform='rotate(18 77 45)'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;
+      }
+      /* ボタン類：ピル型に */
+      html[data-theme="cute"] .theme-switch{ background:#fff; border-radius:999px; border-color:var(--edge-dim); }
+      html[data-theme="cute"] .theme-switch button{ border-radius:999px; }
+      html[data-theme="cute"] .theme-switch button:hover{ color:#a12c4c; background:rgba(255,183,205,.35); }
+      html[data-theme="cute"] .theme-switch button[aria-pressed="true"]{ background:#ff8fab; color:#fff; border-color:#ff8fab; box-shadow:0 4px 12px rgba(255,143,171,.5); }
+      html[data-theme="cute"] .theme-switch .paw-ico{ width:13px; height:13px; vertical-align:-2px; margin-right:4px; }
+      html[data-theme="cute"] .hbtn,html[data-theme="cute"] .copybtn,html[data-theme="cute"] .rot-nav{
+        clip-path:none; border-radius:999px;
+        background:rgba(255,143,171,.13); color:var(--cyan-hi); border-color:var(--edge-dim);
+      }
+      html[data-theme="cute"] .hbtn:hover,html[data-theme="cute"] .copybtn:hover{ background:rgba(255,143,171,.3); color:#a12c4c; }
+      html[data-theme="cute"] .copybtn.copied{ color:var(--term-green); border-color:rgba(120,200,130,.6); }
+      /* ゲージ：ピンクのリング＋クリーム色のコア */
+      html[data-theme="cute"] .gauge-wrap::before{ background:radial-gradient(circle, rgba(255,183,205,.5), rgba(255,183,205,.14) 55%, transparent 72%); }
+      html[data-theme="cute"] .gauge-wrap circle[stroke^="rgba(103,232,255"],
+      html[data-theme="cute"] .gauge-wrap circle[stroke^="rgba(83,217,255"]{ stroke:rgba(255,150,175,.45); }
+      html[data-theme="cute"] #gauge-arc{ stroke:#ff7fab; filter:drop-shadow(0 0 7px rgba(255,143,171,.75)); }
+      html[data-theme="cute"] #coreGrad stop[offset="0%"]{ stop-color:#fff7f9; }
+      html[data-theme="cute"] #coreGrad stop[offset="55%"]{ stop-color:#ffe9f0; }
+      html[data-theme="cute"] #coreGrad stop[offset="100%"]{ stop-color:#ffdfe9; }
+      html[data-theme="cute"] .gauge-center .target{ color:#7c3f52; text-shadow:none; }
+      html[data-theme="cute"] .gauge-center .count{ text-shadow:none; }
+      html[data-theme="cute"] .gauge-center .label{ color:var(--term-green); }
+      html[data-theme="cute"] .gauge-paw{ display:block; }
+      /* 締切リスト */
+      html[data-theme="cute"] .deadline-list{ scrollbar-color:rgba(255,143,171,.55) rgba(255,183,205,.18); }
+      html[data-theme="cute"] .deadline-list::-webkit-scrollbar-thumb{ background:rgba(255,143,171,.55); }
+      html[data-theme="cute"] .deadline-list::-webkit-scrollbar-track{ background:rgba(255,183,205,.18); }
+      html[data-theme="cute"] .deadline-list li{ border-bottom:1.5px dashed rgba(244,143,171,.3); }
+      html[data-theme="cute"] .deadline-list li::before{ background:rgba(255,183,205,.4); }
+      html[data-theme="cute"] .deadline-list li.hot::before{ border-color:var(--amber); background:rgba(217,79,112,.3); box-shadow:0 0 7px rgba(217,79,112,.5); }
+      html[data-theme="cute"] .deadline-list li.is-main .what,
+      html[data-theme="cute"] .deadline-list li.is-maint .what{ color:#7c3f52; }
+      html[data-theme="cute"] .main-tag,html[data-theme="cute"] .maint-tag,html[data-theme="cute"] .main-flag{ border-radius:999px; padding-left:8px; padding-right:8px; }
+      html[data-theme="cute"] .maint-tag{ background:#ffc2d4; color:#8a2440; }
+      /* ゲームモジュール */
+      html[data-theme="cute"] .grid > section{ scrollbar-color:rgba(255,143,171,.55) rgba(255,183,205,.18); }
+      html[data-theme="cute"] .grid > section::-webkit-scrollbar-thumb{ background:rgba(255,143,171,.55); }
+      html[data-theme="cute"] .grid > section::-webkit-scrollbar-track{ background:rgba(255,183,205,.18); }
+      html[data-theme="cute"] .game .ver{
+        clip-path:none; border-radius:999px; padding:3px 12px;
+        background:linear-gradient(90deg,#ff8fab,#ffb3c8); color:#7c2140;
+        box-shadow:0 4px 10px rgba(255,143,171,.35);
+      }
+      html[data-theme="cute"] .game .ver.soon{ background:linear-gradient(90deg,#ffc2d4,#ffe3ec); color:#8a2440; }
+      html[data-theme="cute"] .game li{ border-bottom:1.5px dashed rgba(244,143,171,.22); }
+      html[data-theme="cute"] .game li::before{ box-shadow:none; background:rgba(255,183,205,.45); }
+      html[data-theme="cute"] .game li b{ color:#7c3f52; }
+      html[data-theme="cute"] .src a{ color:#d94f70; border-bottom-color:#f2a7bb; }
+      html[data-theme="cute"] .src a:hover{ color:#a12c4c; }
+      html[data-theme="cute"] .coupon code{
+        color:#2e7d46; background:rgba(160,220,160,.16);
+        border:1.5px dashed rgba(110,190,120,.55); border-radius:12px;
+      }
+      /* ローテーションバー */
+      html[data-theme="cute"] .rot-bar{
+        background:linear-gradient(90deg, rgba(255,183,205,.5), rgba(255,214,228,.18));
+        border-color:var(--edge-dim); border-radius:20px 20px 0 0;
+      }
+      html[data-theme="cute"] .rot-bar .rot-title{ color:#7c3f52; }
+      html[data-theme="cute"] .rot-page-num{ color:#7c3f52; }
+      html[data-theme="cute"] .rot-dots button{ border-color:rgba(244,143,171,.6); }
+      html[data-theme="cute"] .rot-dots button::after{ background:rgba(255,150,175,.45); }
+      html[data-theme="cute"] .rot-dots button[aria-current="true"]{ border-color:#ff7fab; box-shadow:0 0 8px rgba(255,143,171,.55); }
+      html[data-theme="cute"] .rot-dots button[aria-current="true"]::after{ background:#ff7fab; box-shadow:none; }
+      html[data-theme="cute"] .rot-nav:hover{ background:rgba(255,143,171,.3); color:#a12c4c; }
+      html[data-theme="cute"] .rot-progress{ background:rgba(255,183,205,.25); }
+      html[data-theme="cute"] .rot-progress i{ box-shadow:0 0 8px rgba(255,143,171,.8); }
+      /* システムログ：クリーム色のメモ帳風 */
+      html[data-theme="cute"] .log-body{
+        background:#fffaf3; color:#9a6373; border-color:var(--edge-dim); border-radius:14px;
+        scrollbar-color:rgba(255,143,171,.55) rgba(255,183,205,.18);
+      }
+      html[data-theme="cute"] .log-body .inf{ color:#d94f70; }
+      html[data-theme="cute"] .howto ol b{ color:#7c3f52; }
+      /* 背景に散らす肉球（CUTEのときだけ表示） */
+      .paw-field{ display:none; }
+      html[data-theme="cute"] .paw-field{ display:block; position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+      .paw-field svg{ position:absolute; display:block; }
+      .gauge-paw{ display:none; width:24px; height:24px; margin-bottom:2px; }
       *{ box-sizing:border-box; }
       html,body{ margin:0; padding:0; }
       html{ height:100%; }
@@ -504,6 +665,14 @@
     </style>
   </head>
   <body>
+    <div class="paw-field" aria-hidden="true">
+      <svg viewBox="0 0 100 100" style="left:2.5%;top:16%;width:54px;transform:rotate(-18deg);opacity:.30"><g fill="#ff8fab"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
+      <svg viewBox="0 0 100 100" style="left:6.5%;top:24%;width:34px;transform:rotate(14deg);opacity:.22"><g fill="#ff8fab"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
+      <svg viewBox="0 0 100 100" style="right:3%;top:64%;width:62px;transform:rotate(20deg);opacity:.26"><g fill="#ff8fab"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
+      <svg viewBox="0 0 100 100" style="right:8%;top:74%;width:36px;transform:rotate(-12deg);opacity:.2"><g fill="#ff8fab"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
+      <svg viewBox="0 0 100 100" style="left:44%;bottom:2.5%;width:40px;transform:rotate(8deg);opacity:.18"><g fill="#f6a8c1"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
+      <svg viewBox="0 0 100 100" style="left:1.5%;bottom:6%;width:38px;transform:rotate(24deg);opacity:.2"><g fill="#f6a8c1"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
+    </div>
     <div class="bg-rings" aria-hidden="true"><svg viewBox="0 0 600 600"><g class="bg-spin-a"><circle cx="300" cy="300" r="292" fill="none" stroke="rgba(103,232,255,.15)" stroke-width="1" stroke-dasharray="4 14"/></g><g class="bg-spin-b"><circle cx="300" cy="300" r="240" fill="none" stroke="rgba(103,232,255,.09)" stroke-width="10" stroke-dasharray="64 28 14 28"/></g><circle cx="300" cy="300" r="182" fill="none" stroke="rgba(103,232,255,.07)" stroke-width="1"/><g class="bg-spin-a"><circle cx="300" cy="300" r="122" fill="none" stroke="rgba(103,232,255,.11)" stroke-width="1.5" stroke-dasharray="2 8"/></g></svg></div>
     <div class="wrap">
 
@@ -522,6 +691,7 @@
             <button type="button" data-theme-btn="jarvis" aria-pressed="true">JARVIS</button>
             <button type="button" data-theme-btn="cyberpunk" aria-pressed="false">CYBERPUNK</button>
             <button type="button" data-theme-btn="control" aria-pressed="false">管制</button>
+            <button type="button" data-theme-btn="cute" aria-pressed="false"><svg class="paw-ico" viewBox="0 0 100 100" aria-hidden="true" style="width:13px;height:13px;vertical-align:-2px;margin-right:4px"><g fill="currentColor"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>CUTE</button>
           </div>
           <button class="hbtn" id="btn-download" type="button">⬇ PC用ファイルを保存</button>
           <button class="hbtn" id="btn-full" type="button">⛶ フルスクリーン</button>
@@ -580,13 +750,14 @@
                 <circle cx="130" cy="130" r="108" fill="none" stroke="rgba(103,232,255,.30)" stroke-width="7" stroke-dasharray="1.6 9.71"/>
                 <g transform="rotate(-90 130 130)">
                   <circle cx="130" cy="130" r="98" fill="none" stroke="rgba(83,217,255,.13)" stroke-width="9"/>
-                  <circle id="gauge-arc" cx="130" cy="130" r="98" fill="none" stroke="#53d9ff" stroke-width="9" stroke-linecap="round" stroke-dasharray="615.8" stroke-dashoffset="0" style="filter:drop-shadow(0 0 7px rgba(83,217,255,.75))"/>
+                  <circle id="gauge-arc" cx="130" cy="130" r="98" fill="none" stroke="#53d9ff" stroke-width="9" stroke-linecap="round" stroke-dasharray="615.8" stroke-dashoffset="0"/>
                 </g>
                 <g class="rg-spin-c"><circle cx="130" cy="130" r="87" fill="none" stroke="rgba(103,232,255,.45)" stroke-width="1.5" stroke-dasharray="30 14"/></g>
                 <circle cx="130" cy="130" r="79" fill="url(#coreGrad)" stroke="rgba(103,232,255,.35)" stroke-width="1"/>
                 <circle cx="130" cy="130" r="71" fill="none" stroke="rgba(103,232,255,.16)" stroke-width="1"/>
               </svg>
               <div class="gauge-center">
+                <svg class="gauge-paw" viewBox="0 0 100 100" aria-hidden="true"><g fill="#ff8fab"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
                 <div class="label" id="gauge-label">MAIN // 黒い砂漠</div>
                 <div class="target" id="gauge-target">黒い砂漠 定期メンテ開始</div>
                 <div class="count" id="gauge-count">--:--:--</div>
@@ -737,7 +908,7 @@
           <li><b>フルスクリーンで眺める</b>：「⛶ フルスクリーン」ボタンで全画面表示。サブモニターに置いておくのもおすすめです。</li>
           <li><b>モジュールの自動切替</b>：ゲーム情報は3ページに分かれ、25秒ごとにフェードで自動で切り替わります（締切リストとカウントダウンは常に表示）。モジュール上部の <span class="mono">PAGE 01 / 03</span> 表示と ◀ ▶・丸いページボタンで手動でも送れます。❚❚ で自動切替を止められます。</li>
           <li><b>カウントダウンについて</b>：左上のゲージは<b>黒い砂漠の定期メンテナンス（毎週木曜 08:00〜12:00 JST）</b>までの残り時間を、日付から自動で計算して表示します。メンテ中は「メンテ中」表示になり、終了予定までのカウントに切り替わります。メンテがない週や時間が変わる週は、公式のお知らせが優先です。</li>
-          <li><b>テーマ切替</b>：上部の <span class="mono">THEME [JARVIS / CYBERPUNK / 管制]</span> ボタンで見た目をその場で切り替えられます。選んだテーマはこのブラウザに保存され、次回も同じテーマで開きます（壁紙でもクリックで切り替え可能です）。</li>
+          <li><b>テーマ切替</b>：上部の <span class="mono">THEME [JARVIS / CYBERPUNK / 管制 / CUTE]</span> ボタンで見た目をその場で切り替えられます。CUTEはパステルピンク×クリームに肉球モチーフの可愛いテーマです。選んだテーマはこのブラウザに保存され、次回も同じテーマで開きます（壁紙でもクリックで切り替え可能です）。</li>
         </ol>
         <p>※ 中身は2026年11月23日時点の情報で固定されています。クーポン期限やイベント日程は公式のお知らせでも確認してください。</p>
       </section>
@@ -1072,7 +1243,7 @@
           }
         });
 
-        /* ===== テーマ切替（JARVIS / CYBERPUNK / CONTROL） ===== */
+        /* ===== テーマ切替（JARVIS / CYBERPUNK / CONTROL / CUTE） ===== */
         (function(){
           var btns = document.querySelectorAll('[data-theme-btn]');
           function applyTheme(name){
