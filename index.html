@@ -245,15 +245,17 @@
       }
       html[data-theme="cute"] .log-body .inf{ color:#d94f70; }
       html[data-theme="cute"] .howto ol b{ color:#7c3f52; }
-      /* 背景に散らす肉球（CUTEのときだけ表示） */
+      /* 背景に散らす肉球（CUTEのときだけ表示・最下部の帯の中だけ） */
       .paw-field{ display:none; }
-      html[data-theme="cute"] .paw-field{ display:block; position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+      html[data-theme="cute"] .paw-field{ display:block; position:fixed; left:0; right:0; bottom:0; top:auto; height:clamp(72px,10vh,110px); z-index:0; pointer-events:none; overflow:hidden; }
+      /* CUTEのときは帯の分だけ下余白を広げ、SETUPやフッターの文字に猫・足あとが被らないようにする */
+      html[data-theme="cute"] .wrap{ padding-bottom:clamp(84px, calc(10vh + 12px), 122px); }
       .paw-field svg{ position:absolute; display:block; }
       .gauge-paw{ display:none; width:24px; height:24px; margin-bottom:2px; }
       /* ===== CUTE限定：歩く肉球の足あと＋黒猫のお散歩 ===== */
       .paw-trail,.cat-walker{ display:none; }
       html[data-theme="cute"] .paw-trail{
-        display:block; position:fixed; inset:0; z-index:3; pointer-events:none; overflow:hidden;
+        display:block; position:fixed; left:0; right:0; bottom:0; top:auto; height:clamp(72px,10vh,110px); z-index:3; pointer-events:none; overflow:hidden;
       }
       html[data-theme="cute"] .paw-trail svg{
         position:absolute; display:block; width:30px; height:30px; opacity:0;
@@ -269,7 +271,7 @@
       @keyframes pawBounce{ 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-3px) } }
       html[data-theme="cute"] .cat-walker{
         display:block; position:fixed; left:0; bottom:2px; z-index:4; pointer-events:none;
-        width:138px; opacity:.92; transform:translateX(-200px);
+        width:clamp(80px,11vh,110px); opacity:.92; transform:translateX(-200px);
         will-change:transform;
       }
       .cat-walker svg{ display:block; width:100%; height:auto; overflow:visible; }
@@ -695,8 +697,8 @@
     <div class="paw-field" aria-hidden="true">
       <svg viewBox="0 0 100 100" style="left:2.5%;top:16%;width:54px;transform:rotate(-18deg);opacity:.30"><g fill="#ff8fab"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
       <svg viewBox="0 0 100 100" style="left:6.5%;top:24%;width:34px;transform:rotate(14deg);opacity:.22"><g fill="#ff8fab"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
-      <svg viewBox="0 0 100 100" style="right:3%;top:64%;width:62px;transform:rotate(20deg);opacity:.26"><g fill="#ff8fab"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
-      <svg viewBox="0 0 100 100" style="right:8%;top:74%;width:36px;transform:rotate(-12deg);opacity:.2"><g fill="#ff8fab"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
+      <svg viewBox="0 0 100 100" style="right:3%;bottom:6%;width:62px;transform:rotate(20deg);opacity:.26"><g fill="#ff8fab"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
+      <svg viewBox="0 0 100 100" style="right:8%;bottom:44%;width:36px;transform:rotate(-12deg);opacity:.2"><g fill="#ff8fab"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
       <svg viewBox="0 0 100 100" style="left:44%;bottom:2.5%;width:40px;transform:rotate(8deg);opacity:.18"><g fill="#f6a8c1"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
       <svg viewBox="0 0 100 100" style="left:1.5%;bottom:6%;width:38px;transform:rotate(24deg);opacity:.2"><g fill="#f6a8c1"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
     </div>
@@ -950,7 +952,7 @@
           <li><b>フルスクリーンで眺める</b>：「⛶ フルスクリーン」ボタンで全画面表示。サブモニターに置いておくのもおすすめです。</li>
           <li><b>モジュールの自動切替</b>：ゲーム情報は3ページに分かれ、25秒ごとにフェードで自動で切り替わります（締切リストとカウントダウンは常に表示）。モジュール上部の <span class="mono">PAGE 01 / 03</span> 表示と ◀ ▶・丸いページボタンで手動でも送れます。❚❚ で自動切替を止められます。</li>
           <li><b>カウントダウンについて</b>：左上のゲージは<b>黒い砂漠の定期メンテナンス（毎週木曜 08:00〜12:00 JST）</b>までの残り時間を、日付から自動で計算して表示します。メンテ中は「メンテ中」表示になり、終了予定までのカウントに切り替わります。メンテがない週や時間が変わる週は、公式のお知らせが優先です。</li>
-          <li><b>テーマ切替</b>：上部の <span class="mono">THEME [JARVIS / CYBERPUNK / 管制 / CUTE]</span> ボタンで見た目をその場で切り替えられます。CUTEはパステルピンク×クリームに肉球モチーフの可愛いテーマです。CUTEのときだけ、画面の下に肉球の足あとがペタペタと順番に現れては消えたり、たまに丸っこい黒猫がコマ送りの歩行アニメーションで歩いて横切り、途中で一度座ってしっぽをくるんと巻いて毛づくろいしたりします（他のテーマでは出ません）。選んだテーマはこのブラウザに保存され、次回も同じテーマで開きます（壁紙でもクリックで切り替え可能です）。</li>
+          <li><b>テーマ切替</b>：上部の <span class="mono">THEME [JARVIS / CYBERPUNK / 管制 / CUTE]</span> ボタンで見た目をその場で切り替えられます。CUTEはパステルピンク×クリームに肉球モチーフの可愛いテーマです。CUTEのときだけ、画面最下部の細い帯の中で、肉球の足あとがペタペタと順番に現れては消えたり、たまに丸っこい黒猫がコマ送りの歩行アニメーションで歩いて横切り、途中で一度座ってしっぽをくるんと巻いて毛づくろいしたりします（帯の外＝本文の上には出ません。他のテーマでも出ません）。選んだテーマはこのブラウザに保存され、次回も同じテーマで開きます（壁紙でもクリックで切り替え可能です）。</li>
         </ol>
         <p>※ 中身は2026年11月23日時点の情報で固定されています。クーポン期限やイベント日程は公式のお知らせでも確認してください。</p>
       </section>
