@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="ja">
   <head>
+<meta name="robots" content="noindex, nofollow" />
     <meta charset="utf-8" />
-    <meta name="robots" content="noindex, nofollow" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="dark" />
     <link rel="icon" href="data:," />
@@ -173,9 +173,13 @@
 
       .deadline-list{ list-style:none; margin:6px 0 0; padding:0; }
       .deadline-list li{
-        display:grid; grid-template-columns:108px 1fr auto; gap:10px; align-items:baseline;
-        padding:9px 2px; border-bottom:1px dashed rgba(77,216,255,.14); font-size:13.5px;
+        display:grid; grid-template-columns:1fr auto; grid-template-areas:"date left" "what what";
+        gap:2px 10px; align-items:baseline;
+        padding:8px 2px; border-bottom:1px dashed rgba(77,216,255,.14); font-size:13.5px;
       }
+      .deadline-list .d{ grid-area:date; }
+      .deadline-list .what{ grid-area:what; }
+      .deadline-list .left{ grid-area:left; }
       .deadline-list li:last-child{ border-bottom:none; }
       .deadline-list .d{ font-family:"Share Tech Mono",monospace; color:var(--cyan-pale); font-size:12.5px; white-space:nowrap; }
       .deadline-list .what{ color:var(--ink); line-height:1.45; }
@@ -274,7 +278,7 @@
         .hud-head .tag{ display:none; }
         .topbar{ gap:12px; padding:10px 12px; }
         .clockbox{ text-align:left; }
-        .deadline-list li{ grid-template-columns:96px 1fr auto; gap:7px; }
+        .deadline-list .d{ font-size:11.5px; }
         .log-body{ font-size:11.5px; max-height:220px; }
       }
 
@@ -314,7 +318,7 @@
       .rot-progress i{ display:block; height:100%; width:0%; background:var(--cyan); box-shadow:0 0 8px rgba(77,216,255,.8); }
       .rot-progress i.run{ transition:width 25s linear; width:100%; }
       @media (prefers-reduced-motion: reduce){ .rot-progress i.run{ transition:none; } }
-      .rot-pages{ flex:1 1 auto; min-height:0; display:grid; }
+      .rot-pages{ flex:1 1 auto; min-height:0; display:grid; grid-template-rows:minmax(0,1fr); }
       .rot-page{
         grid-area:1 / 1; min-height:0; height:100%;
         opacity:0; visibility:hidden; pointer-events:none;
@@ -346,27 +350,114 @@
       body{ min-height:100vh; min-height:100dvh; }
       .wrap{
         max-width:none; width:100%;
+        height:100vh; height:100dvh;
         min-height:100vh; min-height:100dvh;
-        padding:10px 12px 12px;
+        /* 下端はWindowsタスクバー（約48〜60px）に被さる領域なので、
+           パネルやフッターがタスクバーの裏に沈まないよう余白を確保する */
+        padding:10px 12px 72px;
         display:flex; flex-direction:column;
+        overflow:hidden;
       }
       .hexrail{ display:none; }
       .topbar{ flex:none; }
       .snapshot{ flex:none; }
       .term-log{ flex:none; }
-      .layout{ flex:1 1 auto; align-items:stretch; margin-top:12px; min-height:0; }
+      .layout{ flex:1 1 auto; align-items:stretch; margin-top:12px; min-height:0; grid-template-rows:minmax(0,1fr); }
+      .layout > *{ min-height:0; min-width:0; }
       .layout > div:first-child{ min-height:0; }
-      .layout > div:first-child > section{ flex:1 1 auto; display:flex; flex-direction:column; }
+      .layout > div:first-child > section{ flex:1 1 auto; display:flex; flex-direction:column; min-height:0; }
       .gauge-box .gauge-wrap{ margin-top:auto; margin-bottom:auto; }
       .gauge-box .ticks{ margin-top:auto; }
-      .grid{ height:100%; grid-auto-rows:1fr; }
+      .grid{ height:100%; grid-auto-rows:minmax(0,1fr); }
       .grid > section{ display:flex; flex-direction:column; }
       .grid > section .src{ margin-top:auto; padding-top:10px; }
       .howto{ flex:none; margin-top:12px; }
       footer{ flex:none; margin-top:10px; }
+
+      /* ===== 高さフィット：左列が重ならず・切れずに収まる配分 ===== */
+      /* 左列は高さ100%のフレックス列。ゲージは絶対に縮めない（flex:0 0 auto）：
+         以前はゲージ側が縮むのに中身の円だけ元の大きさで溢れ、
+         下のDEADLINESパネルに重なって見えていた */
+      .leftcol{ display:flex; flex-direction:column; gap:14px; height:100%; min-height:0; }
+      .layout > div:first-child > section.gauge-box{ flex:0 0 auto; }
+      .layout > div:first-child > section.deadlines-panel{
+        flex:1 1 0; min-height:110px; display:flex; flex-direction:column;
+      }
+      /* 締切リストはパネル内部でのみスクロール（細いターミナル風バー） */
+      .deadline-list{
+        flex:1 1 auto; min-height:0; overflow-y:auto; padding-right:4px;
+        scrollbar-width:thin; scrollbar-color:rgba(77,216,255,.45) rgba(77,216,255,.08);
+      }
+      .deadline-list::-webkit-scrollbar{ width:6px; }
+      .deadline-list::-webkit-scrollbar-thumb{ background:rgba(77,216,255,.45); }
+      .deadline-list::-webkit-scrollbar-track{ background:rgba(77,216,255,.08); }
+      /* メインゲーム（黒い砂漠）の締切行の目印 */
+      .deadline-list li.is-main .what{ color:#fff; font-weight:700; }
+      .main-tag{
+        display:inline-block; vertical-align:1px; margin-right:6px;
+        font-family:"Share Tech Mono",monospace; font-size:9.5px; font-weight:700; letter-spacing:.08em;
+        color:#04240f; background:var(--green); padding:1px 5px; border-radius:1px;
+      }
+      /* ゲームパネルもセル内で収め、はみ出す分は内部スクロールにする */
+      .grid > section{
+        min-height:0; overflow-y:auto;
+        scrollbar-width:thin; scrollbar-color:rgba(77,216,255,.45) rgba(77,216,255,.08);
+      }
+      .grid > section::-webkit-scrollbar{ width:6px; }
+      .grid > section::-webkit-scrollbar-thumb{ background:rgba(77,216,255,.45); }
+      .grid > section::-webkit-scrollbar-track{ background:rgba(77,216,255,.08); }
+      /* ゲージは画面の高さに合わせて伸縮（低い画面では小さく） */
+      .gauge-wrap{ width:clamp(140px, 22vh, 200px); height:clamp(140px, 22vh, 200px); flex:none; }
+      .gauge-wrap svg{ width:100%; height:100%; }
+      .gauge-center{ padding:8px; }
+      .gauge-center .label{ color:var(--green); }
+      .gauge-center .target{ max-width:88%; }
+      .gauge-center .count{ line-height:1.15; }
+      /* 黒い砂漠パネルのMAINバッジ */
+      .main-flag{
+        display:inline-block; margin-left:8px; vertical-align:1px;
+        font-family:"Share Tech Mono",monospace; font-size:10px; font-weight:700; letter-spacing:.1em;
+        color:#04240f; background:var(--green); padding:2px 7px; border-radius:1px;
+      }
+      @media (min-width:1081px){ body{ overflow:hidden; } }
+      /* 画面が低いとき（タスクバー＋拡大表示など）はログとゲージを詰める */
+      @media (max-height:1080px){
+        .log-body{ max-height:110px; }
+      }
+      @media (max-height:920px){
+        .log-body{ max-height:84px; }
+        .deadline-list li{ padding:7px 2px; }
+        .gauge-center .count{ font-size:21px; }
+        .howto ol{ line-height:1.55; font-size:13px; }
+        .howto p{ margin-top:5px; }
+      }
       @media (max-width:1080px){
+        .wrap{ height:auto; overflow:visible; padding-bottom:28px; }
         .grid{ height:auto; grid-auto-rows:auto; }
+        .grid > section{ overflow:visible; }
         .layout > div:first-child > section{ flex:none; }
+        .leftcol{ height:auto; }
+        .deadline-list{ overflow:visible; flex:none; }
+        .gauge-wrap{ width:200px; height:200px; }
+      }
+
+      /* ===== 低い画面（デスクトップ幅）：縦を詰めて全パネルを画面内に収める ===== */
+      @media (min-width:1081px) and (max-height:1080px){
+        .log-body{ max-height:100px; }
+        .gauge-wrap{ width:clamp(128px, 19vh, 168px); height:clamp(128px, 19vh, 168px); }
+      }
+      @media (min-width:1081px) and (max-height:940px){
+        .log-body{ max-height:58px; }
+        .log-note{ display:none; }
+        .gauge-wrap{ width:clamp(108px, 16vh, 132px); height:clamp(108px, 16vh, 132px); }
+        .gauge-box .cmdline, .deadlines-panel .cmdline{ display:none; }
+        .gauge-center .label{ font-size:9.5px; }
+        .gauge-center .target{ font-size:12px; }
+        .gauge-center .count{ font-size:18px; }
+        .gauge-center .when{ font-size:10px; }
+        .deadline-list li{ padding:5px 2px; font-size:12.5px; }
+        .howto{ display:none; }
+        footer{ margin-top:6px; }
       }
     </style>
   </head>
@@ -404,7 +495,7 @@
 <span class="t">[init]</span> display mode ......... <span class="ok">WALLPAPER / FULLSCREEN READY</span>
 <span class="t">[init]</span> clock sync (JST) ..... <span class="ok" id="log-clock">SYNCING…</span>
 <span class="t">[load]</span> snapshot ............. <span class="jp">2026年11月23日（月）時点の公式発表ベース</span>
-<span class="t">[load]</span> modules .............. <span class="ok">6 TITLES LOADED</span> <span class="jp">[エンドフィールド / 黒い砂漠 / ゼンゼロ / 鳴潮 / AION2 / アーキエイジクロニクル]</span>
+<span class="t">[load]</span> modules .............. <span class="ok">6 TITLES LOADED</span> <span class="jp">[黒い砂漠（メイン） / エンドフィールド / ゼンゼロ / 鳴潮 / AION2 / アーキエイジクロニクル]</span>
 <span class="t">[load]</span> deadlines ............ <span class="ok">10 ENTRIES</span> <span class="jp">締切順にソート済み</span>
 <span class="t">[load]</span> rotation ............. <span class="ok">AUTO</span> <span class="jp">モジュール 3ページ / 25秒間隔（締切・カウントダウンは固定表示）</span>
 <span class="t">[load]</span> coupons .............. <span class="ok">8 CODES</span> <span class="jp">黒い砂漠（コピーボタン有効）</span>
@@ -416,11 +507,11 @@
 
       <div class="layout">
         <!-- ===== 左カラム ===== -->
-        <div style="display:flex; flex-direction:column; gap:18px;">
-          <section class="hud gauge-box" aria-label="次の締切までのカウントダウン">
+        <div class="leftcol">
+          <section class="hud gauge-box" aria-label="メインゲーム黒い砂漠の次の締切までのカウントダウン">
             <span class="brk"></span>
-            <div class="hud-head"><span class="idx">MOD-00</span><h2>NEXT DEADLINE</h2><span class="tag">~/modules/gauge</span></div>
-            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/gauge</span>$ <span class="c">./countdown --target=next --window=7d</span></div>
+            <div class="hud-head"><span class="idx">MOD-00</span><h2>MAIN // 黒い砂漠</h2><span class="tag">~/main/bdo</span></div>
+            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/gauge</span>$ <span class="c">./countdown --target=main --game=bdo</span></div>
             <div class="gauge-wrap">
               <svg width="230" height="230" viewBox="0 0 230 230" aria-hidden="true">
                 <circle cx="115" cy="115" r="100" fill="none" stroke="rgba(77,216,255,.12)" stroke-width="10"/>
@@ -430,7 +521,7 @@
                         style="filter:drop-shadow(0 0 6px rgba(77,216,255,.7))"/>
               </svg>
               <div class="gauge-center">
-                <div class="label">COUNTDOWN</div>
+                <div class="label">MAIN GAME — 黒い砂漠</div>
                 <div class="target" id="gauge-target">―</div>
                 <div class="count" id="gauge-count">--:--:--</div>
                 <div class="when" id="gauge-when">―</div>
@@ -439,9 +530,9 @@
             <div class="ticks"><span>T-MAX 7D</span><span id="gauge-pct">---%</span><span>T-0</span></div>
           </section>
 
-          <section class="hud" aria-label="締切一覧">
+          <section class="hud deadlines-panel" aria-label="締切一覧">
             <span class="brk"></span>
-            <div class="hud-head"><span class="idx">MOD-01</span><h2>DEADLINES</h2><span class="tag">~/modules/deadlines</span></div>
+            <div class="hud-head"><span class="idx">MOD-01</span><h2>DEADLINES</h2><span class="tag">~/deadlines</span></div>
             <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/deadlines</span>$ <span class="c">./deadlines --sort=asc --tz=JST</span></div>
             <ul class="deadline-list" id="deadline-list"></ul>
           </section>
@@ -467,23 +558,9 @@
           <div class="rot-page is-active" data-rot-page>
           <div class="grid">
 
-          <section class="hud game" aria-label="アークナイツ エンドフィールド">
-            <span class="brk"></span>
-            <div class="hud-head"><span class="idx">MOD-02</span><h2>エンドフィールド</h2><span class="tag">~/modules/endfield</span></div>
-            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/endfield</span>$ <span class="c">cat intel.txt</span> <span aria-hidden="true"># ARKNIGHTS: ENDFIELD</span></div>
-            <span class="ver soon">11/25 新バージョン</span>
-            <ul>
-              <li>新バージョン<b>「キノコ菌グ！？君との大冒険！」</b>が<b>11/25（水）</b>配信。新オペレーター「ケイ」登場、ログインで「ミミノ」無料配布</li>
-              <li>メンテナンス <span class="dl">11/25 07:00〜13:00</span><small>（予定）</small></li>
-              <li>現バージョンの<b>ガイド報酬の受け取りは11/25 07:00まで</b>。まだの人はメンテ前に</li>
-              <li>次期Ver.2.0（ロドス・アイランド登場）も予告済み</li>
-            </ul>
-            <p class="src">出典：<a href="https://www.gamespress.com/en-US/The-Game-Awards-Nominee-Arknights-Endfield-Launches-Meeting-You-in-the" target="_blank" rel="noopener">GRYPHLINE発表（GamesPress）</a></p>
-          </section>
-
           <section class="hud game" aria-label="黒い砂漠">
             <span class="brk"></span>
-            <div class="hud-head"><span class="idx">MOD-03</span><h2>黒い砂漠</h2><span class="tag">~/modules/bdo</span></div>
+            <div class="hud-head"><span class="idx">MOD-02</span><h2>黒い砂漠</h2><span class="main-flag">MAIN</span><span class="tag">~/modules/bdo</span></div>
             <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/bdo</span>$ <span class="c">cat intel.txt coupons.txt</span> <span aria-hidden="true"># BLACK DESERT</span></div>
             <span class="ver">クーポン大量配布中</span>
             <ul>
@@ -504,6 +581,20 @@
               <li><small>入力場所：ゲーム内 [メニュー(ESC) − 支援センター(F11) − クーポン使用]、報酬はメール(B)へ</small></li>
             </ul>
             <p class="src">出典：<a href="https://www.jp.playblackdesert.com/ja-JP/News/Detail?boardNo=7211" target="_blank" rel="noopener">公式「現在使えるクーポンまとめ」（11/23 18:00更新）</a></p>
+          </section>
+
+          <section class="hud game" aria-label="アークナイツ エンドフィールド">
+            <span class="brk"></span>
+            <div class="hud-head"><span class="idx">MOD-03</span><h2>エンドフィールド</h2><span class="tag">~/modules/endfield</span></div>
+            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/endfield</span>$ <span class="c">cat intel.txt</span> <span aria-hidden="true"># ARKNIGHTS: ENDFIELD</span></div>
+            <span class="ver soon">11/25 新バージョン</span>
+            <ul>
+              <li>新バージョン<b>「キノコ菌グ！？君との大冒険！」</b>が<b>11/25（水）</b>配信。新オペレーター「ケイ」登場、ログインで「ミミノ」無料配布</li>
+              <li>メンテナンス <span class="dl">11/25 07:00〜13:00</span><small>（予定）</small></li>
+              <li>現バージョンの<b>ガイド報酬の受け取りは11/25 07:00まで</b>。まだの人はメンテ前に</li>
+              <li>次期Ver.2.0（ロドス・アイランド登場）も予告済み</li>
+            </ul>
+            <p class="src">出典：<a href="https://www.gamespress.com/en-US/The-Game-Awards-Nominee-Arknights-Endfield-Launches-Meeting-You-in-the" target="_blank" rel="noopener">GRYPHLINE発表（GamesPress）</a></p>
           </section>
           </div>
           </div>
@@ -604,12 +695,12 @@
           { t: D("2026-11-25T07:00:00"+JST), label:"エンドフィールド メンテ開始", sub:"ガイド報酬の受け取りもここまで", gauge:true },
           { t: D("2026-11-25T07:00:00"+JST), label:"AION2 ルドラ討伐イベント終了", sub:"11/25 定期メンテナンス前まで" },
           { t: D("2026-11-25T13:00:00"+JST), label:"エンドフィールド メンテ終了予定", sub:"新バージョン「キノコ菌グ！？君との大冒険！」開始" },
-          { t: D("2026-11-26T23:59:00"+JST), label:"黒い砂漠 ハイデル宴会クーポン2種", sub:"BEYONDTHEJOURNEY / TYALLADVENTURERS" },
+          { t: D("2026-11-26T23:59:00"+JST), label:"黒い砂漠 ハイデル宴会クーポン2種", sub:"BEYONDTHEJOURNEY / TYALLADVENTURERS", game:"bdo" },
           { t: D("2026-11-30T04:59:00"+JST), label:"ゼンゼロ「オバケ屋敷」終了", sub:"イベント報酬の取り忘れ注意" },
           { t: D("2026-12-01T15:59:00"+JST), label:"ゼンゼロ 第2期変調 終了", sub:"セヴェリアン／ノーマ復刻" },
           { t: D("2026-12-02T07:00:00"+JST), label:"ゼンゼロ Ver.3.3 終了", sub:"次はVer.3.4" },
-          { t: D("2026-12-03T09:00:00"+JST), label:"黒い砂漠 Master Classクーポン2種", sub:"12/3 定期メンテナンス前まで" },
-          { t: D("2026-12-10T09:00:00"+JST), label:"黒い砂漠 クーポン4種 終了", sub:"JapanBDMCWinner など（12/10 メンテ前）" },
+          { t: D("2026-12-03T09:00:00"+JST), label:"黒い砂漠 Master Classクーポン2種", sub:"12/3 定期メンテナンス前まで", game:"bdo" },
+          { t: D("2026-12-10T09:00:00"+JST), label:"黒い砂漠 クーポン4種 終了", sub:"JapanBDMCWinner など（12/10 メンテ前）", game:"bdo" },
           { t: D("2026-12-16T09:00:00"+JST), label:"AION2 アビスポイントブースト終了", sub:"12/16 定期メンテナンス前まで" }
         ];
 
@@ -645,19 +736,27 @@
         var listEl = document.getElementById("deadline-list");
         function renderList(){
           var now = new Date();
+          var keepScroll = listEl.scrollTop;
           listEl.innerHTML = "";
           deadlines.forEach(function(item){
             var li = document.createElement("li");
             var ms = item.t - now;
             if (ms <= 0) li.className = "done";
             else if (ms < 48*3600*1000) li.className = "hot";
+            if (item.game === "bdo") li.classList.add("is-main");
             var d = document.createElement("span"); d.className = "d"; d.textContent = fmtDate(item.t);
-            var w = document.createElement("span"); w.className = "what"; w.textContent = item.label;
+            var w = document.createElement("span"); w.className = "what";
+            if (item.game === "bdo"){
+              var mt = document.createElement("span"); mt.className = "main-tag"; mt.textContent = "MAIN";
+              w.appendChild(mt);
+            }
+            w.appendChild(document.createTextNode(item.label));
             var sm = document.createElement("small"); sm.textContent = item.sub; w.appendChild(sm);
             var l = document.createElement("span"); l.className = "left"; l.textContent = remainText(ms);
             li.appendChild(d); li.appendChild(w); li.appendChild(l);
             listEl.appendChild(li);
           });
+          listEl.scrollTop = keepScroll;
         }
 
         /* ===== 時計＋ゲージ ===== */
@@ -676,13 +775,22 @@
           for (var i=0;i<deadlines.length;i++){ if (deadlines[i].t > now) return deadlines[i]; }
           return null;
         }
+        /* ゲージはメインゲーム（黒い砂漠）の次の締切を数える */
+        function nextMainDeadline(now){
+          for (var i=0;i<deadlines.length;i++){
+            if (deadlines[i].game === "bdo" && deadlines[i].t > now) return deadlines[i];
+          }
+          return nextDeadline(now);
+        }
         function tick(){
           var now = new Date();
           var j = toJST(now);
           clockEl.textContent = ("0"+j.getUTCHours()).slice(-2)+":"+("0"+j.getUTCMinutes()).slice(-2)+":"+("0"+j.getUTCSeconds()).slice(-2);
           dateEl.textContent = j.getUTCFullYear()+"."+("0"+(j.getUTCMonth()+1)).slice(-2)+"."+("0"+j.getUTCDate()).slice(-2)+" ("+WD[j.getUTCDay()]+") JST";
           if (logClock) logClock.textContent = "OK — " + clockEl.textContent + " JST";
-          var nx = nextDeadline(now);
+          var nxAll = nextDeadline(now);
+          if (logNext && nxAll) logNext.textContent = fmtDate(nxAll.t) + " " + nxAll.label + "（" + remainText(nxAll.t - now) + "）";
+          var nx = nextMainDeadline(now);
           if (nx){
             var ms = nx.t - now;
             var frac = Math.max(0, Math.min(1, ms / WINDOW));
@@ -691,7 +799,6 @@
             gCount.textContent = hms(ms);
             gWhen.textContent = fmtDate(nx.t) + " まで";
             gPct.textContent = Math.round(frac*100) + "% LEFT";
-            if (logNext) logNext.textContent = fmtDate(nx.t) + " " + nx.label + "（" + remainText(ms) + "）";
           } else {
             gTarget.textContent = "全締切を通過";
             gCount.textContent = "--:--:--";
@@ -703,6 +810,46 @@
         renderList(); tick();
         setInterval(tick, 1000);
         setInterval(renderList, 60000);
+
+        /* ===== 締切リストの自動スクロール（全10件が順番に見えるように） ===== */
+        (function(){
+          if (!listEl) return;
+          if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+          var STEP_MS = 50;          /* 1pxずつ進める間隔：ゆっくり */
+          var HOLD_TOP = 2600;       /* 先頭で止まる時間 */
+          var HOLD_BOTTOM = 3600;    /* 末尾で止まる時間 */
+          var dir = 1;
+          var holdUntil = Date.now() + HOLD_TOP;
+          var userHoldUntil = 0;
+          var last = 0;
+          function frame(ts){
+            requestAnimationFrame(frame);
+            if (document.hidden) return;
+            if (ts - last < STEP_MS) return;
+            last = ts;
+            var nowMs = Date.now();
+            if (nowMs < userHoldUntil || nowMs < holdUntil) return;
+            if (listEl.scrollHeight - listEl.clientHeight < 4) return;
+            if (dir > 0){
+              listEl.scrollTop += 1;
+              if (listEl.scrollTop + listEl.clientHeight >= listEl.scrollHeight - 1){
+                dir = -1; holdUntil = nowMs + HOLD_BOTTOM;
+              }
+            } else {
+              listEl.scrollTop -= 4;
+              if (listEl.scrollTop <= 0){
+                listEl.scrollTop = 0;
+                dir = 1; holdUntil = nowMs + HOLD_TOP;
+              }
+            }
+          }
+          requestAnimationFrame(frame);
+          /* 手で触っている間は自動スクロールを止める */
+          ["wheel", "touchstart", "pointerdown"].forEach(function(ev){
+            listEl.addEventListener(ev, function(){ userHoldUntil = Date.now() + 6000; }, { passive:true });
+          });
+          listEl.addEventListener("mouseenter", function(){ userHoldUntil = Date.now() + 4000; });
+        })();
 
         /* ===== クーポンコピー ===== */
         document.querySelectorAll(".copybtn").forEach(function(btn){
@@ -837,6 +984,6 @@
         });
       })();
     </script>
-  <script>setTimeout(function(){location.reload();},30*60*1000);</script>
+  <script>setInterval(function(){location.reload();}, 30*60*1000);</script>
 </body>
 </html>
