@@ -413,6 +413,37 @@
       .gauge-center .label{ color:var(--green); }
       .gauge-center .target{ max-width:88%; }
       .gauge-center .count{ line-height:1.15; }
+      /* メンテナンス行の目印（締切リスト用） */
+      .maint-tag{
+        display:inline-block; vertical-align:1px; margin-right:6px;
+        font-family:"Share Tech Mono",monospace; font-size:9.5px; font-weight:700; letter-spacing:.06em;
+        color:#241300; background:var(--amber); padding:1px 5px; border-radius:1px;
+      }
+      .deadline-list li.is-maint .what{ color:#fff; }
+      /* ===== 質問窓 ASK パネル ===== */
+      .grid.single{ grid-template-columns:1fr; }
+      .ask-panel{ cursor:pointer; }
+      .ask-panel:hover{ border-color:rgba(77,216,255,.62); }
+      .ask-cta{
+        flex:1 1 auto; display:flex; flex-direction:column; justify-content:center; gap:16px;
+        text-decoration:none; color:inherit; padding:6px 2px 2px;
+      }
+      .ask-cta:focus-visible{ outline:2px solid var(--cyan); outline-offset:4px; }
+      .ask-prompt{
+        display:block; background:var(--term-body);
+        border:1px solid rgba(87,255,154,.35);
+        padding:20px 18px; color:#fff;
+        font-size:clamp(20px, 2.6vw, 32px); letter-spacing:.03em; line-height:1.4;
+      }
+      .ask-desc{ display:block; font-size:14px; line-height:1.75; color:var(--ink); max-width:640px; }
+      .ask-examples{ display:block; font-size:12.5px; line-height:1.7; color:var(--ink-dim); }
+      .ask-open{
+        align-self:flex-start; display:inline-block;
+        border:1px solid var(--panel-edge); background:rgba(77,216,255,.08);
+        padding:10px 18px; font-size:16px; font-weight:700; letter-spacing:.08em; color:var(--cyan-pale);
+      }
+      .ask-panel:hover .ask-open{ background:rgba(77,216,255,.18); color:#fff; }
+      .gauge-note{ margin-top:8px; font-size:11px; color:var(--ink-faint); letter-spacing:.04em; text-align:center; }
       /* 黒い砂漠パネルのMAINバッジ */
       .main-flag{
         display:inline-block; margin-left:8px; vertical-align:1px;
@@ -497,9 +528,9 @@
 <span class="t">[load]</span> snapshot ............. <span class="jp">2026年11月23日（月）時点の公式発表ベース</span>
 <span class="t">[load]</span> modules .............. <span class="ok">6 TITLES LOADED</span> <span class="jp">[黒い砂漠（メイン） / エンドフィールド / ゼンゼロ / 鳴潮 / AION2 / アーキエイジクロニクル]</span>
 <span class="t">[load]</span> deadlines ............ <span class="ok">10 ENTRIES</span> <span class="jp">締切順にソート済み</span>
-<span class="t">[load]</span> rotation ............. <span class="ok">AUTO</span> <span class="jp">モジュール 3ページ / 25秒間隔（締切・カウントダウンは固定表示）</span>
+<span class="t">[load]</span> rotation ............. <span class="ok">AUTO</span> <span class="jp">モジュール 4ページ / 25秒間隔（締切・カウントダウンは固定表示）</span>
 <span class="t">[load]</span> coupons .............. <span class="ok">8 CODES</span> <span class="jp">黒い砂漠（コピーボタン有効）</span>
-<span class="t">[next]</span> <span class="jp">次の締切</span> ............. <span class="wrn" id="log-next">―</span>
+<span class="t">[next]</span> <span class="jp">次回メンテ</span> ............. <span class="wrn" id="log-next">―</span>
 <span class="t">[note]</span> <span class="jp">このログはこのページ自身の表示用です。PC本体の状態（CPU/GPU等）は取得していません。</span>
 <span class="t">[ ok ]</span> <span class="ok">ALL MODULES READY</span> — awaiting input<span class="cursor green" aria-hidden="true"></span></pre>
         <p class="log-note mono">// local boot log — generated from this page's own data only</p>
@@ -508,10 +539,10 @@
       <div class="layout">
         <!-- ===== 左カラム ===== -->
         <div class="leftcol">
-          <section class="hud gauge-box" aria-label="メインゲーム黒い砂漠の次の締切までのカウントダウン">
+          <section class="hud gauge-box" aria-label="次回メンテナンスまでのカウントダウン">
             <span class="brk"></span>
-            <div class="hud-head"><span class="idx">MOD-00</span><h2>MAIN // 黒い砂漠</h2><span class="tag">~/main/bdo</span></div>
-            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/gauge</span>$ <span class="c">./countdown --target=main --game=bdo</span></div>
+            <div class="hud-head"><span class="idx">MOD-00</span><h2>NEXT MAINTENANCE</h2><span class="tag">~/maintenance</span></div>
+            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/gauge</span>$ <span class="c">./countdown --target=bdo-weekly-maintenance</span></div>
             <div class="gauge-wrap">
               <svg width="230" height="230" viewBox="0 0 230 230" aria-hidden="true">
                 <circle cx="115" cy="115" r="100" fill="none" stroke="rgba(77,216,255,.12)" stroke-width="10"/>
@@ -521,13 +552,14 @@
                         style="filter:drop-shadow(0 0 6px rgba(77,216,255,.7))"/>
               </svg>
               <div class="gauge-center">
-                <div class="label">MAIN GAME — 黒い砂漠</div>
-                <div class="target" id="gauge-target">―</div>
+                <div class="label" id="gauge-label">MAIN // 黒い砂漠</div>
+                <div class="target" id="gauge-target">黒い砂漠 定期メンテ開始</div>
                 <div class="count" id="gauge-count">--:--:--</div>
                 <div class="when" id="gauge-when">―</div>
               </div>
             </div>
             <div class="ticks"><span>T-MAX 7D</span><span id="gauge-pct">---%</span><span>T-0</span></div>
+            <div class="gauge-note mono">毎週木曜 08:00〜12:00（JST）で自動計算</div>
           </section>
 
           <section class="hud deadlines-panel" aria-label="締切一覧">
@@ -663,6 +695,22 @@
           </div>
           </div>
 
+          <div class="rot-page" data-rot-page>
+          <div class="grid single">
+          <section class="hud game ask-panel" aria-label="質問窓 ASK">
+            <span class="brk"></span>
+            <div class="hud-head"><span class="idx">MOD-08</span><h2>ASK // 質問コンソール</h2><span class="tag">~/ask</span></div>
+            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/ask</span>$ <span class="c">./ask --open=muse</span></div>
+            <a class="ask-cta" href="https://muse.ai" target="_blank" rel="noopener" aria-label="Museを開いて質問する">
+              <span class="ask-prompt mono">&gt; 質問はここをクリック<span class="cursor green" aria-hidden="true"></span></span>
+              <span class="ask-desc">クリックするとブラウザで Muse が開きます。開いた先で、そのまま質問できます。</span>
+              <span class="ask-examples mono">例）次のメンテはいつ？ ／ クーポンの期限は？ ／ 終わりそうなイベントある？</span>
+              <span class="ask-open disp">▶ Muse を開く — muse.ai</span>
+            </a>
+          </section>
+          </div>
+          </div>
+
           </div>
         </div>
       </div>
@@ -670,13 +718,15 @@
       <!-- ===== 使い方 ===== -->
       <section class="hud howto" aria-label="PCでの使い方">
         <span class="brk"></span>
-        <div class="hud-head"><span class="idx">MOD-08</span><h2>SETUP</h2><span class="tag">~/setup — PCでの使い方</span></div>
+        <div class="hud-head"><span class="idx">MOD-09</span><h2>SETUP</h2><span class="tag">~/setup — PCでの使い方</span></div>
         <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/setup</span>$ <span class="c">cat README.txt</span> <span aria-hidden="true"># PCでの使い方</span></div>
         <ol>
           <li><b>ファイルとして置く</b>：上の「⬇ PC用ファイルを保存」ボタンで <span class="mono">game-hud.html</span> をダウンロードして、デスクトップなど好きな場所へ。ダブルクリックでブラウザが開きます（ネット接続時のみフォント表示が完全になります）。</li>
           <li><b>Wallpaper EngineのWeb壁紙にする</b>：Wallpaper Engineで「壁紙を作成／編集」→ Web壁紙を選び、保存した <span class="mono">game-hud.html</span> ファイルを指定すると、デスクトップ背景として常時表示できます。時計とカウントダウンは開いたまま自動で進みます。</li>
           <li><b>フルスクリーンで眺める</b>：「⛶ フルスクリーン」ボタンで全画面表示。サブモニターに置いておくのもおすすめです。</li>
-          <li><b>モジュールの自動切替</b>：ゲーム情報は3ページに分かれ、25秒ごとにフェードで自動で切り替わります（締切リストとカウントダウンは常に表示）。モジュール上部の <span class="mono">PAGE 01 / 03</span> 表示と ◀ ▶・数字ボタンで手動でも送れます。❚❚ で自動切替を止められます。</li>
+          <li><b>モジュールの自動切替</b>：ゲーム情報は4ページに分かれ、25秒ごとにフェードで自動で切り替わります（締切リストとカウントダウンは常に表示）。モジュール上部の <span class="mono">PAGE 01 / 04</span> 表示と ◀ ▶・数字ボタンで手動でも送れます。❚❚ で自動切替を止められます。</li>
+          <li><b>カウントダウンについて</b>：左上のゲージは<b>黒い砂漠の定期メンテナンス（毎週木曜 08:00〜12:00 JST）</b>までの残り時間を、日付から自動で計算して表示します。メンテ中は「メンテ中」表示になり、終了予定までのカウントに切り替わります。メンテがない週や時間が変わる週は、公式のお知らせが優先です。</li>
+          <li><b>質問窓（ASK）</b>：4ページ目のパネルです。壁紙の中では文字入力ができないため、パネルをクリックするとブラウザで <span class="mono">muse.ai</span> が開きます。質問は開いた先でどうぞ。</li>
         </ol>
         <p>※ 中身は2026年11月23日時点の情報で固定されています。クーポン期限やイベント日程は公式のお知らせでも確認してください。</p>
       </section>
@@ -692,15 +742,15 @@
 
         /* ===== 締切データ（2026-11-23時点） ===== */
         var deadlines = [
-          { t: D("2026-11-25T07:00:00"+JST), label:"エンドフィールド メンテ開始", sub:"ガイド報酬の受け取りもここまで", gauge:true },
+          { t: D("2026-11-25T07:00:00"+JST), label:"エンドフィールド メンテ開始", sub:"ガイド報酬の受け取りもここまで", maint:"start" },
           { t: D("2026-11-25T07:00:00"+JST), label:"AION2 ルドラ討伐イベント終了", sub:"11/25 定期メンテナンス前まで" },
-          { t: D("2026-11-25T13:00:00"+JST), label:"エンドフィールド メンテ終了予定", sub:"新バージョン「キノコ菌グ！？君との大冒険！」開始" },
+          { t: D("2026-11-25T13:00:00"+JST), label:"エンドフィールド メンテ終了予定", sub:"新バージョン「キノコ菌グ！？君との大冒険！」開始", maint:"end" },
           { t: D("2026-11-26T23:59:00"+JST), label:"黒い砂漠 ハイデル宴会クーポン2種", sub:"BEYONDTHEJOURNEY / TYALLADVENTURERS", game:"bdo" },
           { t: D("2026-11-30T04:59:00"+JST), label:"ゼンゼロ「オバケ屋敷」終了", sub:"イベント報酬の取り忘れ注意" },
           { t: D("2026-12-01T15:59:00"+JST), label:"ゼンゼロ 第2期変調 終了", sub:"セヴェリアン／ノーマ復刻" },
           { t: D("2026-12-02T07:00:00"+JST), label:"ゼンゼロ Ver.3.3 終了", sub:"次はVer.3.4" },
-          { t: D("2026-12-03T09:00:00"+JST), label:"黒い砂漠 Master Classクーポン2種", sub:"12/3 定期メンテナンス前まで", game:"bdo" },
-          { t: D("2026-12-10T09:00:00"+JST), label:"黒い砂漠 クーポン4種 終了", sub:"JapanBDMCWinner など（12/10 メンテ前）", game:"bdo" },
+          { t: D("2026-12-03T08:00:00"+JST), label:"黒い砂漠 Master Classクーポン2種", sub:"12/3 定期メンテナンス前まで", game:"bdo", maintProxy:true },
+          { t: D("2026-12-10T08:00:00"+JST), label:"黒い砂漠 クーポン4種 終了", sub:"JapanBDMCWinner など（12/10 メンテ前）", game:"bdo", maintProxy:true },
           { t: D("2026-12-16T09:00:00"+JST), label:"AION2 アビスポイントブースト終了", sub:"12/16 定期メンテナンス前まで" }
         ];
 
@@ -744,8 +794,13 @@
             if (ms <= 0) li.className = "done";
             else if (ms < 48*3600*1000) li.className = "hot";
             if (item.game === "bdo") li.classList.add("is-main");
+            if (item.maint) li.classList.add("is-maint");
             var d = document.createElement("span"); d.className = "d"; d.textContent = fmtDate(item.t);
             var w = document.createElement("span"); w.className = "what";
+            if (item.maint){
+              var mtag = document.createElement("span"); mtag.className = "maint-tag"; mtag.textContent = "メンテ";
+              w.appendChild(mtag);
+            }
             if (item.game === "bdo"){
               var mt = document.createElement("span"); mt.className = "main-tag"; mt.textContent = "MAIN";
               w.appendChild(mt);
@@ -769,18 +824,34 @@
         var gPct = document.getElementById("gauge-pct");
         var logClock = document.getElementById("log-clock");
         var logNext = document.getElementById("log-next");
+        var gLabel = document.getElementById("gauge-label");
         var CIRC = 628.3, WINDOW = 7*24*3600*1000;
 
         function nextDeadline(now){
           for (var i=0;i<deadlines.length;i++){ if (deadlines[i].t > now) return deadlines[i]; }
           return null;
         }
-        /* ゲージはメインゲーム（黒い砂漠）の次の締切を数える */
-        function nextMainDeadline(now){
-          for (var i=0;i<deadlines.length;i++){
-            if (deadlines[i].game === "bdo" && deadlines[i].t > now) return deadlines[i];
-          }
-          return nextDeadline(now);
+        /* ゲージは「黒い砂漠の定期メンテナンス」を数える：
+           毎週木曜 08:00〜12:00（JST）として日付から自動計算するので、
+           スナップショットの日付を過ぎても毎週次のメンテを数え続ける。
+           メンテ中は終了（12:00）までのカウントに切り替わる。
+           ※メンテがない週・時間変更の週は公式告知とずれる場合がある */
+        var BDO_WDAY = 4; /* 木曜 */
+        var BDO_START_H = 8, BDO_END_H = 12;
+        function bdoMaintWindow(now){
+          var j = toJST(now);
+          var delta = (BDO_WDAY - j.getUTCDay() + 7) % 7;
+          var startMs = Date.UTC(j.getUTCFullYear(), j.getUTCMonth(), j.getUTCDate() + delta, BDO_START_H, 0, 0) - 9*3600*1000;
+          var endMs = startMs + (BDO_END_H - BDO_START_H) * 3600 * 1000;
+          var nowMs = now.getTime();
+          if (nowMs >= endMs){ startMs += 7*24*3600*1000; endMs += 7*24*3600*1000; }
+          var during = nowMs >= startMs && nowMs < endMs;
+          return {
+            start: new Date(startMs),
+            end: new Date(endMs),
+            during: during,
+            target: new Date(during ? endMs : startMs)
+          };
         }
         function tick(){
           var now = new Date();
@@ -788,24 +859,18 @@
           clockEl.textContent = ("0"+j.getUTCHours()).slice(-2)+":"+("0"+j.getUTCMinutes()).slice(-2)+":"+("0"+j.getUTCSeconds()).slice(-2);
           dateEl.textContent = j.getUTCFullYear()+"."+("0"+(j.getUTCMonth()+1)).slice(-2)+"."+("0"+j.getUTCDate()).slice(-2)+" ("+WD[j.getUTCDay()]+") JST";
           if (logClock) logClock.textContent = "OK — " + clockEl.textContent + " JST";
-          var nxAll = nextDeadline(now);
-          if (logNext && nxAll) logNext.textContent = fmtDate(nxAll.t) + " " + nxAll.label + "（" + remainText(nxAll.t - now) + "）";
-          var nx = nextMainDeadline(now);
-          if (nx){
-            var ms = nx.t - now;
-            var frac = Math.max(0, Math.min(1, ms / WINDOW));
-            arc.style.strokeDashoffset = String(CIRC * (1 - frac));
-            gTarget.textContent = nx.label;
-            gCount.textContent = hms(ms);
-            gWhen.textContent = fmtDate(nx.t) + " まで";
-            gPct.textContent = Math.round(frac*100) + "% LEFT";
-          } else {
-            gTarget.textContent = "全締切を通過";
-            gCount.textContent = "--:--:--";
-            gWhen.textContent = "次の更新をお待ちください";
-            arc.style.strokeDashoffset = String(CIRC);
-            gPct.textContent = "0% LEFT";
-          }
+          var mw = bdoMaintWindow(now);
+          var targetDate = mw.target;
+          if (logNext) logNext.textContent = fmtDate(mw.start) + "〜12:00 黒い砂漠 定期メンテ" + (mw.during ? "（メンテ中・終了まで " + remainText(targetDate - now) + "）" : "（開始まで " + remainText(targetDate - now) + "）");
+          var ms = targetDate - now;
+          var span = mw.during ? (mw.end - mw.start) : WINDOW;
+          var frac = Math.max(0, Math.min(1, ms / span));
+          arc.style.strokeDashoffset = String(CIRC * (1 - frac));
+          if (gLabel) gLabel.textContent = mw.during ? "MAIN // 黒い砂漠 — メンテ中" : "MAIN // 黒い砂漠";
+          gTarget.textContent = mw.during ? "黒い砂漠 メンテ中" : "黒い砂漠 定期メンテ開始";
+          gCount.textContent = hms(ms);
+          gWhen.textContent = fmtDate(targetDate) + (mw.during ? " 終了予定まで" : " 開始まで");
+          gPct.textContent = Math.round(frac*100) + "% LEFT";
         }
         renderList(); tick();
         setInterval(tick, 1000);
