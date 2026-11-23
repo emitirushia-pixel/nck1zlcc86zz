@@ -250,6 +250,41 @@
       html[data-theme="cute"] .paw-field{ display:block; position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
       .paw-field svg{ position:absolute; display:block; }
       .gauge-paw{ display:none; width:24px; height:24px; margin-bottom:2px; }
+      /* ===== CUTE限定：歩く肉球の足あと＋黒猫のお散歩 ===== */
+      .paw-trail,.cat-walker{ display:none; }
+      html[data-theme="cute"] .paw-trail{
+        display:block; position:fixed; inset:0; z-index:3; pointer-events:none; overflow:hidden;
+      }
+      html[data-theme="cute"] .paw-trail svg{
+        position:absolute; display:block; width:30px; height:30px; opacity:0;
+        animation:pawStep 14s linear infinite;
+      }
+      @keyframes pawStep{
+        0%{ opacity:0; transform:scale(.7) rotate(var(--r,0deg)); }
+        5%{ opacity:.42; transform:scale(1) rotate(var(--r,0deg)); }
+        58%{ opacity:.42; transform:scale(1) rotate(var(--r,0deg)); }
+        74%,100%{ opacity:0; transform:scale(1) rotate(var(--r,0deg)); }
+      }
+      html[data-theme="cute"] .gauge-paw{ animation:pawBounce 2.6s ease-in-out infinite; }
+      @keyframes pawBounce{ 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-3px) } }
+      html[data-theme="cute"] .cat-walker{
+        display:block; position:fixed; left:0; bottom:2px; z-index:4; pointer-events:none;
+        width:148px; opacity:.88;
+        animation:catCross 78s linear infinite;
+        will-change:transform;
+      }
+      .cat-walker svg{ display:block; width:100%; height:auto; animation:catBob .55s ease-in-out infinite alternate; overflow:visible; }
+      @keyframes catCross{
+        0%,7%{ transform:translateX(-190px); }
+        27%{ transform:translateX(104vw); }
+        27.1%,100%{ transform:translateX(104vw); }
+      }
+      @keyframes catBob{ from{ transform:translateY(0); } to{ transform:translateY(-3px); } }
+      .cat-walker .cat-tail{ transform-box:fill-box; transform-origin:100% 90%; animation:tailSway 1.15s ease-in-out infinite alternate; }
+      @keyframes tailSway{ from{ transform:rotate(-7deg); } to{ transform:rotate(9deg); } }
+      .cat-walker .cat-leg{ transform-box:fill-box; transform-origin:50% 0%; animation:legSwing .55s ease-in-out infinite alternate; }
+      .cat-walker .cat-leg.leg-b{ animation-delay:-.28s; }
+      @keyframes legSwing{ from{ transform:rotate(13deg); } to{ transform:rotate(-13deg); } }
       *{ box-sizing:border-box; }
       html,body{ margin:0; padding:0; }
       html{ height:100%; }
@@ -658,6 +693,8 @@
       /* ===== モーション抑制 ===== */
       @media (prefers-reduced-motion: reduce){
         .cursor,.sys-dot{ animation:none; }
+        html[data-theme="cute"] .paw-trail,html[data-theme="cute"] .cat-walker{ display:none; }
+        html[data-theme="cute"] .gauge-paw{ animation:none; }
         .bg-spin-a,.bg-spin-b,.cm-spin,.rg-spin-a,.rg-spin-b,.rg-spin-c{ animation:none; }
         .rot-progress i.run{ transition:none; }
         .rot-page,.rot-page.is-active{ transition:none; }
@@ -672,6 +709,35 @@
       <svg viewBox="0 0 100 100" style="right:8%;top:74%;width:36px;transform:rotate(-12deg);opacity:.2"><g fill="#ff8fab"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
       <svg viewBox="0 0 100 100" style="left:44%;bottom:2.5%;width:40px;transform:rotate(8deg);opacity:.18"><g fill="#f6a8c1"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
       <svg viewBox="0 0 100 100" style="left:1.5%;bottom:6%;width:38px;transform:rotate(24deg);opacity:.2"><g fill="#f6a8c1"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
+    </div>
+    <div class="paw-trail" aria-hidden="true">
+      <svg viewBox="0 0 100 100" style="left:3.5%;bottom:14px;--r:72deg;animation-delay:0s"><g fill="#ef5f8b"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
+      <svg viewBox="0 0 100 100" style="left:6.8%;bottom:32px;--r:96deg;animation-delay:.85s"><g fill="#ef5f8b"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
+      <svg viewBox="0 0 100 100" style="left:10.1%;bottom:14px;--r:72deg;animation-delay:1.7s"><g fill="#ef5f8b"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
+      <svg viewBox="0 0 100 100" style="left:13.4%;bottom:32px;--r:96deg;animation-delay:2.55s"><g fill="#ef5f8b"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
+      <svg viewBox="0 0 100 100" style="left:16.7%;bottom:14px;--r:72deg;animation-delay:3.4s"><g fill="#ef5f8b"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
+      <svg viewBox="0 0 100 100" style="left:20%;bottom:32px;--r:96deg;animation-delay:4.25s"><g fill="#ef5f8b"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
+      <svg viewBox="0 0 100 100" style="left:23.3%;bottom:14px;--r:72deg;animation-delay:5.1s"><g fill="#ef5f8b"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
+      <svg viewBox="0 0 100 100" style="left:26.6%;bottom:32px;--r:96deg;animation-delay:5.95s"><g fill="#ef5f8b"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
+      <svg viewBox="0 0 100 100" style="left:29.9%;bottom:14px;--r:72deg;animation-delay:6.8s"><g fill="#ef5f8b"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
+      <svg viewBox="0 0 100 100" style="left:33.2%;bottom:32px;--r:96deg;animation-delay:7.65s"><g fill="#ef5f8b"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
+    </div>
+    <div class="cat-walker" aria-hidden="true">
+      <svg viewBox="0 0 220 122">
+        <path class="cat-tail" d="M42 66 C14 60 10 30 30 16" fill="none" stroke="#38222e" stroke-width="10" stroke-linecap="round"/>
+        <g fill="#38222e">
+          <ellipse cx="108" cy="64" rx="64" ry="27"/>
+          <circle cx="176" cy="40" r="23"/>
+          <polygon points="160,24 164,3 178,17"/>
+          <polygon points="180,18 194,4 197,25"/>
+          <g class="cat-leg"><rect x="58" y="82" width="11" height="30" rx="5.5"/></g>
+          <g class="cat-leg leg-b"><rect x="82" y="84" width="11" height="28" rx="5.5"/></g>
+          <g class="cat-leg leg-b"><rect x="128" y="84" width="11" height="28" rx="5.5"/></g>
+          <g class="cat-leg"><rect x="152" y="82" width="11" height="30" rx="5.5"/></g>
+        </g>
+        <circle cx="184" cy="37" r="2.6" fill="#ffeef4"/>
+        <ellipse cx="196" cy="47" rx="3.4" ry="2.4" fill="#ff8fab"/>
+      </svg>
     </div>
     <div class="bg-rings" aria-hidden="true"><svg viewBox="0 0 600 600"><g class="bg-spin-a"><circle cx="300" cy="300" r="292" fill="none" stroke="rgba(103,232,255,.15)" stroke-width="1" stroke-dasharray="4 14"/></g><g class="bg-spin-b"><circle cx="300" cy="300" r="240" fill="none" stroke="rgba(103,232,255,.09)" stroke-width="10" stroke-dasharray="64 28 14 28"/></g><circle cx="300" cy="300" r="182" fill="none" stroke="rgba(103,232,255,.07)" stroke-width="1"/><g class="bg-spin-a"><circle cx="300" cy="300" r="122" fill="none" stroke="rgba(103,232,255,.11)" stroke-width="1.5" stroke-dasharray="2 8"/></g></svg></div>
     <div class="wrap">
@@ -908,7 +974,7 @@
           <li><b>フルスクリーンで眺める</b>：「⛶ フルスクリーン」ボタンで全画面表示。サブモニターに置いておくのもおすすめです。</li>
           <li><b>モジュールの自動切替</b>：ゲーム情報は3ページに分かれ、25秒ごとにフェードで自動で切り替わります（締切リストとカウントダウンは常に表示）。モジュール上部の <span class="mono">PAGE 01 / 03</span> 表示と ◀ ▶・丸いページボタンで手動でも送れます。❚❚ で自動切替を止められます。</li>
           <li><b>カウントダウンについて</b>：左上のゲージは<b>黒い砂漠の定期メンテナンス（毎週木曜 08:00〜12:00 JST）</b>までの残り時間を、日付から自動で計算して表示します。メンテ中は「メンテ中」表示になり、終了予定までのカウントに切り替わります。メンテがない週や時間が変わる週は、公式のお知らせが優先です。</li>
-          <li><b>テーマ切替</b>：上部の <span class="mono">THEME [JARVIS / CYBERPUNK / 管制 / CUTE]</span> ボタンで見た目をその場で切り替えられます。CUTEはパステルピンク×クリームに肉球モチーフの可愛いテーマです。選んだテーマはこのブラウザに保存され、次回も同じテーマで開きます（壁紙でもクリックで切り替え可能です）。</li>
+          <li><b>テーマ切替</b>：上部の <span class="mono">THEME [JARVIS / CYBERPUNK / 管制 / CUTE]</span> ボタンで見た目をその場で切り替えられます。CUTEはパステルピンク×クリームに肉球モチーフの可愛いテーマです。CUTEのときだけ、画面の下に肉球の足あとがペタペタと順番に現れては消えたり、たまに黒猫のシルエットがゆっくり歩いて横切ったりします（他のテーマでは出ません）。選んだテーマはこのブラウザに保存され、次回も同じテーマで開きます（壁紙でもクリックで切り替え可能です）。</li>
         </ol>
         <p>※ 中身は2026年11月23日時点の情報で固定されています。クーポン期限やイベント日程は公式のお知らせでも確認してください。</p>
       </section>
