@@ -5,241 +5,320 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="dark" />
+    <meta http-equiv="refresh" content="1800" />
     <link rel="icon" href="data:," />
     <title>ゲーム情報ダッシュボード PC版</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
     <style>
       :root{
-        --bg:#020507;
-        --bg2:#040a10;
-        --panel:rgba(4,13,20,.92);
-        --panel-edge:rgba(77,216,255,.38);
-        --term-bar:#081826;
-        --term-body:#02080d;
-        --cyan:#4dd8ff;
+        --bg:#010409;
+        --bg2:#020a16;
+        --panel:rgba(5,20,34,.86);
+        --edge:rgba(103,232,255,.34);
+        --edge-dim:rgba(103,232,255,.18);
+        --cyan:#53d9ff;
+        --cyan-hi:#a5ecff;
         --cyan-dim:#1d7ea6;
-        --cyan-pale:#aee9ff;
+        --teal:#2ee6a8;
         --amber:#ffb648;
         --red:#ff5d73;
         --green:#3dffc8;
         --term-green:#57ff9a;
-        --ink:#e2f5ff;
-        --ink-dim:#93bccd;
-        --ink-faint:#64879a;
+        --ink:#e8f8ff;
+        --ink-dim:#a5cbdd;
+        --ink-faint:#6f97ab;
       }
       *{ box-sizing:border-box; }
       html,body{ margin:0; padding:0; }
+      html{ height:100%; }
       body{
         background:
-          radial-gradient(1100px 600px at 85% -10%, rgba(29,126,166,.13), transparent 60%),
-          radial-gradient(900px 500px at -10% 110%, rgba(29,126,166,.08), transparent 60%),
-          var(--bg);
+          radial-gradient(1000px 620px at 78% -12%, rgba(53,160,220,.16), transparent 62%),
+          radial-gradient(820px 560px at 8% 108%, rgba(46,230,168,.05), transparent 60%),
+          radial-gradient(700px 700px at 50% 46%, rgba(29,126,166,.07), transparent 65%),
+          linear-gradient(180deg, var(--bg2), var(--bg));
         color:var(--ink);
         font-family:"Noto Sans JP", system-ui, sans-serif;
-        min-height:100vh;
+        min-height:100vh; min-height:100dvh;
         overflow-x:hidden;
       }
-      /* 細いグリッド＋走査線の背景レイヤー */
+      /* 細密グリッド */
       body::before{
         content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
         background:
-          repeating-linear-gradient(0deg, rgba(77,216,255,.035) 0 1px, transparent 1px 56px),
-          repeating-linear-gradient(90deg, rgba(77,216,255,.035) 0 1px, transparent 1px 56px);
+          repeating-linear-gradient(0deg, rgba(103,232,255,.030) 0 1px, transparent 1px 44px),
+          repeating-linear-gradient(90deg, rgba(103,232,255,.030) 0 1px, transparent 1px 44px),
+          repeating-linear-gradient(0deg, rgba(103,232,255,.016) 0 1px, transparent 1px 11px),
+          repeating-linear-gradient(90deg, rgba(103,232,255,.016) 0 1px, transparent 1px 11px);
       }
-      /* CRT走査線＋周辺減光（画面の質感のみ・情報は持たない） */
+      /* 走査線＋周辺減光（質感のみ） */
       body::after{
         content:""; position:fixed; inset:0; pointer-events:none; z-index:60;
         background:
-          radial-gradient(120% 90% at 50% 40%, transparent 62%, rgba(0,0,0,.38) 100%),
-          repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px),
-          repeating-linear-gradient(0deg, rgba(160,235,255,.016) 0 1px, transparent 1px 6px);
+          radial-gradient(125% 95% at 50% 42%, transparent 60%, rgba(0,0,0,.42) 100%),
+          repeating-linear-gradient(0deg, rgba(0,0,0,.20) 0 1px, transparent 1px 3px),
+          repeating-linear-gradient(0deg, rgba(165,236,255,.014) 0 1px, transparent 1px 6px);
       }
-      .mono{ font-family:"Share Tech Mono", monospace; }
-      .disp{ font-family:"Rajdhani","Noto Sans JP",sans-serif; }
+      /* 背景の大リング群（装飾のみ・ゆっくり回転） */
+      .bg-rings{
+        position:fixed; z-index:0; pointer-events:none;
+        width:135vmin; height:135vmin; right:-34vmin; top:50%;
+        transform:translateY(-50%); opacity:.75;
+      }
+      .bg-rings svg{ width:100%; height:100%; display:block; }
+      .bg-spin-a,.bg-spin-b,.cm-spin,.rg-spin-a,.rg-spin-b,.rg-spin-c{
+        transform-box:fill-box; transform-origin:center;
+      }
+      .bg-spin-a{ animation:spin 140s linear infinite; }
+      .bg-spin-b{ animation:spin-rev 190s linear infinite; }
+      @keyframes spin{ to{ transform:rotate(360deg); } }
+      @keyframes spin-rev{ to{ transform:rotate(-360deg); } }
 
-      .wrap{ position:relative; z-index:1; max-width:1560px; margin:0 auto; padding:18px 22px 30px; }
+      .mono{ font-family:"Share Tech Mono", monospace; }
+      .disp{ font-family:"Orbitron","Rajdhani","Noto Sans JP",sans-serif; }
+
+      .wrap{
+        position:relative; z-index:1;
+        max-width:none; width:100%;
+        height:100vh; height:100dvh; min-height:100vh; min-height:100dvh;
+        /* 下端はWindowsタスクバーに被さる領域：パネルが沈まないよう余白を確保 */
+        padding:12px 14px 72px;
+        display:flex; flex-direction:column; overflow:hidden;
+      }
 
       /* ===== 上部ステータスバー ===== */
       .topbar{
-        display:flex; align-items:center; gap:18px; flex-wrap:wrap;
-        border:1px solid var(--panel-edge);
-        background:linear-gradient(180deg, #071626, #040c15);
-        padding:12px 18px;
-        box-shadow:0 0 0 1px rgba(0,0,0,.6), 0 0 24px rgba(77,216,255,.07), inset 0 1px 0 rgba(174,233,255,.08);
+        flex:none;
+        display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+        border:1px solid var(--edge);
+        background:linear-gradient(180deg, rgba(14,44,68,.72), rgba(4,16,28,.88));
+        padding:10px 18px;
+        box-shadow:0 0 24px rgba(83,217,255,.08), inset 0 1px 0 rgba(165,236,255,.10), inset 0 0 30px rgba(83,217,255,.04);
       }
-      /* ターミナルウィンドウの信号ドット */
-      .win-dots{ display:inline-flex; gap:7px; flex:none; align-items:center; }
-      .win-dots i{ width:11px; height:11px; border-radius:50%; display:block; }
-      .win-dots i:nth-child(1){ background:#ff5d73; box-shadow:0 0 6px rgba(255,93,115,.6); }
-      .win-dots i:nth-child(2){ background:#ffb648; box-shadow:0 0 6px rgba(255,182,72,.6); }
-      .win-dots i:nth-child(3){ background:#3dffc8; box-shadow:0 0 6px rgba(61,255,200,.6); }
-      /* 点滅ブロックカーソル */
+      /* リアクター風コアマーク */
+      .core-mark{ width:42px; height:42px; flex:none; filter:drop-shadow(0 0 7px rgba(103,232,255,.55)); }
+      .core-mark svg{ width:100%; height:100%; display:block; }
+      .cm-spin{ animation:spin 16s linear infinite; }
       .cursor{
         display:inline-block; width:.62em; height:1em; margin-left:.18em;
         background:var(--cyan); vertical-align:-.12em;
-        box-shadow:0 0 10px rgba(77,216,255,.8);
+        box-shadow:0 0 10px rgba(83,217,255,.85);
         animation:blink 1.06s steps(1) infinite;
       }
       .cursor.green{ background:var(--term-green); box-shadow:0 0 10px rgba(87,255,154,.8); }
       @keyframes blink{ 0%,55%{opacity:1} 56%,100%{opacity:0} }
-      @media (prefers-reduced-motion: reduce){ .cursor{ animation:none; } }
       .sys-dot{ width:9px; height:9px; border-radius:50%; background:var(--green); box-shadow:0 0 10px var(--green); flex:none; animation:pulse 2.4s infinite; }
       @keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:.45} }
-      @media (prefers-reduced-motion: reduce){ .sys-dot{ animation:none; } }
-      .topbar .sys{ font-size:12px; letter-spacing:.18em; color:var(--cyan-pale); }
+      .topbar .sys{ font-size:11.5px; letter-spacing:.22em; color:var(--cyan-hi); }
       .topbar h1{
         font-family:"Rajdhani","Noto Sans JP",sans-serif; font-weight:700;
-        font-size:clamp(20px,2.4vw,30px); letter-spacing:.06em; margin:0; color:#fff;
+        font-size:clamp(20px,2.4vw,30px); letter-spacing:.08em; margin:0; color:#fff;
+        text-shadow:0 0 16px rgba(83,217,255,.35);
       }
       .topbar h1 .accent{ color:var(--cyan); }
       .topbar .spacer{ flex:1; }
-      .clockbox{ text-align:right; }
-      .clockbox .time{ font-family:"Share Tech Mono",monospace; font-size:clamp(24px,3vw,38px); color:#fff; line-height:1; text-shadow:0 0 14px rgba(77,216,255,.55); }
-      .clockbox .date{ font-size:12px; color:var(--ink-dim); letter-spacing:.14em; margin-top:4px; }
+      .clockbox{ text-align:right; position:relative; padding-left:18px; }
+      .clockbox::before{
+        content:""; position:absolute; left:0; top:50%; width:9px; height:9px;
+        transform:translateY(-50%); border-radius:50%;
+        border:2px solid var(--cyan); box-shadow:0 0 8px rgba(83,217,255,.6), inset 0 0 4px rgba(83,217,255,.7);
+      }
+      .clockbox .time{ font-family:"Orbitron","Share Tech Mono",monospace; font-weight:700; font-size:clamp(23px,2.8vw,36px); color:#fff; line-height:1; letter-spacing:.06em; text-shadow:0 0 16px rgba(83,217,255,.65); }
+      .clockbox .date{ font-size:11.5px; color:var(--ink-dim); letter-spacing:.18em; margin-top:5px; }
       .top-actions{ display:flex; gap:10px; flex-wrap:wrap; }
       .hbtn{
         min-height:40px; padding:8px 16px; cursor:pointer;
-        background:rgba(77,216,255,.06); color:var(--cyan-pale);
-        border:1px solid var(--panel-edge); border-radius:2px;
-        font-family:"Share Tech Mono","Noto Sans JP",monospace; font-weight:400; font-size:13.5px; letter-spacing:.04em;
+        background:rgba(83,217,255,.07); color:var(--cyan-hi);
+        border:1px solid var(--edge);
+        clip-path:polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        font-family:"Share Tech Mono","Noto Sans JP",monospace; font-size:13.5px; letter-spacing:.05em;
       }
-      .hbtn::before{ content:"$ "; color:var(--term-green); }
-      .hbtn:hover{ background:rgba(77,216,255,.16); color:#fff; }
+      .hbtn:hover{ background:rgba(83,217,255,.18); color:#fff; }
       .hbtn:focus-visible{ outline:2px solid var(--cyan); outline-offset:2px; }
 
-      .snapshot{ margin:12px 2px 0; font-size:12.5px; color:var(--ink-faint); letter-spacing:.05em; }
+      .snapshot{ flex:none; margin:10px 2px 0; font-size:12.5px; color:var(--ink-faint); letter-spacing:.05em; font-family:"Share Tech Mono","Noto Sans JP",monospace; }
+      .snapshot::before{ content:"◉ "; color:var(--cyan); }
       .snapshot b{ color:var(--ink-dim); font-weight:500; }
 
       /* ===== レイアウト ===== */
-      .layout{ display:grid; grid-template-columns:340px 1fr; gap:18px; margin-top:16px; align-items:start; }
-      @media (max-width:1080px){ .layout{ grid-template-columns:1fr; } }
-
-      /* HUDパネル共通：ターミナルウィンドウ（角ブラケット＋タイトルバー） */
-      .hud{
-        position:relative; background:var(--panel);
-        border:1px solid rgba(77,216,255,.26);
-        padding:18px; padding-top:14px;
-        box-shadow:0 0 0 1px rgba(0,0,0,.55), inset 0 1px 0 rgba(174,233,255,.05);
+      .layout{
+        flex:1 1 auto; min-height:0;
+        display:grid; grid-template-columns:364px 1fr; gap:16px;
+        margin-top:12px; align-items:stretch; grid-template-rows:minmax(0,1fr);
       }
-      .hud::before,.hud::after,
-      .hud .brk::before,.hud .brk::after{
-        content:""; position:absolute; width:14px; height:14px; border:2px solid var(--cyan); z-index:2;
+      .layout > *{ min-height:0; min-width:0; }
+
+      /* ===== ホログラムパネル共通 ===== */
+      .hud{
+        position:relative;
+        background:linear-gradient(155deg, rgba(13,42,64,.80), rgba(3,13,24,.88) 55%, rgba(4,18,30,.84));
+        border:1px solid var(--edge-dim);
+        padding:16px 18px; padding-top:12px;
+        box-shadow:0 0 0 1px rgba(0,0,0,.5), inset 0 0 26px rgba(83,217,255,.045), inset 0 1px 0 rgba(165,236,255,.07);
+      }
+      .hud::before,.hud::after,.hud .brk::before,.hud .brk::after{
+        content:""; position:absolute; width:15px; height:15px; border:2px solid var(--cyan); z-index:2;
+        filter:drop-shadow(0 0 4px rgba(83,217,255,.55));
       }
       .hud::before{ top:-2px; left:-2px; border-right:none; border-bottom:none; }
       .hud::after{ top:-2px; right:-2px; border-left:none; border-bottom:none; }
       .hud .brk::before{ bottom:-2px; left:-2px; border-right:none; border-top:none; }
       .hud .brk::after{ bottom:-2px; right:-2px; border-left:none; border-top:none; }
-      /* タイトルバー：信号ドット＋パス風表記 */
+      /* 見出し：リングノード＋タイトル */
       .hud-head{
         display:flex; align-items:center; gap:10px;
-        margin:-14px -18px 12px; padding:8px 12px;
-        background:linear-gradient(180deg, #0a1e33, var(--term-bar));
-        border-bottom:1px solid rgba(77,216,255,.30);
+        margin:-12px -18px 12px; padding:9px 14px;
+        background:linear-gradient(90deg, rgba(83,217,255,.15), rgba(83,217,255,.03) 65%, transparent);
+        border-bottom:1px solid var(--edge-dim);
       }
       .hud-head::before{
-        content:""; flex:none; width:8px; height:8px; border-radius:50%;
-        background:#ff5d73; box-shadow:15px 0 0 #ffb648, 30px 0 0 #3dffc8;
-        margin-right:30px;
+        content:""; flex:none; width:11px; height:11px; border-radius:50%;
+        border:2px solid var(--cyan);
+        background:radial-gradient(circle, var(--cyan-hi) 0 2.5px, transparent 3.5px);
+        box-shadow:0 0 9px rgba(83,217,255,.65);
       }
-      .hud-head::after{
-        content:"—  □  ×"; flex:none; margin-left:2px;
-        font-family:"Share Tech Mono",monospace; font-size:11px; color:var(--ink-faint); letter-spacing:.18em;
-      }
-      .hud-head .idx{ font-family:"Share Tech Mono",monospace; color:var(--cyan); font-size:12px; letter-spacing:.08em; white-space:nowrap; }
-      .hud-head h2{ margin:0; font-size:16.5px; font-weight:700; letter-spacing:.04em; color:#fff; font-family:"Rajdhani","Noto Sans JP",sans-serif; white-space:nowrap; }
-      .hud-head h2::before{ content:">_ "; font-family:"Share Tech Mono",monospace; font-weight:400; color:var(--term-green); }
-      .hud-head .tag{ margin-left:auto; font-size:10.5px; color:var(--ink-dim); letter-spacing:.1em; font-family:"Share Tech Mono",monospace; text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-      /* コマンドライン行（見出し下のプロンプト表記） */
-      .cmdline{
-        font-family:"Share Tech Mono",monospace; font-size:12px; line-height:1.5;
-        color:var(--ink-dim); margin:-4px 0 10px; word-break:break-all;
-      }
-      .cmdline .u{ color:var(--term-green); }
-      .cmdline .p{ color:var(--cyan); }
-      .cmdline .c{ color:#fff; }
+      .hud-head .idx{ font-family:"Orbitron","Share Tech Mono",monospace; color:var(--cyan); font-size:11px; letter-spacing:.14em; white-space:nowrap; }
+      .hud-head h2{ margin:0; font-size:16.5px; font-weight:700; letter-spacing:.07em; color:#fff; font-family:"Rajdhani","Noto Sans JP",sans-serif; white-space:nowrap; text-shadow:0 0 10px rgba(83,217,255,.3); }
+      .hud-head .tag{ margin-left:auto; font-size:10.5px; color:var(--ink-faint); letter-spacing:.12em; font-family:"Share Tech Mono",monospace; text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
-      /* ===== 左カラム：ゲージ＋締切 ===== */
-      .gauge-box{ text-align:center; }
-      .gauge-wrap{ position:relative; width:230px; height:230px; margin:6px auto 4px; }
-      .gauge-wrap svg{ transform:rotate(-90deg); }
-      .gauge-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; }
-      .gauge-center .label{ font-size:11px; letter-spacing:.22em; color:var(--ink-dim); }
-      .gauge-center .target{ font-size:14px; font-weight:700; color:#fff; max-width:180px; line-height:1.35; }
-      .gauge-center .count{ font-family:"Share Tech Mono",monospace; font-size:25px; color:var(--cyan); text-shadow:0 0 12px rgba(77,216,255,.6); }
-      .gauge-center .when{ font-size:11.5px; color:var(--ink-faint); }
-      .ticks{ display:flex; justify-content:space-between; font-family:"Share Tech Mono",monospace; font-size:10px; color:var(--ink-faint); padding:0 6px; }
+      /* ===== 左カラム：リアクター＋締切 ===== */
+      .leftcol{ display:flex; flex-direction:column; gap:14px; height:100%; min-height:0; }
+      .gauge-box{ flex:0 0 auto; text-align:center; }
+      .gauge-wrap{
+        position:relative; flex:none;
+        width:clamp(205px, 27.5vh, 262px); height:clamp(205px, 27.5vh, 262px);
+        margin:8px auto 4px;
+      }
+      .gauge-wrap::before{
+        content:""; position:absolute; inset:16%; border-radius:50%;
+        background:radial-gradient(circle, rgba(83,217,255,.20), rgba(83,217,255,.05) 55%, transparent 72%);
+        filter:blur(4px);
+      }
+      .gauge-wrap svg{ width:100%; height:100%; display:block; position:relative; }
+      .rg-spin-a{ animation:spin 80s linear infinite; }
+      .rg-spin-b{ animation:spin-rev 115s linear infinite; }
+      .rg-spin-c{ animation:spin 55s linear infinite; }
+      .gauge-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; padding:10px; }
+      .gauge-center .label{ font-size:10.5px; letter-spacing:.26em; color:var(--green); font-family:"Orbitron","Share Tech Mono",monospace; }
+      .gauge-center .target{ font-size:14.5px; font-weight:700; color:#fff; max-width:86%; line-height:1.35; text-shadow:0 0 10px rgba(83,217,255,.35); }
+      .gauge-center .count{ font-family:"Orbitron","Share Tech Mono",monospace; font-weight:700; font-size:24px; letter-spacing:.03em; color:var(--cyan-hi); text-shadow:0 0 14px rgba(83,217,255,.75); line-height:1.2; white-space:nowrap; }
+      .gauge-center .when{ font-size:11.5px; color:var(--ink-dim); }
+      .ticks{ display:flex; justify-content:space-between; font-family:"Share Tech Mono",monospace; font-size:10px; letter-spacing:.12em; color:var(--ink-faint); padding:0 8px; margin-top:2px; }
+      .gauge-note{ margin-top:8px; font-size:11px; color:var(--ink-faint); letter-spacing:.05em; text-align:center; }
 
-      .deadline-list{ list-style:none; margin:6px 0 0; padding:0; }
+      .deadlines-panel{ flex:1 1 0; min-height:110px; display:flex; flex-direction:column; }
+      .deadline-list{
+        list-style:none; margin:2px 0 0; padding:0 4px 0 0;
+        flex:1 1 auto; min-height:0; overflow-y:auto;
+        scrollbar-width:thin; scrollbar-color:rgba(83,217,255,.45) rgba(83,217,255,.08);
+      }
+      .deadline-list::-webkit-scrollbar{ width:6px; }
+      .deadline-list::-webkit-scrollbar-thumb{ background:rgba(83,217,255,.45); }
+      .deadline-list::-webkit-scrollbar-track{ background:rgba(83,217,255,.08); }
       .deadline-list li{
+        position:relative;
         display:grid; grid-template-columns:1fr auto; grid-template-areas:"date left" "what what";
         gap:2px 10px; align-items:baseline;
-        padding:8px 2px; border-bottom:1px dashed rgba(77,216,255,.14); font-size:13.5px;
+        padding:8px 2px 8px 16px; border-bottom:1px dashed rgba(103,232,255,.14); font-size:13.5px;
       }
-      .deadline-list .d{ grid-area:date; }
-      .deadline-list .what{ grid-area:what; }
-      .deadline-list .left{ grid-area:left; }
-      .deadline-list li:last-child{ border-bottom:none; }
-      .deadline-list .d{ font-family:"Share Tech Mono",monospace; color:var(--cyan-pale); font-size:12.5px; white-space:nowrap; }
-      .deadline-list .what{ color:var(--ink); line-height:1.45; }
+      .deadline-list li::before{
+        content:""; position:absolute; left:1px; top:15px; width:6px; height:6px; border-radius:50%;
+        border:1.5px solid var(--cyan-dim); background:rgba(83,217,255,.15);
+      }
+      .deadline-list li.hot::before{ border-color:var(--amber); background:rgba(255,182,72,.35); box-shadow:0 0 7px rgba(255,182,72,.7); }
+      .deadline-list .d{ grid-area:date; font-family:"Share Tech Mono",monospace; color:var(--cyan-hi); font-size:12.5px; white-space:nowrap; }
+      .deadline-list .what{ grid-area:what; color:var(--ink); line-height:1.45; }
       .deadline-list .what small{ display:block; color:var(--ink-faint); font-size:11.5px; }
-      .deadline-list .left{ font-family:"Share Tech Mono",monospace; font-size:12px; color:var(--ink-dim); white-space:nowrap; }
+      .deadline-list .left{ grid-area:left; font-family:"Share Tech Mono",monospace; font-size:12px; color:var(--ink-dim); white-space:nowrap; }
       .deadline-list li.hot .d, .deadline-list li.hot .left{ color:var(--amber); }
       .deadline-list li.done{ opacity:.42; }
       .deadline-list li.done .what{ text-decoration:line-through; }
+      .deadline-list li.is-main .what{ color:#fff; font-weight:700; }
+      .deadline-list li.is-maint .what{ color:#fff; }
+      .main-tag{
+        display:inline-block; vertical-align:1px; margin-right:6px;
+        font-family:"Share Tech Mono",monospace; font-size:9.5px; font-weight:700; letter-spacing:.08em;
+        color:#04240f; background:var(--green); padding:1px 5px;
+      }
+      .maint-tag{
+        display:inline-block; vertical-align:1px; margin-right:6px;
+        font-family:"Share Tech Mono",monospace; font-size:9.5px; font-weight:700; letter-spacing:.06em;
+        color:#241300; background:var(--amber); padding:1px 5px;
+      }
 
       /* ===== ゲームモジュール ===== */
-      .grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:18px; }
-      @media (min-width:1500px){ .grid{ grid-template-columns:repeat(3, 1fr); } }
+      .grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:16px; height:100%; grid-auto-rows:minmax(0,1fr); }
       @media (max-width:720px){ .grid{ grid-template-columns:1fr; } }
-      .game .ver{
-        display:inline-block; font-family:"Share Tech Mono",monospace; font-size:11.5px;
-        color:var(--bg); background:var(--cyan); padding:2px 8px; letter-spacing:.06em; font-weight:700;
+      .grid > section{
+        display:flex; flex-direction:column; min-height:0; overflow-y:auto;
+        scrollbar-width:thin; scrollbar-color:rgba(83,217,255,.45) rgba(83,217,255,.08);
       }
-      .game .ver.soon{ background:var(--amber); }
+      .grid > section::-webkit-scrollbar{ width:6px; }
+      .grid > section::-webkit-scrollbar-thumb{ background:rgba(83,217,255,.45); }
+      .grid > section::-webkit-scrollbar-track{ background:rgba(83,217,255,.08); }
+      .grid > section .src{ margin-top:auto; padding-top:10px; }
+      .game .ver{
+        display:inline-block; align-self:flex-start;
+        font-family:"Share Tech Mono",monospace; font-size:11.5px; font-weight:700; letter-spacing:.07em;
+        color:#03222f; background:linear-gradient(90deg, var(--cyan), #7fe3ff); padding:3px 10px;
+        clip-path:polygon(7px 0, 100% 0, calc(100% - 7px) 100%, 0 100%);
+        box-shadow:0 0 12px rgba(83,217,255,.35);
+      }
+      .game .ver.soon{ background:linear-gradient(90deg, var(--amber), #ffd28a); color:#2a1800; }
       .game ul{ list-style:none; margin:10px 0 0; padding:0; }
-      .game li{ position:relative; padding:7px 0 7px 18px; font-size:13.5px; line-height:1.55; color:var(--ink); border-bottom:1px dashed rgba(77,216,255,.10); }
+      .game li{ position:relative; padding:7px 0 7px 18px; font-size:13.5px; line-height:1.55; color:var(--ink); border-bottom:1px dashed rgba(103,232,255,.10); }
       .game li:last-child{ border-bottom:none; }
-      .game li::before{ content:"▸"; position:absolute; left:0; color:var(--cyan); }
+      .game li::before{
+        content:""; position:absolute; left:1px; top:14px; width:6px; height:6px; border-radius:50%;
+        border:1.5px solid var(--cyan); box-shadow:inset 0 0 3px rgba(83,217,255,.8);
+      }
       .game li b{ color:#fff; }
       .game li .dl{ color:var(--amber); font-weight:700; white-space:nowrap; }
       .game li small{ color:var(--ink-faint); }
       .src{ margin-top:10px; font-size:12px; }
       .src a{ color:var(--cyan); text-decoration:none; border-bottom:1px dotted var(--cyan-dim); padding:4px 0; display:inline-block; min-height:32px; }
       .src a:hover{ color:#fff; }
+      .main-flag{
+        display:inline-block; vertical-align:1px;
+        font-family:"Share Tech Mono",monospace; font-size:10px; font-weight:700; letter-spacing:.1em;
+        color:#04240f; background:var(--green); padding:2px 7px;
+      }
 
       .coupon{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:6px; }
       .coupon code{
         font-family:"Share Tech Mono",monospace; font-size:14px; color:var(--green);
-        background:rgba(61,255,200,.07); border:1px dashed rgba(61,255,200,.4); padding:5px 10px; letter-spacing:.03em;
+        background:rgba(61,255,200,.07); border:1px dashed rgba(61,255,200,.42); padding:5px 10px; letter-spacing:.03em;
       }
       .coupon .exp{ font-size:11.5px; color:var(--ink-dim); }
       .copybtn{
-        min-height:36px; padding:6px 12px; cursor:pointer; font-size:12.5px; font-weight:700; letter-spacing:.06em;
-        background:transparent; color:var(--cyan-pale); border:1px solid var(--panel-edge);
-        font-family:"Rajdhani","Noto Sans JP",sans-serif;
+        min-height:36px; padding:6px 13px; cursor:pointer; font-size:12.5px; font-weight:700; letter-spacing:.07em;
+        background:rgba(83,217,255,.06); color:var(--cyan-hi); border:1px solid var(--edge);
+        clip-path:polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+        font-family:"Share Tech Mono","Noto Sans JP",monospace;
       }
-      .copybtn:hover{ background:rgba(77,216,255,.14); color:#fff; }
+      .copybtn:hover{ background:rgba(83,217,255,.16); color:#fff; }
       .copybtn:focus-visible{ outline:2px solid var(--cyan); outline-offset:2px; }
-      .copybtn.copied{ color:var(--green); border-color:rgba(61,255,200,.5); }
+      .copybtn.copied{ color:var(--green); border-color:rgba(61,255,200,.55); }
 
       /* ===== 使い方 ===== */
-      .howto{ margin-top:18px; }
+      .howto{ flex:none; margin-top:12px; }
       .howto ol{ margin:6px 0 0; padding-left:20px; font-size:13.5px; line-height:1.8; color:var(--ink); }
       .howto ol b{ color:#fff; }
       .howto p{ font-size:13px; color:var(--ink-dim); line-height:1.7; margin:8px 0 0; }
-      footer{ margin-top:16px; text-align:center; font-size:11.5px; color:var(--ink-faint); letter-spacing:.14em; }
+      footer{ flex:none; margin-top:10px; text-align:center; font-size:11.5px; color:var(--ink-faint); letter-spacing:.14em; }
 
-      /* ===== ターミナルログ（このページ自身の起動ログ表示） ===== */
-      .term-log{ margin-top:14px; }
+      /* ===== システムログ ===== */
+      .term-log{ flex:none; margin-top:12px; }
       .log-body{
-        margin:0; background:var(--term-body);
-        border:1px solid rgba(77,216,255,.20);
-        padding:12px 14px 13px;
+        margin:0; background:rgba(1,7,13,.82);
+        border:1px solid var(--edge-dim);
+        padding:11px 14px 12px;
         font-family:"Share Tech Mono",monospace; font-size:12.5px; line-height:1.85;
-        color:#9fd8ef; white-space:pre-wrap; word-break:break-word; overflow-wrap:anywhere;
+        color:#a8dcf2; white-space:pre-wrap; word-break:break-word; overflow-wrap:anywhere;
         max-height:264px; overflow-y:auto;
+        scrollbar-width:thin; scrollbar-color:rgba(83,217,255,.45) rgba(83,217,255,.08);
       }
       .log-body .t{ color:var(--ink-faint); }
       .log-body .ok{ color:var(--term-green); }
@@ -248,235 +327,130 @@
       .log-body .jp{ font-family:"Share Tech Mono","Noto Sans JP",monospace; }
       .log-note{ margin:8px 2px 0; font-size:11.5px; color:var(--ink-faint); line-height:1.6; }
 
-      /* ===== 装飾：左右端の16進レール（装飾のみ） ===== */
-      .hexrail{
-        position:fixed; top:0; bottom:0; width:22px; z-index:0; pointer-events:none;
-        font-family:"Share Tech Mono",monospace; font-size:9.5px; line-height:2.1;
-        color:rgba(77,216,255,.20); writing-mode:vertical-rl; overflow:hidden;
-        letter-spacing:.32em; white-space:nowrap; user-select:none;
-      }
-      .hexrail.l{ left:2px; } .hexrail.r{ right:2px; transform:rotate(180deg); }
-      @media (max-width:1640px){ .hexrail{ display:none; } }
-
-      /* ゲーム項目のマーカーをターミナル風に */
-      .game li::before{ content:">"; font-family:"Share Tech Mono",monospace; color:var(--term-green); font-size:13px; }
-      .game .ver{ border-radius:1px; box-shadow:inset 0 0 0 1px rgba(0,0,0,.25); }
-      .coupon code{ border-radius:1px; }
-      .copybtn{ border-radius:2px; font-family:"Share Tech Mono","Noto Sans JP",monospace; }
-      .copybtn::before{ content:"$ "; color:var(--term-green); }
-      .snapshot{ font-family:"Share Tech Mono","Noto Sans JP",monospace; }
-      .snapshot::before{ content:"[SNAPSHOT] "; color:var(--cyan); }
-
-      /* 狭幅：タイトルバーを詰めて横スクロールを防ぐ */
-      @media (max-width:560px){
-        .wrap{ padding:12px 12px 24px; }
-        .hud{ padding:14px 12px; padding-top:12px; }
-        .hud-head{ margin:-12px -12px 10px; padding:7px 9px; gap:7px; }
-        .hud-head::after{ display:none; }
-        .hud-head::before{ margin-right:26px; }
-        .hud-head h2{ font-size:15px; }
-        .hud-head .tag{ display:none; }
-        .topbar{ gap:12px; padding:10px 12px; }
-        .clockbox{ text-align:left; }
-        .deadline-list .d{ font-size:11.5px; }
-        .log-body{ font-size:11.5px; max-height:220px; }
-      }
-
       /* ===== モジュール自動ローテーション ===== */
       .rotator{ display:flex; flex-direction:column; min-height:0; height:100%; }
       .rot-bar{
         flex:none; display:flex; align-items:center; gap:12px; flex-wrap:wrap;
-        border:1px solid rgba(77,216,255,.30); border-bottom:none;
-        background:linear-gradient(180deg, #0a1e33, var(--term-bar));
-        padding:7px 12px;
+        border:1px solid var(--edge-dim); border-bottom:none;
+        background:linear-gradient(90deg, rgba(83,217,255,.13), rgba(83,217,255,.03));
+        padding:8px 14px;
       }
-      .rot-bar .rot-title{ font-family:"Share Tech Mono",monospace; font-size:12px; letter-spacing:.1em; color:var(--cyan-pale); white-space:nowrap; }
-      .rot-bar .rot-title b{ color:var(--term-green); font-weight:400; }
-      .rot-bar .rot-status{ font-family:"Share Tech Mono",monospace; font-size:11px; letter-spacing:.08em; color:var(--amber); white-space:nowrap; }
+      .rot-bar .rot-title{ font-family:"Orbitron","Share Tech Mono",monospace; font-size:11.5px; letter-spacing:.16em; color:var(--cyan-hi); white-space:nowrap; }
+      .rot-bar .rot-title b{ color:var(--green); font-weight:400; }
+      .rot-bar .rot-status{ font-family:"Share Tech Mono",monospace; font-size:11px; letter-spacing:.1em; color:var(--amber); white-space:nowrap; }
       .rot-bar .spacer{ flex:1; }
-      .rot-pager{ display:flex; align-items:center; gap:8px; }
-      .rot-page-num{ font-family:"Share Tech Mono",monospace; font-size:13px; color:#fff; letter-spacing:.1em; white-space:nowrap; }
+      .rot-pager{ display:flex; align-items:center; gap:9px; }
+      .rot-page-num{ font-family:"Orbitron","Share Tech Mono",monospace; font-size:12.5px; color:#fff; letter-spacing:.12em; white-space:nowrap; }
       .rot-page-num span{ color:var(--ink-faint); }
-      .rot-dots{ display:flex; gap:6px; align-items:center; }
+      .rot-dots{ display:flex; gap:8px; align-items:center; }
       .rot-dots button{
-        width:22px; height:22px; padding:0; cursor:pointer;
-        background:transparent; border:1px solid rgba(77,216,255,.35); color:var(--ink-dim);
-        font-family:"Share Tech Mono",monospace; font-size:11px; line-height:1;
+        width:22px; height:22px; padding:0; cursor:pointer; border-radius:50%;
+        background:transparent; border:1.5px solid rgba(103,232,255,.45); color:transparent;
+        font-size:0; line-height:1; position:relative;
       }
-      .rot-dots button[aria-current="true"]{ background:var(--cyan); color:var(--bg); border-color:var(--cyan); font-weight:700; }
-      .rot-dots button:hover{ color:#fff; border-color:var(--cyan); }
-      .rot-dots button[aria-current="true"]:hover{ color:var(--bg); }
+      .rot-dots button::after{
+        content:""; position:absolute; inset:5px; border-radius:50%;
+        background:rgba(103,232,255,.35);
+      }
+      .rot-dots button[aria-current="true"]{ border-color:var(--cyan); box-shadow:0 0 10px rgba(83,217,255,.55); }
+      .rot-dots button[aria-current="true"]::after{ background:var(--cyan); box-shadow:0 0 6px rgba(83,217,255,.9); }
+      .rot-dots button:hover{ border-color:var(--cyan-hi); }
       .rot-nav{
         min-width:32px; height:26px; padding:2px 8px; cursor:pointer;
-        background:rgba(77,216,255,.06); color:var(--cyan-pale);
-        border:1px solid var(--panel-edge); border-radius:2px;
+        background:rgba(83,217,255,.06); color:var(--cyan-hi);
+        border:1px solid var(--edge); border-radius:2px;
         font-family:"Share Tech Mono",monospace; font-size:13px; line-height:1;
       }
-      .rot-nav:hover{ background:rgba(77,216,255,.16); color:#fff; }
+      .rot-nav:hover{ background:rgba(83,217,255,.16); color:#fff; }
       .rot-nav:focus-visible, .rot-dots button:focus-visible{ outline:2px solid var(--cyan); outline-offset:2px; }
-      .rot-progress{ flex:none; height:3px; background:rgba(77,216,255,.14); position:relative; overflow:hidden; }
-      .rot-progress i{ display:block; height:100%; width:0%; background:var(--cyan); box-shadow:0 0 8px rgba(77,216,255,.8); }
+      .rot-progress{ flex:none; height:3px; background:rgba(83,217,255,.13); position:relative; overflow:hidden; }
+      .rot-progress i{ display:block; height:100%; width:0%; background:var(--cyan); box-shadow:0 0 9px rgba(83,217,255,.85); }
       .rot-progress i.run{ transition:width 25s linear; width:100%; }
-      @media (prefers-reduced-motion: reduce){ .rot-progress i.run{ transition:none; } }
       .rot-pages{ flex:1 1 auto; min-height:0; display:grid; grid-template-rows:minmax(0,1fr); }
       .rot-page{
         grid-area:1 / 1; min-height:0; height:100%;
         opacity:0; visibility:hidden; pointer-events:none;
         transition:opacity .7s ease, visibility 0s linear .7s;
       }
-      .rot-page.is-active{
-        opacity:1; visibility:visible; pointer-events:auto;
-        transition:opacity .7s ease, visibility 0s;
-      }
-      @media (prefers-reduced-motion: reduce){
-        .rot-page{ transition:none; }
-        .rot-page.is-active{ transition:none; }
-      }
+      .rot-page.is-active{ opacity:1; visibility:visible; pointer-events:auto; transition:opacity .7s ease, visibility 0s; }
       .rot-page .grid{ height:100%; grid-template-columns:repeat(2, 1fr); }
       @media (max-width:720px){ .rot-page .grid{ grid-template-columns:1fr; } }
-      @media (max-width:1080px){
-        .rotator{ height:auto; }
-        .rot-pages{ display:grid; }
-        .rot-page{ height:auto; }
-        .rot-page .grid{ height:auto; }
-      }
-      @media (max-width:560px){
-        .rot-bar{ gap:8px; padding:7px 9px; }
-        .rot-bar .rot-status{ display:none; }
-      }
 
-      /* ===== 全画面レイアウト（壁紙前提：画面いっぱいに敷き詰める） ===== */
-      html{ height:100%; }
-      body{ min-height:100vh; min-height:100dvh; }
-      .wrap{
-        max-width:none; width:100%;
-        height:100vh; height:100dvh;
-        min-height:100vh; min-height:100dvh;
-        /* 下端はWindowsタスクバー（約48〜60px）に被さる領域なので、
-           パネルやフッターがタスクバーの裏に沈まないよう余白を確保する */
-        padding:10px 12px 72px;
-        display:flex; flex-direction:column;
-        overflow:hidden;
-      }
-      .hexrail{ display:none; }
-      .topbar{ flex:none; }
-      .snapshot{ flex:none; }
-      .term-log{ flex:none; }
-      .layout{ flex:1 1 auto; align-items:stretch; margin-top:12px; min-height:0; grid-template-rows:minmax(0,1fr); }
-      .layout > *{ min-height:0; min-width:0; }
-      .layout > div:first-child{ min-height:0; }
-      .layout > div:first-child > section{ flex:1 1 auto; display:flex; flex-direction:column; min-height:0; }
-      .gauge-box .gauge-wrap{ margin-top:auto; margin-bottom:auto; }
-      .gauge-box .ticks{ margin-top:auto; }
-      .grid{ height:100%; grid-auto-rows:minmax(0,1fr); }
-      .grid > section{ display:flex; flex-direction:column; }
-      .grid > section .src{ margin-top:auto; padding-top:10px; }
-      .howto{ flex:none; margin-top:12px; }
-      footer{ flex:none; margin-top:10px; }
-
-      /* ===== 高さフィット：左列が重ならず・切れずに収まる配分 ===== */
-      /* 左列は高さ100%のフレックス列。ゲージは絶対に縮めない（flex:0 0 auto）：
-         以前はゲージ側が縮むのに中身の円だけ元の大きさで溢れ、
-         下のDEADLINESパネルに重なって見えていた */
-      .leftcol{ display:flex; flex-direction:column; gap:14px; height:100%; min-height:0; }
-      .layout > div:first-child > section.gauge-box{ flex:0 0 auto; }
-      .layout > div:first-child > section.deadlines-panel{
-        flex:1 1 0; min-height:110px; display:flex; flex-direction:column;
-      }
-      /* 締切リストはパネル内部でのみスクロール（細いターミナル風バー） */
-      .deadline-list{
-        flex:1 1 auto; min-height:0; overflow-y:auto; padding-right:4px;
-        scrollbar-width:thin; scrollbar-color:rgba(77,216,255,.45) rgba(77,216,255,.08);
-      }
-      .deadline-list::-webkit-scrollbar{ width:6px; }
-      .deadline-list::-webkit-scrollbar-thumb{ background:rgba(77,216,255,.45); }
-      .deadline-list::-webkit-scrollbar-track{ background:rgba(77,216,255,.08); }
-      /* メインゲーム（黒い砂漠）の締切行の目印 */
-      .deadline-list li.is-main .what{ color:#fff; font-weight:700; }
-      .main-tag{
-        display:inline-block; vertical-align:1px; margin-right:6px;
-        font-family:"Share Tech Mono",monospace; font-size:9.5px; font-weight:700; letter-spacing:.08em;
-        color:#04240f; background:var(--green); padding:1px 5px; border-radius:1px;
-      }
-      /* ゲームパネルもセル内で収め、はみ出す分は内部スクロールにする */
-      .grid > section{
-        min-height:0; overflow-y:auto;
-        scrollbar-width:thin; scrollbar-color:rgba(77,216,255,.45) rgba(77,216,255,.08);
-      }
-      .grid > section::-webkit-scrollbar{ width:6px; }
-      .grid > section::-webkit-scrollbar-thumb{ background:rgba(77,216,255,.45); }
-      .grid > section::-webkit-scrollbar-track{ background:rgba(77,216,255,.08); }
-      /* ゲージは画面の高さに合わせて伸縮（低い画面では小さく） */
-      .gauge-wrap{ width:clamp(140px, 22vh, 200px); height:clamp(140px, 22vh, 200px); flex:none; }
-      .gauge-wrap svg{ width:100%; height:100%; }
-      .gauge-center{ padding:8px; }
-      .gauge-center .label{ color:var(--green); }
-      .gauge-center .target{ max-width:88%; }
-      .gauge-center .count{ line-height:1.15; }
-      /* メンテナンス行の目印（締切リスト用） */
-      .maint-tag{
-        display:inline-block; vertical-align:1px; margin-right:6px;
-        font-family:"Share Tech Mono",monospace; font-size:9.5px; font-weight:700; letter-spacing:.06em;
-        color:#241300; background:var(--amber); padding:1px 5px; border-radius:1px;
-      }
-      .deadline-list li.is-maint .what{ color:#fff; }
-      .gauge-note{ margin-top:8px; font-size:11px; color:var(--ink-faint); letter-spacing:.04em; text-align:center; }
-      /* 黒い砂漠パネルのMAINバッジ */
-      .main-flag{
-        display:inline-block; margin-left:8px; vertical-align:1px;
-        font-family:"Share Tech Mono",monospace; font-size:10px; font-weight:700; letter-spacing:.1em;
-        color:#04240f; background:var(--green); padding:2px 7px; border-radius:1px;
-      }
-      @media (min-width:1081px){ body{ overflow:hidden; } }
-      /* 画面が低いとき（タスクバー＋拡大表示など）はログとゲージを詰める */
+      /* ===== 低い画面：縦を詰めて全パネルを画面内に収める ===== */
       @media (max-height:1080px){
-        .log-body{ max-height:110px; }
+        .log-body{ max-height:104px; }
+      }
+      @media (min-width:1081px) and (max-height:1080px){
+        .gauge-wrap{ width:clamp(168px, 23vh, 214px); height:clamp(168px, 23vh, 214px); }
       }
       @media (max-height:920px){
         .log-body{ max-height:84px; }
-        .deadline-list li{ padding:7px 2px; }
+        .deadline-list li{ padding-top:7px; padding-bottom:7px; }
         .gauge-center .count{ font-size:21px; }
         .howto ol{ line-height:1.55; font-size:13px; }
         .howto p{ margin-top:5px; }
       }
-      @media (max-width:1080px){
-        .wrap{ height:auto; overflow:visible; padding-bottom:28px; }
-        .grid{ height:auto; grid-auto-rows:auto; }
-        .grid > section{ overflow:visible; }
-        .layout > div:first-child > section{ flex:none; }
-        .leftcol{ height:auto; }
-        .deadline-list{ overflow:visible; flex:none; }
-        .gauge-wrap{ width:200px; height:200px; }
-      }
-
-      /* ===== 低い画面（デスクトップ幅）：縦を詰めて全パネルを画面内に収める ===== */
-      @media (min-width:1081px) and (max-height:1080px){
-        .log-body{ max-height:100px; }
-        .gauge-wrap{ width:clamp(128px, 19vh, 168px); height:clamp(128px, 19vh, 168px); }
-      }
       @media (min-width:1081px) and (max-height:940px){
         .log-body{ max-height:58px; }
         .log-note{ display:none; }
-        .gauge-wrap{ width:clamp(108px, 16vh, 132px); height:clamp(108px, 16vh, 132px); }
-        .gauge-box .cmdline, .deadlines-panel .cmdline{ display:none; }
-        .gauge-center .label{ font-size:9.5px; }
+        .gauge-wrap{ width:clamp(138px, 19vh, 168px); height:clamp(138px, 19vh, 168px); }
+        .gauge-note{ display:none; }
+        .gauge-center .label{ font-size:9px; }
         .gauge-center .target{ font-size:12px; }
-        .gauge-center .count{ font-size:18px; }
+        .gauge-center .count{ font-size:17px; }
         .gauge-center .when{ font-size:10px; }
-        .deadline-list li{ padding:5px 2px; font-size:12.5px; }
+        .deadline-list li{ padding-top:5px; padding-bottom:5px; font-size:12.5px; }
         .howto{ display:none; }
         footer{ margin-top:6px; }
+      }
+
+      /* ===== 狭幅：縦積みレイアウト ===== */
+      @media (max-width:1080px){
+        .wrap{ height:auto; overflow:visible; padding-bottom:28px; }
+        body{ overflow-y:auto; }
+        .layout{ grid-template-columns:1fr; grid-template-rows:none; }
+        .leftcol{ height:auto; }
+        .deadlines-panel{ flex:none; }
+        .deadline-list{ overflow:visible; flex:none; }
+        .rotator{ height:auto; }
+        .rot-page{ height:auto; }
+        .rot-page .grid{ height:auto; }
+        .grid{ height:auto; grid-auto-rows:auto; }
+        .grid > section{ overflow:visible; }
+        .gauge-wrap{ width:248px; height:248px; }
+        .bg-rings{ opacity:.45; }
+      }
+      @media (max-width:560px){
+        .wrap{ padding:12px 12px 24px; }
+        .hud{ padding:14px 12px; padding-top:12px; }
+        .hud-head{ margin:-12px -12px 10px; padding:8px 10px; gap:7px; }
+        .hud-head h2{ font-size:15px; }
+        .hud-head .tag{ display:none; }
+        .topbar{ gap:12px; padding:10px 12px; }
+        .clockbox{ text-align:left; }
+        .deadline-list .d{ font-size:11.5px; }
+        .log-body{ font-size:11.5px; max-height:220px; }
+        .rot-bar{ gap:8px; padding:7px 9px; }
+        .rot-bar .rot-status{ display:none; }
+        .gauge-center .count{ font-size:20px; }
+      }
+
+      /* ===== モーション抑制 ===== */
+      @media (prefers-reduced-motion: reduce){
+        .cursor,.sys-dot{ animation:none; }
+        .bg-spin-a,.bg-spin-b,.cm-spin,.rg-spin-a,.rg-spin-b,.rg-spin-c{ animation:none; }
+        .rot-progress i.run{ transition:none; }
+        .rot-page,.rot-page.is-active{ transition:none; }
       }
     </style>
   </head>
   <body>
-    <div class="hexrail l" aria-hidden="true">0x47 0x41 0x4D 0x45 0x5F 0x49 0x4E 0x54 0x45 0x4C 0x5F 0x48 0x55 0x44 0x00 0xFF 0x10 0x2A 0xC3 0x9E 0x47 0x41 0x4D 0x45 0x5F 0x49 0x4E 0x54 0x45 0x4C 0x5F 0x48 0x55 0x44 0x00 0xFF 0x10 0x2A 0xC3 0x9E 0x47 0x41 0x4D 0x45</div>
-    <div class="hexrail r" aria-hidden="true">0x47 0x41 0x4D 0x45 0x5F 0x49 0x4E 0x54 0x45 0x4C 0x5F 0x48 0x55 0x44 0x00 0xFF 0x10 0x2A 0xC3 0x9E 0x47 0x41 0x4D 0x45 0x5F 0x49 0x4E 0x54 0x45 0x4C 0x5F 0x48 0x55 0x44 0x00 0xFF 0x10 0x2A 0xC3 0x9E 0x47 0x41 0x4D 0x45</div>
+    <div class="bg-rings" aria-hidden="true"><svg viewBox="0 0 600 600"><g class="bg-spin-a"><circle cx="300" cy="300" r="292" fill="none" stroke="rgba(103,232,255,.15)" stroke-width="1" stroke-dasharray="4 14"/></g><g class="bg-spin-b"><circle cx="300" cy="300" r="240" fill="none" stroke="rgba(103,232,255,.09)" stroke-width="10" stroke-dasharray="64 28 14 28"/></g><circle cx="300" cy="300" r="182" fill="none" stroke="rgba(103,232,255,.07)" stroke-width="1"/><g class="bg-spin-a"><circle cx="300" cy="300" r="122" fill="none" stroke="rgba(103,232,255,.11)" stroke-width="1.5" stroke-dasharray="2 8"/></g></svg></div>
     <div class="wrap">
 
       <!-- ===== ステータスバー ===== -->
       <header class="topbar">
-        <span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="core-mark" aria-hidden="true"><svg viewBox="0 0 44 44"><g class="cm-spin"><circle cx="22" cy="22" r="19" fill="none" stroke="rgba(103,232,255,.65)" stroke-width="2" stroke-dasharray="14 8 4 8"/></g><circle cx="22" cy="22" r="12.5" fill="none" stroke="rgba(103,232,255,.4)" stroke-width="1.5"/><circle cx="22" cy="22" r="5" fill="#a5ecff"/></svg></span>
         <span class="sys-dot" aria-hidden="true"></span>
         <div>
           <div class="sys mono">game-intel@hud:~$ ./game_intel_hud --mode=wallpaper</div>
@@ -498,7 +472,6 @@
       <section class="hud term-log" aria-label="システムログ">
         <span class="brk"></span>
         <div class="hud-head"><span class="idx">SYS-LOG</span><h2>SYSTEM.LOG</h2><span class="tag">game-intel@hud: ~/system.log</span></div>
-        <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~</span>$ <span class="c">cat system.log --follow=local</span></div>
         <pre class="log-body" aria-label="このページの起動ログ"><span class="t">[boot]</span> game-intel-hud <span class="inf">v2026.11.23</span> — standalone file build
 <span class="t">[init]</span> display mode ......... <span class="ok">WALLPAPER / FULLSCREEN READY</span>
 <span class="t">[init]</span> clock sync (JST) ..... <span class="ok" id="log-clock">SYNCING…</span>
@@ -519,14 +492,25 @@
           <section class="hud gauge-box" aria-label="次回メンテナンスまでのカウントダウン">
             <span class="brk"></span>
             <div class="hud-head"><span class="idx">MOD-00</span><h2>NEXT MAINTENANCE</h2><span class="tag">~/maintenance</span></div>
-            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/gauge</span>$ <span class="c">./countdown --target=bdo-weekly-maintenance</span></div>
             <div class="gauge-wrap">
-              <svg width="230" height="230" viewBox="0 0 230 230" aria-hidden="true">
-                <circle cx="115" cy="115" r="100" fill="none" stroke="rgba(77,216,255,.12)" stroke-width="10"/>
-                <circle cx="115" cy="115" r="86" fill="none" stroke="rgba(77,216,255,.08)" stroke-width="1.5" stroke-dasharray="3 6"/>
-                <circle id="gauge-arc" cx="115" cy="115" r="100" fill="none" stroke="#4dd8ff" stroke-width="10"
-                        stroke-linecap="butt" stroke-dasharray="628.3" stroke-dashoffset="0"
-                        style="filter:drop-shadow(0 0 6px rgba(77,216,255,.7))"/>
+              <svg viewBox="0 0 260 260" aria-hidden="true">
+                <defs>
+                  <radialGradient id="coreGrad" cx="50%" cy="42%" r="68%">
+                    <stop offset="0%" stop-color="#0d3249"/>
+                    <stop offset="55%" stop-color="#062032"/>
+                    <stop offset="100%" stop-color="#020a14"/>
+                  </radialGradient>
+                </defs>
+                <g class="rg-spin-a"><circle cx="130" cy="130" r="126" fill="none" stroke="rgba(103,232,255,.38)" stroke-width="1.5" stroke-dasharray="3 9"/></g>
+                <g class="rg-spin-b"><circle cx="130" cy="130" r="117" fill="none" stroke="rgba(83,217,255,.5)" stroke-width="5" stroke-dasharray="52 20 14 20 96 20" opacity=".6"/></g>
+                <circle cx="130" cy="130" r="108" fill="none" stroke="rgba(103,232,255,.30)" stroke-width="7" stroke-dasharray="1.6 9.71"/>
+                <g transform="rotate(-90 130 130)">
+                  <circle cx="130" cy="130" r="98" fill="none" stroke="rgba(83,217,255,.13)" stroke-width="9"/>
+                  <circle id="gauge-arc" cx="130" cy="130" r="98" fill="none" stroke="#53d9ff" stroke-width="9" stroke-linecap="round" stroke-dasharray="615.8" stroke-dashoffset="0" style="filter:drop-shadow(0 0 7px rgba(83,217,255,.75))"/>
+                </g>
+                <g class="rg-spin-c"><circle cx="130" cy="130" r="87" fill="none" stroke="rgba(103,232,255,.45)" stroke-width="1.5" stroke-dasharray="30 14"/></g>
+                <circle cx="130" cy="130" r="79" fill="url(#coreGrad)" stroke="rgba(103,232,255,.35)" stroke-width="1"/>
+                <circle cx="130" cy="130" r="71" fill="none" stroke="rgba(103,232,255,.16)" stroke-width="1"/>
               </svg>
               <div class="gauge-center">
                 <div class="label" id="gauge-label">MAIN // 黒い砂漠</div>
@@ -542,7 +526,6 @@
           <section class="hud deadlines-panel" aria-label="締切一覧">
             <span class="brk"></span>
             <div class="hud-head"><span class="idx">MOD-01</span><h2>DEADLINES</h2><span class="tag">~/deadlines</span></div>
-            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/deadlines</span>$ <span class="c">./deadlines --sort=asc --tz=JST</span></div>
             <ul class="deadline-list" id="deadline-list"></ul>
           </section>
         </div>
@@ -570,7 +553,6 @@
           <section class="hud game" aria-label="黒い砂漠">
             <span class="brk"></span>
             <div class="hud-head"><span class="idx">MOD-02</span><h2>黒い砂漠</h2><span class="main-flag">MAIN</span><span class="tag">~/modules/bdo</span></div>
-            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/bdo</span>$ <span class="c">cat intel.txt coupons.txt</span> <span aria-hidden="true"># BLACK DESERT</span></div>
             <span class="ver">クーポン大量配布中</span>
             <ul>
               <li>ハイデル宴会クーポン2種は <span class="dl">11/26 23:59まで</span>。入力忘れ注意
@@ -595,7 +577,6 @@
           <section class="hud game" aria-label="アークナイツ エンドフィールド">
             <span class="brk"></span>
             <div class="hud-head"><span class="idx">MOD-03</span><h2>エンドフィールド</h2><span class="tag">~/modules/endfield</span></div>
-            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/endfield</span>$ <span class="c">cat intel.txt</span> <span aria-hidden="true"># ARKNIGHTS: ENDFIELD</span></div>
             <span class="ver soon">11/25 新バージョン</span>
             <ul>
               <li>新バージョン<b>「キノコ菌グ！？君との大冒険！」</b>が<b>11/25（水）</b>配信。新オペレーター「ケイ」登場、ログインで「ミミノ」無料配布</li>
@@ -613,7 +594,6 @@
           <section class="hud game" aria-label="ゼンレスゾーンゼロ">
             <span class="brk"></span>
             <div class="hud-head"><span class="idx">MOD-04</span><h2>ゼンレスゾーンゼロ</h2><span class="tag">~/modules/zzz</span></div>
-            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/zzz</span>$ <span class="c">cat intel.txt</span> <span aria-hidden="true"># ZENLESS ZONE ZERO</span></div>
             <span class="ver">Ver.3.3 開催中</span>
             <ul>
               <li>Ver.3.3「もう一度、空へと飛び立って」開催中。<b>第2期変調</b>（セヴェリアン／ノーマ復刻）は <span class="dl">12/1まで</span></li>
@@ -627,7 +607,6 @@
           <section class="hud game" aria-label="鳴潮">
             <span class="brk"></span>
             <div class="hud-head"><span class="idx">MOD-05</span><h2>鳴潮</h2><span class="tag">~/modules/wuwa</span></div>
-            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/wuwa</span>$ <span class="c">cat intel.txt</span> <span aria-hidden="true"># WUTHERING WAVES</span></div>
             <span class="ver">Ver.3.8 開催中</span>
             <ul>
               <li>Ver.3.8「旧夢で朽ちゆく小百合花」（11/12配信）。潮汐任務 第四章第五幕が開放</li>
@@ -645,7 +624,6 @@
           <section class="hud game" aria-label="AION2">
             <span class="brk"></span>
             <div class="hud-head"><span class="idx">MOD-06</span><h2>AION2</h2><span class="tag">~/modules/aion2</span></div>
-            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/aion2</span>$ <span class="c">cat intel.txt</span> <span aria-hidden="true"># AION 2</span></div>
             <span class="ver">11/18 アプデ適用</span>
             <ul>
               <li>聖域「深淵の再錬：ルドラ」に<b>難易度[簡単]</b>が追加。ルドラ装備の獲得率も上方調整</li>
@@ -659,7 +637,6 @@
           <section class="hud game" aria-label="アーキエイジクロニクル">
             <span class="brk"></span>
             <div class="hud-head"><span class="idx">MOD-07</span><h2>アーキエイジクロニクル</h2><span class="tag">~/modules/aac</span></div>
-            <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/modules/aac</span>$ <span class="c">cat intel.txt</span> <span aria-hidden="true"># ARCHEAGE CHRONICLES</span></div>
             <span class="ver">早期アクセス中</span>
             <ul>
               <li>11/20メンテで<b>ハードモード</b>（Crimson Rift／Brutal Nightmare）追加。各地域都市に<b>ボスバウンティボード</b>も設置</li>
@@ -680,12 +657,11 @@
       <section class="hud howto" aria-label="PCでの使い方">
         <span class="brk"></span>
         <div class="hud-head"><span class="idx">MOD-08</span><h2>SETUP</h2><span class="tag">~/setup — PCでの使い方</span></div>
-        <div class="cmdline"><span class="u">game-intel@hud</span>:<span class="p">~/setup</span>$ <span class="c">cat README.txt</span> <span aria-hidden="true"># PCでの使い方</span></div>
         <ol>
           <li><b>ファイルとして置く</b>：上の「⬇ PC用ファイルを保存」ボタンで <span class="mono">game-hud.html</span> をダウンロードして、デスクトップなど好きな場所へ。ダブルクリックでブラウザが開きます（ネット接続時のみフォント表示が完全になります）。</li>
           <li><b>Wallpaper EngineのWeb壁紙にする</b>：Wallpaper Engineで「壁紙を作成／編集」→ Web壁紙を選び、保存した <span class="mono">game-hud.html</span> ファイルを指定すると、デスクトップ背景として常時表示できます。時計とカウントダウンは開いたまま自動で進みます。</li>
           <li><b>フルスクリーンで眺める</b>：「⛶ フルスクリーン」ボタンで全画面表示。サブモニターに置いておくのもおすすめです。</li>
-          <li><b>モジュールの自動切替</b>：ゲーム情報は3ページに分かれ、25秒ごとにフェードで自動で切り替わります（締切リストとカウントダウンは常に表示）。モジュール上部の <span class="mono">PAGE 01 / 03</span> 表示と ◀ ▶・数字ボタンで手動でも送れます。❚❚ で自動切替を止められます。</li>
+          <li><b>モジュールの自動切替</b>：ゲーム情報は3ページに分かれ、25秒ごとにフェードで自動で切り替わります（締切リストとカウントダウンは常に表示）。モジュール上部の <span class="mono">PAGE 01 / 03</span> 表示と ◀ ▶・丸いページボタンで手動でも送れます。❚❚ で自動切替を止められます。</li>
           <li><b>カウントダウンについて</b>：左上のゲージは<b>黒い砂漠の定期メンテナンス（毎週木曜 08:00〜12:00 JST）</b>までの残り時間を、日付から自動で計算して表示します。メンテ中は「メンテ中」表示になり、終了予定までのカウントに切り替わります。メンテがない週や時間が変わる週は、公式のお知らせが優先です。</li>
         </ol>
         <p>※ 中身は2026年11月23日時点の情報で固定されています。クーポン期限やイベント日程は公式のお知らせでも確認してください。</p>
@@ -785,7 +761,7 @@
         var logClock = document.getElementById("log-clock");
         var logNext = document.getElementById("log-next");
         var gLabel = document.getElementById("gauge-label");
-        var CIRC = 628.3, WINDOW = 7*24*3600*1000;
+        var CIRC = 615.8, WINDOW = 7*24*3600*1000;
 
         function nextDeadline(now){
           for (var i=0;i<deadlines.length;i++){ if (deadlines[i].t > now) return deadlines[i]; }
