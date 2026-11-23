@@ -269,22 +269,12 @@
       @keyframes pawBounce{ 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-3px) } }
       html[data-theme="cute"] .cat-walker{
         display:block; position:fixed; left:0; bottom:2px; z-index:4; pointer-events:none;
-        width:148px; opacity:.88;
-        animation:catCross 78s linear infinite;
+        width:138px; opacity:.92; transform:translateX(-200px);
         will-change:transform;
       }
-      .cat-walker svg{ display:block; width:100%; height:auto; animation:catBob .55s ease-in-out infinite alternate; overflow:visible; }
-      @keyframes catCross{
-        0%,7%{ transform:translateX(-190px); }
-        27%{ transform:translateX(104vw); }
-        27.1%,100%{ transform:translateX(104vw); }
-      }
-      @keyframes catBob{ from{ transform:translateY(0); } to{ transform:translateY(-3px); } }
-      .cat-walker .cat-tail{ transform-box:fill-box; transform-origin:100% 90%; animation:tailSway 1.15s ease-in-out infinite alternate; }
-      @keyframes tailSway{ from{ transform:rotate(-7deg); } to{ transform:rotate(9deg); } }
-      .cat-walker .cat-leg{ transform-box:fill-box; transform-origin:50% 0%; animation:legSwing .55s ease-in-out infinite alternate; }
-      .cat-walker .cat-leg.leg-b{ animation-delay:-.28s; }
-      @keyframes legSwing{ from{ transform:rotate(13deg); } to{ transform:rotate(-13deg); } }
+      .cat-walker svg{ display:block; width:100%; height:auto; overflow:visible; }
+      .cat-walker .cat-frame{ display:none; }
+      .cat-walker .cat-frame.on{ display:block; }
       *{ box-sizing:border-box; }
       html,body{ margin:0; padding:0; }
       html{ height:100%; }
@@ -723,22 +713,8 @@
       <svg viewBox="0 0 100 100" style="left:33.2%;bottom:32px;--r:96deg;animation-delay:7.65s"><g fill="#ef5f8b"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
     </div>
     <div class="cat-walker" aria-hidden="true">
-      <svg viewBox="0 0 220 122">
-        <path class="cat-tail" d="M42 66 C14 60 10 30 30 16" fill="none" stroke="#38222e" stroke-width="10" stroke-linecap="round"/>
-        <g fill="#38222e">
-          <ellipse cx="108" cy="64" rx="64" ry="27"/>
-          <circle cx="176" cy="40" r="23"/>
-          <polygon points="160,24 164,3 178,17"/>
-          <polygon points="180,18 194,4 197,25"/>
-          <g class="cat-leg"><rect x="58" y="82" width="11" height="30" rx="5.5"/></g>
-          <g class="cat-leg leg-b"><rect x="82" y="84" width="11" height="28" rx="5.5"/></g>
-          <g class="cat-leg leg-b"><rect x="128" y="84" width="11" height="28" rx="5.5"/></g>
-          <g class="cat-leg"><rect x="152" y="82" width="11" height="30" rx="5.5"/></g>
-        </g>
-        <circle cx="184" cy="37" r="2.6" fill="#ffeef4"/>
-        <ellipse cx="196" cy="47" rx="3.4" ry="2.4" fill="#ff8fab"/>
-      </svg>
-    </div>
+<svg viewBox="0 0 140 108" fill="#38222e"><g class="cat-frame on" data-f="0"><path d="M32 58.0 C17.3 48.3 8.1 36.1 10.1 28.1" fill="none" stroke="#38222e" stroke-width="9" stroke-linecap="round"/><path d="M40 72 L40.0 88.0 L40.0 102.0" fill="none" stroke="#2a1721" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M86 72 L86.0 84.2 L86.0 95.0" fill="none" stroke="#2a1721" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(0 -0.0)"><ellipse cx="63" cy="59" rx="37" ry="25"/><g transform="translate(0.9 -0.6)"><circle cx="107" cy="37" r="22"/><polygon points="90,24 92,2 106,14"/><polygon points="112,15 124,0 128,20"/></g></g><path d="M48 72 L48.0 84.2 L48.0 95.0" fill="none" stroke="#38222e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M94 72 L94.0 88.0 L94.0 102.0" fill="none" stroke="#38222e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(0.9 -0.6)"><circle cx="116" cy="34" r="3.1" fill="#ffd166"/><ellipse cx="127" cy="43" rx="3.2" ry="2.3" fill="#ff8fab"/></g></g><g class="cat-frame" data-f="1"><path d="M32 56.4 C18.0 46.3 8.3 33.7 10.3 25.7" fill="none" stroke="#38222e" stroke-width="9" stroke-linecap="round"/><path d="M40 72 L36.3 88.0 L30.8 102.0" fill="none" stroke="#2a1721" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M86 72 L89.7 85.3 L95.2 97.1" fill="none" stroke="#2a1721" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(0 -1.6)"><ellipse cx="63" cy="59" rx="37" ry="25"/><g transform="translate(1.6 -1.2)"><circle cx="107" cy="37" r="22"/><polygon points="90,24 92,2 106,14"/><polygon points="112,15 124,0 128,20"/></g></g><path d="M48 72 L51.7 85.3 L57.2 97.1" fill="none" stroke="#38222e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M94 72 L90.3 88.0 L84.8 102.0" fill="none" stroke="#38222e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(1.6 -2.7)"><circle cx="116" cy="34" r="3.1" fill="#ffd166"/><ellipse cx="127" cy="43" rx="3.2" ry="2.3" fill="#ff8fab"/></g></g><g class="cat-frame" data-f="2"><path d="M32 55.8 C17.5 44.1 6.6 30.2 8.6 22.2" fill="none" stroke="#38222e" stroke-width="9" stroke-linecap="round"/><path d="M40 72 L34.8 88.0 L27.0 102.0" fill="none" stroke="#2a1721" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M86 72 L91.2 88.0 L99.0 102.0" fill="none" stroke="#2a1721" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(0 -2.2)"><ellipse cx="63" cy="59" rx="37" ry="25"/><g transform="translate(1.3 -1.1)"><circle cx="107" cy="37" r="22"/><polygon points="90,24 92,2 106,14"/><polygon points="112,15 124,0 128,20"/></g></g><path d="M48 72 L53.2 88.0 L61.0 102.0" fill="none" stroke="#38222e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M94 72 L88.8 88.0 L81.0 102.0" fill="none" stroke="#38222e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(1.3 -3.3)"><circle cx="116" cy="34" r="3.1" fill="#ffd166"/><ellipse cx="127" cy="43" rx="3.2" ry="2.3" fill="#ff8fab"/></g></g><g class="cat-frame" data-f="3"><path d="M32 56.4 C16.2 43.0 3.9 27.8 5.9 19.8" fill="none" stroke="#38222e" stroke-width="9" stroke-linecap="round"/><path d="M40 72 L36.3 85.3 L30.8 97.1" fill="none" stroke="#2a1721" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M86 72 L89.7 88.0 L95.2 102.0" fill="none" stroke="#2a1721" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(0 -1.6)"><ellipse cx="63" cy="59" rx="37" ry="25"/><g transform="translate(0.3 -0.3)"><circle cx="107" cy="37" r="22"/><polygon points="90,24 92,2 106,14"/><polygon points="112,15 124,0 128,20"/></g></g><path d="M48 72 L51.7 88.0 L57.2 102.0" fill="none" stroke="#38222e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M94 72 L90.3 85.3 L84.8 97.1" fill="none" stroke="#38222e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(0.3 -1.9)"><circle cx="116" cy="34" r="3.1" fill="#ffd166"/><ellipse cx="127" cy="43" rx="3.2" ry="2.3" fill="#ff8fab"/></g></g><g class="cat-frame" data-f="4"><path d="M32 58.0 C14.7 43.7 1.9 27.9 3.9 19.9" fill="none" stroke="#38222e" stroke-width="9" stroke-linecap="round"/><path d="M40 72 L40.0 84.2 L40.0 95.0" fill="none" stroke="#2a1721" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M86 72 L86.0 88.0 L86.0 102.0" fill="none" stroke="#2a1721" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(0 -0.0)"><ellipse cx="63" cy="59" rx="37" ry="25"/><g transform="translate(-0.9 -0.6)"><circle cx="107" cy="37" r="22"/><polygon points="90,24 92,2 106,14"/><polygon points="112,15 124,0 128,20"/></g></g><path d="M48 72 L48.0 88.0 L48.0 102.0" fill="none" stroke="#38222e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M94 72 L94.0 84.2 L94.0 95.0" fill="none" stroke="#38222e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(-0.9 -0.6)"><circle cx="116" cy="34" r="3.1" fill="#ffd166"/><ellipse cx="127" cy="43" rx="3.2" ry="2.3" fill="#ff8fab"/></g></g><g class="cat-frame" data-f="5"><path d="M32 56.4 C14.0 45.7 1.7 30.3 3.7 22.3" fill="none" stroke="#38222e" stroke-width="9" stroke-linecap="round"/><path d="M40 72 L43.7 85.3 L49.2 97.1" fill="none" stroke="#2a1721" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M86 72 L82.3 88.0 L76.8 102.0" fill="none" stroke="#2a1721" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(0 -1.6)"><ellipse cx="63" cy="59" rx="37" ry="25"/><g transform="translate(-1.6 -1.2)"><circle cx="107" cy="37" r="22"/><polygon points="90,24 92,2 106,14"/><polygon points="112,15 124,0 128,20"/></g></g><path d="M48 72 L44.3 88.0 L38.8 102.0" fill="none" stroke="#38222e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M94 72 L97.7 85.3 L103.2 97.1" fill="none" stroke="#38222e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(-1.6 -2.7)"><circle cx="116" cy="34" r="3.1" fill="#ffd166"/><ellipse cx="127" cy="43" rx="3.2" ry="2.3" fill="#ff8fab"/></g></g><g class="cat-frame" data-f="6"><path d="M32 55.8 C14.5 47.9 3.4 33.8 5.4 25.8" fill="none" stroke="#38222e" stroke-width="9" stroke-linecap="round"/><path d="M40 72 L45.2 88.0 L53.0 102.0" fill="none" stroke="#2a1721" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M86 72 L80.8 88.0 L73.0 102.0" fill="none" stroke="#2a1721" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(0 -2.2)"><ellipse cx="63" cy="59" rx="37" ry="25"/><g transform="translate(-1.3 -1.1)"><circle cx="107" cy="37" r="22"/><polygon points="90,24 92,2 106,14"/><polygon points="112,15 124,0 128,20"/></g></g><path d="M48 72 L42.8 88.0 L35.0 102.0" fill="none" stroke="#38222e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M94 72 L99.2 88.0 L107.0 102.0" fill="none" stroke="#38222e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(-1.3 -3.3)"><circle cx="116" cy="34" r="3.1" fill="#ffd166"/><ellipse cx="127" cy="43" rx="3.2" ry="2.3" fill="#ff8fab"/></g></g><g class="cat-frame" data-f="7"><path d="M32 56.4 C15.8 49.0 6.1 36.2 8.1 28.2" fill="none" stroke="#38222e" stroke-width="9" stroke-linecap="round"/><path d="M40 72 L43.7 88.0 L49.2 102.0" fill="none" stroke="#2a1721" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M86 72 L82.3 85.3 L76.8 97.1" fill="none" stroke="#2a1721" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(0 -1.6)"><ellipse cx="63" cy="59" rx="37" ry="25"/><g transform="translate(-0.3 -0.3)"><circle cx="107" cy="37" r="22"/><polygon points="90,24 92,2 106,14"/><polygon points="112,15 124,0 128,20"/></g></g><path d="M48 72 L44.3 85.3 L38.8 97.1" fill="none" stroke="#38222e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M94 72 L97.7 88.0 L103.2 102.0" fill="none" stroke="#38222e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(-0.3 -1.9)"><circle cx="116" cy="34" r="3.1" fill="#ffd166"/><ellipse cx="127" cy="43" rx="3.2" ry="2.3" fill="#ff8fab"/></g></g><g class="cat-frame" data-f="sit"><path d="M34 96 C12 99 7 82 18 72" fill="none" stroke="#38222e" stroke-width="9" stroke-linecap="round"/><ellipse cx="44" cy="80" rx="25" ry="21"/><ellipse cx="54" cy="58" rx="23" ry="31" transform="rotate(-7 54 58)"/><path d="M66 76 L66 99" stroke="#38222e" stroke-width="10" stroke-linecap="round"/><path d="M78 76 L78 99" stroke="#2a1721" stroke-width="10" stroke-linecap="round"/><circle cx="59" cy="27" r="23"/><polygon points="41,14 43,-6 57,5"/><polygon points="66,4 79,-8 82,13"/><path d="M64 26 q5 4 10 0" fill="none" stroke="#ffeef4" stroke-width="2.2" stroke-linecap="round"/><ellipse cx="79" cy="33" rx="3.2" ry="2.3" fill="#ff8fab"/></g><g class="cat-frame" data-f="groom"><path d="M34 96 C12 99 7 82 18 72" fill="none" stroke="#38222e" stroke-width="9" stroke-linecap="round"/><ellipse cx="44" cy="80" rx="25" ry="21"/><ellipse cx="54" cy="58" rx="23" ry="31" transform="rotate(-7 54 58)"/><path d="M78 76 L78 99" stroke="#2a1721" stroke-width="10" stroke-linecap="round"/><path d="M68 74 C74 62 78 54 84 48" fill="none" stroke="#38222e" stroke-width="10" stroke-linecap="round"/><g transform="rotate(13 62 34)"><circle cx="62" cy="34" r="23"/><polygon points="44,21 46,1 60,12"/><polygon points="69,11 82,-1 85,20"/></g><path d="M70 40 q5 4 10 0" fill="none" stroke="#ffeef4" stroke-width="2.2" stroke-linecap="round" transform="rotate(13 62 34)"/><ellipse cx="84" cy="44" rx="3.2" ry="2.3" fill="#ff8fab" transform="rotate(13 62 34)"/></g></svg>
+</div>
     <div class="bg-rings" aria-hidden="true"><svg viewBox="0 0 600 600"><g class="bg-spin-a"><circle cx="300" cy="300" r="292" fill="none" stroke="rgba(103,232,255,.15)" stroke-width="1" stroke-dasharray="4 14"/></g><g class="bg-spin-b"><circle cx="300" cy="300" r="240" fill="none" stroke="rgba(103,232,255,.09)" stroke-width="10" stroke-dasharray="64 28 14 28"/></g><circle cx="300" cy="300" r="182" fill="none" stroke="rgba(103,232,255,.07)" stroke-width="1"/><g class="bg-spin-a"><circle cx="300" cy="300" r="122" fill="none" stroke="rgba(103,232,255,.11)" stroke-width="1.5" stroke-dasharray="2 8"/></g></svg></div>
     <div class="wrap">
 
@@ -974,7 +950,7 @@
           <li><b>フルスクリーンで眺める</b>：「⛶ フルスクリーン」ボタンで全画面表示。サブモニターに置いておくのもおすすめです。</li>
           <li><b>モジュールの自動切替</b>：ゲーム情報は3ページに分かれ、25秒ごとにフェードで自動で切り替わります（締切リストとカウントダウンは常に表示）。モジュール上部の <span class="mono">PAGE 01 / 03</span> 表示と ◀ ▶・丸いページボタンで手動でも送れます。❚❚ で自動切替を止められます。</li>
           <li><b>カウントダウンについて</b>：左上のゲージは<b>黒い砂漠の定期メンテナンス（毎週木曜 08:00〜12:00 JST）</b>までの残り時間を、日付から自動で計算して表示します。メンテ中は「メンテ中」表示になり、終了予定までのカウントに切り替わります。メンテがない週や時間が変わる週は、公式のお知らせが優先です。</li>
-          <li><b>テーマ切替</b>：上部の <span class="mono">THEME [JARVIS / CYBERPUNK / 管制 / CUTE]</span> ボタンで見た目をその場で切り替えられます。CUTEはパステルピンク×クリームに肉球モチーフの可愛いテーマです。CUTEのときだけ、画面の下に肉球の足あとがペタペタと順番に現れては消えたり、たまに黒猫のシルエットがゆっくり歩いて横切ったりします（他のテーマでは出ません）。選んだテーマはこのブラウザに保存され、次回も同じテーマで開きます（壁紙でもクリックで切り替え可能です）。</li>
+          <li><b>テーマ切替</b>：上部の <span class="mono">THEME [JARVIS / CYBERPUNK / 管制 / CUTE]</span> ボタンで見た目をその場で切り替えられます。CUTEはパステルピンク×クリームに肉球モチーフの可愛いテーマです。CUTEのときだけ、画面の下に肉球の足あとがペタペタと順番に現れては消えたり、たまに黒猫がコマ送りの歩行アニメーションで歩いて横切り、途中で一度座って毛づくろいしたりします（他のテーマでは出ません）。選んだテーマはこのブラウザに保存され、次回も同じテーマで開きます（壁紙でもクリックで切り替え可能です）。</li>
         </ol>
         <p>※ 中身は2026年11月23日時点の情報で固定されています。クーポン期限やイベント日程は公式のお知らせでも確認してください。</p>
       </section>
@@ -1336,6 +1312,42 @@
           document.body.removeChild(a);
           setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
         });
+
+        /* ===== CUTE限定：黒猫のお散歩（コマ送り歩行＋毛づくろい） ===== */
+        (function(){
+          var walker = document.querySelector('.cat-walker');
+          if (!walker) return;
+          if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          var frames = walker.querySelectorAll('.cat-frame');
+          var walkFrames = [], sitFrame = null, groomFrame = null;
+          frames.forEach(function(fr){
+            var k = fr.getAttribute('data-f');
+            if (k === 'sit') sitFrame = fr; else if (k === 'groom') groomFrame = fr; else walkFrames.push(fr);
+          });
+          var CYCLE = 78000, SPEED = 138, cur = null;
+          function show(fr){ if (cur === fr) return; if (cur) cur.classList.remove('on'); fr.classList.add('on'); cur = fr; }
+          function tick(now){
+            var W = window.innerWidth;
+            var pauseX = Math.round(W * 0.42);
+            var walk1 = (pauseX + 200) / SPEED * 1000;              /* 左端→休憩地点 */
+            var sitMs = 2100, groomMs = 2500, sit2Ms = 1100;        /* 座る→毛づくろい→座る */
+            var walk2 = (W + 80 - pauseX) / SPEED * 1000;           /* 休憩地点→右端 */
+            var t = now % CYCLE, x, mode = 'hide', ft = 0;
+            if (t < walk1){ mode = 'walk'; ft = t; x = -200 + SPEED * t / 1000; }
+            else if (t < walk1 + sitMs){ mode = 'sit'; x = pauseX; }
+            else if (t < walk1 + sitMs + groomMs){ mode = (Math.floor((t - walk1 - sitMs) / 460) % 2 === 0) ? 'groom' : 'sit'; x = pauseX; }
+            else if (t < walk1 + sitMs + groomMs + sit2Ms){ mode = 'sit'; x = pauseX; }
+            else if (t < walk1 + sitMs + groomMs + sit2Ms + walk2){ mode = 'walk'; ft = t - walk1; x = -200 + SPEED * (t - (sitMs + groomMs + sit2Ms)) / 1000; }
+            if (mode === 'hide'){ walker.style.transform = 'translateX(-200px)'; }
+            else {
+              walker.style.transform = 'translateX(' + Math.round(x) + 'px)';
+              if (mode === 'walk') show(walkFrames[Math.floor(ft / 105) % walkFrames.length]);
+              else if (mode === 'groom') show(groomFrame); else show(sitFrame);
+            }
+            requestAnimationFrame(tick);
+          }
+          requestAnimationFrame(tick);
+        })();
       })();
     </script>
   <script>setInterval(function(){location.reload();}, 30*60*1000);</script>
