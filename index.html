@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja" data-theme="jarvis">
+<html lang="ja" data-theme="cute">
   <head>
 <meta name="robots" content="noindex, nofollow" />
     <meta charset="utf-8" />
@@ -688,10 +688,10 @@
         <div class="top-actions">
           <div class="theme-switch" role="group" aria-label="テーマ切替">
             <span class="ts-label">THEME</span>
-            <button type="button" data-theme-btn="jarvis" aria-pressed="true">JARVIS</button>
+            <button type="button" data-theme-btn="jarvis" aria-pressed="false">JARVIS</button>
             <button type="button" data-theme-btn="cyberpunk" aria-pressed="false">CYBERPUNK</button>
             <button type="button" data-theme-btn="control" aria-pressed="false">管制</button>
-            <button type="button" data-theme-btn="cute" aria-pressed="false"><svg class="paw-ico" viewBox="0 0 100 100" aria-hidden="true" style="width:13px;height:13px;vertical-align:-2px;margin-right:4px"><g fill="currentColor"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>CUTE</button>
+            <button type="button" data-theme-btn="cute" aria-pressed="true"><svg class="paw-ico" viewBox="0 0 100 100" aria-hidden="true" style="width:13px;height:13px;vertical-align:-2px;margin-right:4px"><g fill="currentColor"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>CUTE</button>
           </div>
           <button class="hbtn" id="btn-download" type="button">⬇ PC用ファイルを保存</button>
           <button class="hbtn" id="btn-full" type="button">⛶ フルスクリーン</button>
@@ -764,7 +764,7 @@
                 <div class="when" id="gauge-when">―</div>
               </div>
             </div>
-            <div class="ticks"><span>T-MAX 7D</span><span id="gauge-pct">---%</span><span>T-0</span></div>
+            <div class="ticks"><span>最大7日</span><span id="gauge-pct">---%</span><span>0</span></div>
             <div class="gauge-note mono">毎週木曜 08:00〜12:00（JST）で自動計算</div>
           </section>
 
@@ -961,7 +961,7 @@
           var h = Math.floor(s/3600); s -= h*3600;
           var m = Math.floor(s/60); var ss = s - m*60;
           var core = ("0"+h).slice(-2)+":"+("0"+m).slice(-2)+":"+("0"+ss).slice(-2);
-          return d > 0 ? d+"D " + core : core;
+          return d > 0 ? d+"日 " + core : core;
         }
 
         /* ===== 締切リスト描画 ===== */
@@ -1054,7 +1054,7 @@
           gTarget.textContent = mw.during ? "黒い砂漠 メンテ中" : "黒い砂漠 定期メンテ開始";
           gCount.textContent = hms(ms);
           gWhen.textContent = fmtDate(targetDate) + (mw.during ? " 終了予定まで" : " 開始まで");
-          gPct.textContent = Math.round(frac*100) + "% LEFT";
+          gPct.textContent = "残り " + Math.round(frac*100) + "%";
         }
         renderList(); tick();
         setInterval(tick, 1000);
@@ -1251,7 +1251,7 @@
             try{ localStorage.setItem('hud-theme', name); }catch(e){}
             btns.forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-theme-btn')===name ? 'true':'false'); });
           }
-          var cur = document.documentElement.getAttribute('data-theme') || 'jarvis';
+          var cur = document.documentElement.getAttribute('data-theme') || 'cute';
           btns.forEach(function(b){
             b.setAttribute('aria-pressed', b.getAttribute('data-theme-btn')===cur ? 'true':'false');
             b.addEventListener('click', function(){ applyTheme(b.getAttribute('data-theme-btn')); });
