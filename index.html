@@ -886,7 +886,7 @@
       .sched-note{ margin:10px 0 0; font-size:11.5px; color:var(--ink-faint); line-height:1.65; }
 
       /* ===== AEMEATH：うろつくちびエイメス（透過GIF・キャラのみ／枠・背景・影・ラベルなし） ===== */
-      .aemeath-walker{ display:none; position:fixed; left:0; top:0; z-index:5; width:min(45vw,560px); pointer-events:none; will-change:transform; background:transparent; border:none; box-shadow:none; }
+      .aemeath-walker{ display:none; position:fixed; left:0; top:0; z-index:5; width:min(68vw,840px); pointer-events:none; will-change:transform; background:transparent; border:none; box-shadow:none; }
       html[data-theme="aemeath"] .aemeath-walker{ display:block; }
       .aemeath-walker .aem-inner{
         transition:transform .18s ease;
@@ -1820,72 +1820,98 @@
           if (!el) return;
           if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
           var inner = el.querySelector('.aem-inner');
-          var sparksBox = document.querySelector('.aem-sparks');
           /* 表示は透過ちびエイメスGIF（ちび化する待機モーション）が常時ループ再生する。反転はしない（キャンバス内でキャラが動く素材のため） */
           var started = false;
-          var x = 0, y = 0, tx = 0, ty = 0;
+          var x = 0, y = 0, sx = 0, sy = 0, tx = 0, ty = 0;
           var mode = 'idle';
           var idleUntil = 0;
-          var facing = 1;
-          var lastT = performance.now();
-          var sparkAt = 0;
+          var moveStart = 0, moveDur = 1000, arc = 10, bobPhase = Math.random() * Math.PI * 2;
+          function clamp(v, lo, hi){ return Math.max(lo, Math.min(v, hi)); }
           function groundY(){ return window.innerHeight - el.offsetHeight - 4; }
-          function pickTarget(){
-            var W = window.innerWidth, w = el.offsetWidth;
-            var air = Math.random() < 0.45;
-            tx = 8 + Math.random() * Math.max(10, W - w - 16);
-            ty = air ? (10 + Math.random() * window.innerHeight * 0.5) : groundY();
-            mode = 'move';
+          function nextIdle(now){
+            var r = Math.random();
+            var wait;
+            if (r < 0.32) wait = 500 + Math.random() * 700;        /* ちょこっと移動の合間の短い間 */
+            else if (r < 0.82) wait = 1300 + Math.random() * 1500;  /* ふつうの立ち止まり */
+            else wait = 2800 + Math.random() * 1600;                /* たまに長めに佇む */
+            idleUntil = now + wait;
           }
-          function spawnSpark(cx, cy){
-            if (!sparksBox || sparksBox.childNodes.length > 10) return;
-            var s = document.createElement('span');
-            s.textContent = '✦';
-            s.style.left = (cx + (Math.random() * 36 - 18)) + 'px';
-            s.style.top = cy + 'px';
-            s.style.color = Math.random() < 0.5 ? '#e9a13b' : '#e879a6';
-            sparksBox.appendChild(s);
-            setTimeout(function(){ if (s.parentNode) s.parentNode.removeChild(s); }, 1350);
+          function pickTarget(now){
+            var w = el.offsetWidth, h = el.offsetHeight;
+            var maxX = Math.max(6, window.innerWidth - w - 6);
+            var maxY = Math.max(6, window.innerHeight - h - 6);
+            var r = Math.random();
+            var dist;
+            if (r < 0.45) dist = 50 + Math.random() * 110;       /* 近くへちょこっと：50〜160px */
+            else if (r < 0.86) dist = 140 + Math.random() * 160; /* 短めのうろつき：140〜300px */
+            else dist = 250 + Math.random() * 130;               /* たまに少し遠く：250〜380px（端から端は行かない） */
+            var ntx, nty;
+            if (Math.random() < 0.18){
+              /* たまに上下だけのふわり移動 */
+              ntx = clamp(x + (Math.random() * 64 - 32), 6, maxX);
+              nty = clamp(y + (Math.random() < 0.5 ? -1 : 1) * (42 + Math.random() * 108), 6, maxY);
+            } else {
+              /* 横移動を主にして縦は浅く：長い斜め飛行にしない */
+              var baseDir = Math.random() < 0.5 ? 0 : Math.PI;
+              var ang = baseDir + (Math.random() * 0.84 - 0.42);
+              var dx = Math.cos(ang) * dist;
+              var dy = Math.sin(ang) * dist * 0.62;
+              ntx = clamp(x + dx, 6, maxX);
+              nty = clamp(y + dy, 6, maxY);
+              if (Math.abs(ntx - x) < 34 && Math.abs(nty - y) < 22){
+                ntx = clamp(x - dx, 6, maxX);
+                nty = clamp(y - dy, 6, maxY);
+              }
+            }
+            var actual = Math.sqrt((ntx - x) * (ntx - x) + (nty - y) * (nty - y));
+            if (actual < 26){ mode = 'idle'; nextIdle(now); return; }
+            sx = x; sy = y; tx = ntx; ty = nty;
+            var speed = 42 + Math.random() * 58; /* 42〜100px/秒：速さにばらつき */
+            moveDur = clamp((actual / speed) * 1000, 750, 5200);
+            arc = 6 + Math.random() * 15;        /* 移動の途中でふわりと持ち上がる量 */
+            moveStart = now;
+            mode = 'move';
           }
           function tickAem(now){
             requestAnimationFrame(tickAem);
-            var dt = Math.min(50, now - lastT); lastT = now;
             if (document.hidden) return;
             if (document.documentElement.getAttribute('data-theme') !== 'aemeath') return;
             var w = el.offsetWidth, h = el.offsetHeight;
             if (!w || !h) return;
             if (!started){
               started = true;
-              x = window.innerWidth * 0.25; y = groundY();
+              x = clamp(window.innerWidth * 0.22, 6, Math.max(6, window.innerWidth - w - 6));
+              y = groundY();
               tx = x; ty = y;
-              idleUntil = now + 1000;
+              idleUntil = now + 900;
             }
-            /* 画面サイズが変わっても範囲内に収める */
-            x = Math.max(0, Math.min(x, window.innerWidth - w));
-            y = Math.max(0, Math.min(y, window.innerHeight - h));
-            var floating = false;
+            var maxX = Math.max(0, window.innerWidth - w);
+            var maxY = Math.max(0, window.innerHeight - h);
+            x = clamp(x, 0, maxX); y = clamp(y, 0, maxY);
+            var renderX = x, renderY = y;
+            /* 常に小さく上下に揺れる浮遊感（止まっているときも、動いているときも） */
+            var floatBob = Math.sin(now / 880 + bobPhase) * 5 + Math.sin(now / 1630 + bobPhase * 1.7) * 2.2;
             if (mode === 'idle'){
-              if (now >= idleUntil) pickTarget();
+              renderY = y + floatBob;
+              if (now >= idleUntil) pickTarget(now);
             } else {
-              var dx = tx - x, dy = ty - y;
-              var dist = Math.sqrt(dx * dx + dy * dy);
-              floating = Math.abs(dy) > 26 || y < groundY() - 26;
-              if (dist < 6){
+              var p = (now - moveStart) / moveDur;
+              if (p >= 1){
+                x = tx; y = ty;
+                renderX = x; renderY = y + floatBob;
                 mode = 'idle';
-                idleUntil = now + 1400 + Math.random() * 2600;
-                if (Math.random() < 0.3) facing = -facing; /* たまに振り返る */
+                nextIdle(now);
               } else {
-                var step = Math.min(dist, (floating ? 0.14 : 0.10) * dt);
-                x += dx / dist * step;
-                y += dy / dist * step;
-                if (Math.abs(dx) > 4) facing = dx > 0 ? 1 : -1;
-                if (floating){
-                  if (now - sparkAt > 420){ sparkAt = now; spawnSpark(x + w * 0.5, y + h * 0.78); }
-                }
+                var ease = 0.5 - 0.5 * Math.cos(Math.PI * p); /* 出だしと到着はゆっくり */
+                renderX = sx + (tx - sx) * ease;
+                renderY = sy + (ty - sy) * ease;
+                renderY -= Math.sin(Math.PI * p) * arc;      /* 直線で滑らず、弧を描いてふわり */
+                renderY += floatBob * 0.7 + Math.sin(now / 270 + bobPhase) * 1.8;
+                renderX = clamp(renderX, 0, maxX);
+                renderY = clamp(renderY, -4, maxY + 4);
               }
             }
-            var bob = (mode === 'move' && floating) ? Math.sin(now / 280) * 3 : 0;
-            el.style.transform = 'translate(' + Math.round(x) + 'px,' + Math.round(y + bob) + 'px)';
+            el.style.transform = 'translate(' + Math.round(renderX) + 'px,' + Math.round(renderY) + 'px)';
             if (inner) inner.style.transform = '';
           }
           requestAnimationFrame(tickAem);
