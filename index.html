@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="ja" data-theme="cute">
+<html lang="ja" data-theme="aemeath">
   <head>
 <meta name="robots" content="noindex, nofollow" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="dark" />
     <meta http-equiv="refresh" content="1800" />
-    <script>try{var _t=localStorage.getItem('hud-theme');if(_t==='jarvis'||_t==='cyberpunk'||_t==='control'||_t==='cute')document.documentElement.setAttribute('data-theme',_t);}catch(e){}</script>
+    <script>try{var _t=localStorage.getItem('hud-theme');if(_t==='jarvis'||_t==='cyberpunk'||_t==='control'||_t==='cute'||_t==='aemeath')document.documentElement.setAttribute('data-theme',_t);}catch(e){}</script>
     <link rel="icon" href="data:," />
     <title>ゲーム情報ダッシュボード PC版</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -51,7 +51,7 @@
         --ink:#d6dde3; --ink-dim:#9aa8b3; --ink-faint:#6b7a86;
       }
       /* theme switcher */
-      .theme-switch{display:flex;align-items:center;gap:0;border:1px solid var(--edge);background:rgba(0,0,0,.35);padding:3px}
+      .theme-switch{display:flex;align-items:center;gap:0;flex-wrap:wrap;border:1px solid var(--edge);background:rgba(0,0,0,.35);padding:3px}
       .theme-switch .ts-label{font-family:"Share Tech Mono",monospace;font-size:10px;letter-spacing:.14em;color:var(--ink-faint);padding:0 8px 0 6px;white-space:nowrap}
       .theme-switch button{min-height:34px;padding:6px 11px;cursor:pointer;border:1px solid transparent;background:transparent;color:var(--ink-dim);font-family:"Share Tech Mono","Noto Sans JP",monospace;font-size:12px;letter-spacing:.06em;white-space:nowrap}
       .theme-switch button:hover{color:#fff;background:rgba(255,255,255,.06)}
@@ -276,6 +276,191 @@
       .cat-walker svg{ display:block; width:100%; height:auto; overflow:visible; }
       .cat-walker .cat-frame{ display:none; }
       .cat-walker .cat-frame.on{ display:block; }
+
+      /* ===== AEMEATH theme（エイメス：ピンク×白×水色×金＋星と羽とハロー） =====
+         鳴潮「エイメス」の公式ビジュアルの配色・モチーフで表現（画像そのものは不使用）。
+         ピンクの髪／金色の瞳の四芒星／水色の羽飾りと輪／白基調の衣装／スタートーチ学園。
+         このテーマの間は表示内容も鳴潮だけに絞られる（JS連動）。 */
+      html[data-theme="aemeath"]{
+        color-scheme:light;
+        --bg:#fff7fb; --bg2:#eef1ff;
+        --panel:rgba(255,255,255,.93);
+        --edge:rgba(232,121,168,.55); --edge-dim:rgba(232,121,168,.32);
+        --cyan:#e879a6; --cyan-hi:#cf4d87; --cyan-dim:#f2aec9;
+        --teal:#5fb6d9; --amber:#c9932b; --red:#e5484d;
+        --green:#f2a9c6; --term-green:#2f9e6e;
+        --ink:#572a44; --ink-dim:#8f5a76; --ink-faint:#b28ba1;
+      }
+      html[data-theme="aemeath"] body{
+        background:
+          radial-gradient(920px 540px at 88% -10%, rgba(255,183,217,.55), transparent 62%),
+          radial-gradient(780px 520px at 4% 108%, rgba(147,197,253,.34), transparent 60%),
+          radial-gradient(640px 420px at 55% 40%, rgba(216,180,254,.20), transparent 65%),
+          linear-gradient(180deg,#fffafd,#fdf0f6 55%,#eef2ff);
+        font-family:"M PLUS Rounded 1c","Noto Sans JP",system-ui,sans-serif;
+      }
+      /* 星屑ドット＋きらめき */
+      html[data-theme="aemeath"] body::before{
+        background:
+          radial-gradient(rgba(232,121,168,.20) 1.8px, transparent 2.4px) 0 0/44px 44px,
+          radial-gradient(rgba(95,182,217,.18) 1.6px, transparent 2.2px) 22px 22px/44px 44px,
+          radial-gradient(rgba(201,147,43,.16) 1.4px, transparent 2px) 11px 33px/44px 44px;
+      }
+      html[data-theme="aemeath"] body::after{
+        background:radial-gradient(125% 95% at 50% 42%, transparent 62%, rgba(207,77,135,.10) 100%);
+      }
+      html[data-theme="aemeath"] .bg-rings{ opacity:.5; }
+      html[data-theme="aemeath"] .bg-rings circle[stroke^="rgba(103,232,255"]{ stroke:rgba(232,140,180,.5); }
+      html[data-theme="aemeath"] .topbar h1,
+      html[data-theme="aemeath"] .hud-head h2,
+      html[data-theme="aemeath"] .clockbox .time,
+      html[data-theme="aemeath"] .gauge-center .count,
+      html[data-theme="aemeath"] .gauge-center .label,
+      html[data-theme="aemeath"] .hud-head .idx,
+      html[data-theme="aemeath"] .rot-bar .rot-title,
+      html[data-theme="aemeath"] .rot-page-num{ font-family:"M PLUS Rounded 1c","Noto Sans JP",sans-serif; }
+      html[data-theme="aemeath"] .hud{
+        background:linear-gradient(165deg,#ffffff,#fff5f9 60%,#f2f5ff);
+        border:1.5px solid var(--edge-dim);
+        border-radius:20px;
+        box-shadow:0 10px 26px rgba(207,77,135,.12), 0 2px 6px rgba(95,182,217,.10);
+        overflow:hidden;
+      }
+      html[data-theme="aemeath"] .hud::before,html[data-theme="aemeath"] .hud::after,
+      html[data-theme="aemeath"] .hud .brk::before,html[data-theme="aemeath"] .hud .brk::after{ display:none; }
+      html[data-theme="aemeath"] .topbar{
+        background:linear-gradient(180deg,#ffffff,#fff0f6);
+        border:1.5px solid var(--edge-dim); border-radius:20px;
+        box-shadow:0 10px 26px rgba(207,77,135,.12);
+      }
+      html[data-theme="aemeath"] .topbar h1{ color:#6d2f4e; text-shadow:none; }
+      html[data-theme="aemeath"] .topbar h1 .accent{ color:var(--cyan-hi); }
+      html[data-theme="aemeath"] .topbar .sys{ color:var(--cyan-hi); }
+      html[data-theme="aemeath"] .core-mark{ filter:drop-shadow(0 0 6px rgba(232,121,168,.55)); }
+      html[data-theme="aemeath"] .core-mark circle[stroke^="rgba(103,232,255"]{ stroke:rgba(232,121,168,.8); }
+      html[data-theme="aemeath"] .core-mark circle[fill="#a5ecff"]{ fill:#f6b73c; }
+      html[data-theme="aemeath"] .cursor{ box-shadow:0 0 8px rgba(232,121,168,.8); }
+      html[data-theme="aemeath"] .cursor.green{ box-shadow:0 0 8px rgba(95,182,217,.85); }
+      html[data-theme="aemeath"] .clockbox::before{ box-shadow:0 0 8px rgba(232,121,168,.6), inset 0 0 4px rgba(232,121,168,.7); }
+      html[data-theme="aemeath"] .clockbox .time{ color:#6d2f4e; text-shadow:none; }
+      /* 見出し：金の四芒星ノード＋ピンク→ラベンダーの帯 */
+      html[data-theme="aemeath"] .hud-head{
+        background:linear-gradient(90deg, rgba(255,183,217,.55), rgba(196,181,253,.28) 60%, transparent);
+        border-bottom:1.5px dashed rgba(232,121,168,.38);
+      }
+      html[data-theme="aemeath"] .hud-head::before{
+        content:"✦"; width:auto; height:auto; border:none; border-radius:0; box-shadow:none; background:none;
+        color:#e9a13b; font-size:17px; line-height:1; text-shadow:0 0 7px rgba(246,183,60,.75);
+      }
+      html[data-theme="aemeath"] .hud-head h2{ color:#6d2f4e; text-shadow:none; }
+      html[data-theme="aemeath"] .hud-head .idx{ color:var(--cyan-hi); }
+      html[data-theme="aemeath"] .snapshot::before{ content:"✦ "; color:#e9a13b; }
+      /* ボタン類：ピル型 */
+      html[data-theme="aemeath"] .theme-switch{ background:#fff; border-radius:999px; border-color:var(--edge-dim); }
+      html[data-theme="aemeath"] .theme-switch button{ border-radius:999px; }
+      html[data-theme="aemeath"] .theme-switch button:hover{ color:#a12c5c; background:rgba(255,183,217,.35); }
+      html[data-theme="aemeath"] .theme-switch button[aria-pressed="true"]{ background:linear-gradient(90deg,#f78fb8,#e879a6); color:#fff; border-color:#e879a6; box-shadow:0 4px 12px rgba(232,121,168,.5); }
+      html[data-theme="aemeath"] .hbtn,html[data-theme="aemeath"] .copybtn,html[data-theme="aemeath"] .rot-nav{
+        clip-path:none; border-radius:999px;
+        background:rgba(232,121,168,.12); color:var(--cyan-hi); border-color:var(--edge-dim);
+      }
+      html[data-theme="aemeath"] .hbtn:hover,html[data-theme="aemeath"] .copybtn:hover{ background:rgba(232,121,168,.28); color:#a12c5c; }
+      html[data-theme="aemeath"] .copybtn.copied{ color:var(--term-green); border-color:rgba(95,182,217,.6); }
+      /* ===== AEMEATH ゲージ：ピンク×水色×金のリング＋星＋ハロー ===== */
+      html[data-theme="aemeath"] .gauge-wrap::before{ background:radial-gradient(circle, rgba(255,183,217,.55), rgba(196,181,253,.18) 55%, transparent 72%); }
+      html[data-theme="aemeath"] .gauge-wrap circle[stroke^="rgba(103,232,255"],
+      html[data-theme="aemeath"] .gauge-wrap circle[stroke^="rgba(83,217,255"]{ stroke:rgba(232,140,180,.45); }
+      html[data-theme="aemeath"] .gauge-wrap .rg-spin-b circle{ stroke:rgba(95,182,217,.55); }
+      html[data-theme="aemeath"] .gauge-wrap .rg-spin-c circle{ stroke:rgba(233,161,59,.55); }
+      html[data-theme="aemeath"] #gauge-arc{ stroke:#ff7fab; filter:drop-shadow(0 0 8px rgba(255,127,171,.85)) drop-shadow(0 0 3px rgba(246,183,60,.6)); }
+      html[data-theme="aemeath"] #coreGrad stop[offset="0%"]{ stop-color:#ffffff; }
+      html[data-theme="aemeath"] #coreGrad stop[offset="55%"]{ stop-color:#fff0f6; }
+      html[data-theme="aemeath"] #coreGrad stop[offset="100%"]{ stop-color:#e9efff; }
+      html[data-theme="aemeath"] .gauge-center .target{ color:#6d2f4e; text-shadow:none; }
+      html[data-theme="aemeath"] .gauge-center .count{ color:#cf4d87; text-shadow:0 0 10px rgba(255,183,217,.65); }
+      html[data-theme="aemeath"] .gauge-center .label{ color:#b97f14; }
+      html[data-theme="aemeath"] .gauge-halo{ display:block; }
+      html[data-theme="aemeath"] .gauge-star{ display:block; }
+      html[data-theme="aemeath"] .gauge-paw{ display:none !important; }
+      .gauge-halo{
+        display:none; width:52px; height:14px; margin-bottom:3px;
+        border:2.5px solid rgba(246,183,60,.9); border-radius:50%;
+        box-shadow:0 0 10px rgba(246,183,60,.55), inset 0 0 6px rgba(246,183,60,.4);
+        transform:rotate(-6deg);
+      }
+      .gauge-star{
+        display:none; position:absolute; color:#e9a13b; line-height:1; pointer-events:none;
+        text-shadow:0 0 8px rgba(246,183,60,.8);
+        animation:aemTwinkle 2.8s ease-in-out infinite;
+      }
+      .gauge-star.s1{ top:9%; left:13%; font-size:17px; }
+      .gauge-star.s2{ top:16%; right:10%; font-size:12px; color:#5fb6d9; text-shadow:0 0 8px rgba(95,182,217,.8); animation-delay:.9s; }
+      .gauge-star.s3{ bottom:11%; left:9%; font-size:12px; color:#e879a6; text-shadow:0 0 8px rgba(232,121,168,.8); animation-delay:1.7s; }
+      @keyframes aemTwinkle{ 0%,100%{ opacity:.45; transform:scale(.85) rotate(0deg); } 50%{ opacity:1; transform:scale(1.12) rotate(18deg); } }
+      /* 締切リスト */
+      html[data-theme="aemeath"] .deadline-list{ scrollbar-color:rgba(232,121,168,.55) rgba(255,183,217,.18); }
+      html[data-theme="aemeath"] .deadline-list::-webkit-scrollbar-thumb{ background:rgba(232,121,168,.55); }
+      html[data-theme="aemeath"] .deadline-list::-webkit-scrollbar-track{ background:rgba(255,183,217,.18); }
+      html[data-theme="aemeath"] .deadline-list li{ border-bottom:1.5px dashed rgba(232,121,168,.28); }
+      html[data-theme="aemeath"] .deadline-list li::before{ background:rgba(255,183,217,.4); }
+      html[data-theme="aemeath"] .deadline-list li.hot::before{ border-color:var(--amber); background:rgba(201,147,43,.3); box-shadow:0 0 7px rgba(201,147,43,.55); }
+      html[data-theme="aemeath"] .deadline-list li.is-main .what,
+      html[data-theme="aemeath"] .deadline-list li.is-maint .what{ color:#6d2f4e; }
+      html[data-theme="aemeath"] .main-tag,html[data-theme="aemeath"] .maint-tag,html[data-theme="aemeath"] .main-flag{ border-radius:999px; padding-left:8px; padding-right:8px; }
+      html[data-theme="aemeath"] .maint-tag{ background:#ffd9a8; color:#7a5200; }
+      html[data-theme="aemeath"] .wuwa-tag{ background:linear-gradient(90deg,#f78fb8,#c4b5fd); color:#57123a; }
+      /* ゲームモジュール */
+      html[data-theme="aemeath"] .grid > section{ scrollbar-color:rgba(232,121,168,.55) rgba(255,183,217,.18); }
+      html[data-theme="aemeath"] .grid > section::-webkit-scrollbar-thumb{ background:rgba(232,121,168,.55); }
+      html[data-theme="aemeath"] .grid > section::-webkit-scrollbar-track{ background:rgba(255,183,217,.18); }
+      html[data-theme="aemeath"] .game .ver{
+        clip-path:none; border-radius:999px; padding:3px 12px;
+        background:linear-gradient(90deg,#f78fb8,#f6b73c); color:#57123a;
+        box-shadow:0 4px 10px rgba(232,121,168,.35);
+      }
+      html[data-theme="aemeath"] .game .ver.soon{ background:linear-gradient(90deg,#a5d8f5,#c4b5fd); color:#233a5e; }
+      html[data-theme="aemeath"] .game li{ border-bottom:1.5px dashed rgba(232,121,168,.2); }
+      html[data-theme="aemeath"] .game li::before{ box-shadow:none; background:rgba(255,183,217,.5); border-color:#e879a6; }
+      html[data-theme="aemeath"] .game li b{ color:#6d2f4e; }
+      html[data-theme="aemeath"] .src a{ color:#cf4d87; border-bottom-color:#f2aec9; }
+      html[data-theme="aemeath"] .src a:hover{ color:#a12c5c; }
+      html[data-theme="aemeath"] .coupon code{
+        color:#1d7a4c; background:rgba(160,220,190,.16);
+        border:1.5px dashed rgba(110,190,150,.55); border-radius:12px;
+      }
+      /* ローテーションバー */
+      html[data-theme="aemeath"] .rot-bar{
+        background:linear-gradient(90deg, rgba(255,183,217,.5), rgba(196,181,253,.22));
+        border-color:var(--edge-dim); border-radius:18px 18px 0 0;
+      }
+      html[data-theme="aemeath"] .rot-bar .rot-title{ color:#6d2f4e; }
+      html[data-theme="aemeath"] .rot-page-num{ color:#6d2f4e; }
+      html[data-theme="aemeath"] .rot-dots button{ border-color:rgba(232,121,168,.6); }
+      html[data-theme="aemeath"] .rot-dots button::after{ background:rgba(232,140,180,.45); }
+      html[data-theme="aemeath"] .rot-dots button[aria-current="true"]{ border-color:#ff7fab; box-shadow:0 0 8px rgba(232,121,168,.55); }
+      html[data-theme="aemeath"] .rot-dots button[aria-current="true"]::after{ background:#ff7fab; box-shadow:none; }
+      html[data-theme="aemeath"] .rot-nav:hover{ background:rgba(232,121,168,.28); color:#a12c5c; }
+      html[data-theme="aemeath"] .rot-progress{ background:rgba(255,183,217,.25); }
+      html[data-theme="aemeath"] .rot-progress i{ background:linear-gradient(90deg,#ff7fab,#f6b73c); box-shadow:0 0 8px rgba(232,121,168,.8); }
+      /* システムログ：白いアカデミーノート風 */
+      html[data-theme="aemeath"] .log-body{
+        background:#fffafd; color:#9a637e; border-color:var(--edge-dim); border-radius:14px;
+        scrollbar-color:rgba(232,121,168,.55) rgba(255,183,217,.18);
+      }
+      html[data-theme="aemeath"] .log-body .inf{ color:#cf4d87; }
+      /* 背景に散らす星（AEMEATHのときだけ・端の装飾） */
+      .aemeath-decor{ display:none; }
+      html[data-theme="aemeath"] .aemeath-decor{ display:block; position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+      .aemeath-decor span{ position:absolute; line-height:1; animation:aemTwinkle 3.4s ease-in-out infinite; }
+      /* AEMEATH専用モジュール＆絞り込み用 */
+      .only-aemeath{ display:none !important; }
+      html[data-theme="aemeath"] .only-aemeath{ display:flex !important; }
+      .scope-hidden{ display:none !important; }
+      .wuwa-tag{
+        display:inline-block; vertical-align:1px; margin-right:6px;
+        font-family:"Share Tech Mono",monospace; font-size:9.5px; font-weight:700; letter-spacing:.06em;
+        color:#04240f; background:var(--green); padding:1px 5px;
+      }
       *{ box-sizing:border-box; }
       html,body{ margin:0; padding:0; }
       html{ height:100%; }
@@ -681,6 +866,7 @@
         .bg-spin-a,.bg-spin-b,.cm-spin,.rg-spin-a,.rg-spin-b,.rg-spin-c{ animation:none; }
         .rot-progress i.run{ transition:none; }
         .rot-page,.rot-page.is-active{ transition:none; }
+        .gauge-star,.aemeath-decor span{ animation:none; }
       }
     </style>
   </head>
@@ -709,6 +895,14 @@
 <svg viewBox="0 0 140 110" fill="#23151d"><g class="cat-frame on" data-f="0"><path d="M30 56 C16 50 8 38 12 26" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round"/><path d="M36 70 L36.0 83 L36 100" fill="none" stroke="#150a10" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M76 70 L76.0 81 L76 93" fill="none" stroke="#150a10" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(0 0)"><ellipse cx="60" cy="57" rx="31" ry="26" fill="#23151d"/><g transform="translate(0.9 -0.5)" fill="#23151d" stroke="#23151d" stroke-width="5" stroke-linejoin="round"><polygon points="78,16 80,-4 94,8"/><polygon points="102,6 116,-6 118,14"/><circle cx="97" cy="31" r="27"/></g></g><path d="M46 70 L46.0 81 L46 93" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M86 70 L86.0 83 L86 100" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></g><g class="cat-frame" data-f="1"><path d="M30 54 C15 46 7 34 11 22" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round"/><path d="M36 70 L32.4 83 L27 100" fill="none" stroke="#150a10" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M76 70 L79.6 81 L85 93" fill="none" stroke="#150a10" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(0 -1.8)"><ellipse cx="60" cy="57" rx="31" ry="26" fill="#23151d"/><g transform="translate(1.6 -1.1)" fill="#23151d" stroke="#23151d" stroke-width="5" stroke-linejoin="round"><polygon points="78,16 80,-4 94,8"/><polygon points="102,6 116,-6 118,14"/><circle cx="97" cy="31" r="27"/></g></g><path d="M46 70 L49.6 81 L55 93" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M86 70 L82.4 83 L77 100" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></g><g class="cat-frame" data-f="2"><path d="M30 53 C14 42 5 28 10 17" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round"/><path d="M36 70 L30.8 83 L23 100" fill="none" stroke="#150a10" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M76 70 L81.2 83 L89 100" fill="none" stroke="#150a10" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(0 -2.6)"><ellipse cx="60" cy="57" rx="31" ry="26" fill="#23151d"/><g transform="translate(1.3 -1.0)" fill="#23151d" stroke="#23151d" stroke-width="5" stroke-linejoin="round"><polygon points="78,16 80,-4 94,8"/><polygon points="102,6 116,-6 118,14"/><circle cx="97" cy="31" r="27"/></g></g><path d="M46 70 L51.2 83 L59 100" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M86 70 L80.8 83 L73 100" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></g><g class="cat-frame" data-f="3"><path d="M30 54 C13 40 3 24 8 14" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round"/><path d="M36 70 L32.4 81 L27 93" fill="none" stroke="#150a10" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M76 70 L79.6 83 L85 100" fill="none" stroke="#150a10" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(0 -1.8)"><ellipse cx="60" cy="57" rx="31" ry="26" fill="#23151d"/><g transform="translate(0.3 -0.3)" fill="#23151d" stroke="#23151d" stroke-width="5" stroke-linejoin="round"><polygon points="78,16 80,-4 94,8"/><polygon points="102,6 116,-6 118,14"/><circle cx="97" cy="31" r="27"/></g></g><path d="M46 70 L49.6 83 L55 100" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M86 70 L82.4 81 L77 93" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></g><g class="cat-frame" data-f="4"><path d="M30 56 C12 42 2 24 7 14" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round"/><path d="M36 70 L36.0 81 L36 93" fill="none" stroke="#150a10" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M76 70 L76.0 83 L76 100" fill="none" stroke="#150a10" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(0 0)"><ellipse cx="60" cy="57" rx="31" ry="26" fill="#23151d"/><g transform="translate(-0.9 -0.5)" fill="#23151d" stroke="#23151d" stroke-width="5" stroke-linejoin="round"><polygon points="78,16 80,-4 94,8"/><polygon points="102,6 116,-6 118,14"/><circle cx="97" cy="31" r="27"/></g></g><path d="M46 70 L46.0 83 L46 100" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M86 70 L86.0 81 L86 93" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></g><g class="cat-frame" data-f="5"><path d="M30 54 C12 44 2 28 7 18" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round"/><path d="M36 70 L39.6 81 L45 93" fill="none" stroke="#150a10" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M76 70 L72.4 83 L67 100" fill="none" stroke="#150a10" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(0 -1.8)"><ellipse cx="60" cy="57" rx="31" ry="26" fill="#23151d"/><g transform="translate(-1.6 -1.1)" fill="#23151d" stroke="#23151d" stroke-width="5" stroke-linejoin="round"><polygon points="78,16 80,-4 94,8"/><polygon points="102,6 116,-6 118,14"/><circle cx="97" cy="31" r="27"/></g></g><path d="M46 70 L42.4 83 L37 100" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M86 70 L89.6 81 L95 93" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></g><g class="cat-frame" data-f="6"><path d="M30 53 C13 46 4 32 9 22" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round"/><path d="M36 70 L41.2 83 L49 100" fill="none" stroke="#150a10" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M76 70 L70.8 83 L63 100" fill="none" stroke="#150a10" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(0 -2.6)"><ellipse cx="60" cy="57" rx="31" ry="26" fill="#23151d"/><g transform="translate(-1.3 -1.0)" fill="#23151d" stroke="#23151d" stroke-width="5" stroke-linejoin="round"><polygon points="78,16 80,-4 94,8"/><polygon points="102,6 116,-6 118,14"/><circle cx="97" cy="31" r="27"/></g></g><path d="M46 70 L40.8 83 L33 100" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M86 70 L91.2 83 L99 100" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></g><g class="cat-frame" data-f="7"><path d="M30 54 C14 48 6 36 10 26" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round"/><path d="M36 70 L39.6 83 L45 100" fill="none" stroke="#150a10" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M76 70 L72.4 81 L67 93" fill="none" stroke="#150a10" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(0 -1.8)"><ellipse cx="60" cy="57" rx="31" ry="26" fill="#23151d"/><g transform="translate(-0.3 -0.3)" fill="#23151d" stroke="#23151d" stroke-width="5" stroke-linejoin="round"><polygon points="78,16 80,-4 94,8"/><polygon points="102,6 116,-6 118,14"/><circle cx="97" cy="31" r="27"/></g></g><path d="M46 70 L42.4 81 L37 93" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M86 70 L89.6 83 L95 100" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></g><g class="cat-frame" data-f="sit"><path d="M36 90 C46 104 84 106 94 96 C99 90 95 82 86 84" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round"/><path d="M79 74 L79 99" stroke="#150a10" stroke-width="11" stroke-linecap="round"/><ellipse cx="45" cy="80" rx="29" ry="22" fill="#23151d"/><ellipse cx="55" cy="56" rx="25" ry="31" transform="rotate(-6 55 56)" fill="#23151d"/><path d="M67 74 L67 99" stroke="#23151d" stroke-width="11" stroke-linecap="round"/><g fill="#23151d" stroke="#23151d" stroke-width="5" stroke-linejoin="round"><polygon points="39,9 41,-11 55,1"/><polygon points="63,-1 77,-13 79,7"/><circle cx="58" cy="24" r="26"/></g></g><g class="cat-frame" data-f="groom"><path d="M36 90 C46 104 84 106 94 96 C99 90 95 82 86 84" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round"/><path d="M79 74 L79 99" stroke="#150a10" stroke-width="11" stroke-linecap="round"/><ellipse cx="45" cy="80" rx="29" ry="22" fill="#23151d"/><ellipse cx="55" cy="56" rx="25" ry="31" transform="rotate(-6 55 56)" fill="#23151d"/><g transform="rotate(14 61 31)" fill="#23151d" stroke="#23151d" stroke-width="5" stroke-linejoin="round"><polygon points="42,16 44,-4 58,8"/><polygon points="66,6 80,-6 82,14"/><circle cx="61" cy="31" r="26"/></g><path d="M70 72 C76 60 80 52 87 45" fill="none" stroke="#23151d" stroke-width="11" stroke-linecap="round"/></g></svg>
 </div>
     <div class="bg-rings" aria-hidden="true"><svg viewBox="0 0 600 600"><g class="bg-spin-a"><circle cx="300" cy="300" r="292" fill="none" stroke="rgba(103,232,255,.15)" stroke-width="1" stroke-dasharray="4 14"/></g><g class="bg-spin-b"><circle cx="300" cy="300" r="240" fill="none" stroke="rgba(103,232,255,.09)" stroke-width="10" stroke-dasharray="64 28 14 28"/></g><circle cx="300" cy="300" r="182" fill="none" stroke="rgba(103,232,255,.07)" stroke-width="1"/><g class="bg-spin-a"><circle cx="300" cy="300" r="122" fill="none" stroke="rgba(103,232,255,.11)" stroke-width="1.5" stroke-dasharray="2 8"/></g></svg></div>
+    <div class="aemeath-decor" aria-hidden="true">
+      <span style="left:3%;top:12%;font-size:20px;color:#e9a13b;opacity:.7">✦</span>
+      <span style="left:7%;top:64%;font-size:13px;color:#5fb6d9;opacity:.6;animation-delay:.8s">✦</span>
+      <span style="right:4%;top:20%;font-size:15px;color:#e879a6;opacity:.65;animation-delay:1.5s">✦</span>
+      <span style="right:9%;top:72%;font-size:22px;color:#e9a13b;opacity:.55;animation-delay:2.1s">✦</span>
+      <span style="left:46%;top:5%;font-size:12px;color:#c4b5fd;opacity:.6;animation-delay:.4s">✦</span>
+      <span style="right:38%;bottom:4%;font-size:13px;color:#e879a6;opacity:.5;animation-delay:2.7s">✦</span>
+    </div>
     <div class="wrap">
 
       <!-- ===== ステータスバー ===== -->
@@ -723,10 +917,11 @@
         <div class="top-actions">
           <div class="theme-switch" role="group" aria-label="テーマ切替">
             <span class="ts-label">THEME</span>
+            <button type="button" data-theme-btn="aemeath" aria-pressed="true">✦ AEMEATH</button>
             <button type="button" data-theme-btn="jarvis" aria-pressed="false">JARVIS</button>
             <button type="button" data-theme-btn="cyberpunk" aria-pressed="false">CYBERPUNK</button>
             <button type="button" data-theme-btn="control" aria-pressed="false">管制</button>
-            <button type="button" data-theme-btn="cute" aria-pressed="true"><svg class="paw-ico" viewBox="0 0 100 100" aria-hidden="true" style="width:13px;height:13px;vertical-align:-2px;margin-right:4px"><g fill="currentColor"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>CUTE</button>
+            <button type="button" data-theme-btn="cute" aria-pressed="false"><svg class="paw-ico" viewBox="0 0 100 100" aria-hidden="true" style="width:13px;height:13px;vertical-align:-2px;margin-right:4px"><g fill="currentColor"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>CUTE</button>
           </div>
           <button class="hbtn" id="btn-download" type="button">⬇ PC用ファイルを保存</button>
           <button class="hbtn" id="btn-full" type="button">⛶ フルスクリーン</button>
@@ -739,12 +934,12 @@
       <p class="snapshot">データ取得：<b>2026年11月23日（月）時点</b>の公式発表ベース。ファイル版はこの時点の内容で固定されます。新しい情報は夜のゲーム情報チェックでお知らせします。</p>
       <div class="control-strip" aria-label="モニタリング概要">
         <div class="cs-item"><span class="cs-k">STATUS</span><span class="cs-v ok">● ONLINE</span></div>
-        <div class="cs-item"><span class="cs-k">TITLES</span><span class="cs-v">6</span></div>
-        <div class="cs-item"><span class="cs-k">DEADLINES</span><span class="cs-v">10</span></div>
-        <div class="cs-item"><span class="cs-k">COUPONS</span><span class="cs-v">8 CODES</span></div>
-        <div class="cs-item"><span class="cs-k">ROTATION</span><span class="cs-v">3P / 25s</span></div>
+        <div class="cs-item"><span class="cs-k">TITLES</span><span class="cs-v" id="cs-titles">6</span></div>
+        <div class="cs-item"><span class="cs-k">DEADLINES</span><span class="cs-v" id="cs-deadlines">13</span></div>
+        <div class="cs-item"><span class="cs-k">COUPONS</span><span class="cs-v" id="cs-coupons">8 CODES</span></div>
+        <div class="cs-item"><span class="cs-k">ROTATION</span><span class="cs-v" id="cs-rotation">3P / 25s</span></div>
         <div class="cs-item"><span class="cs-k">SIGNAL</span><span class="wave" aria-hidden="true"><i style="height:5px"></i><i style="height:10px"></i><i style="height:7px"></i><i style="height:13px"></i><i style="height:9px"></i><i style="height:12px"></i><i style="height:6px"></i><i style="height:11px"></i></span></div>
-        <div class="cs-item"><span class="cs-k">NEXT MAINT</span><span class="cs-v warn" id="cs-next">―</span></div>
+        <div class="cs-item"><span class="cs-k" id="cs-next-k">NEXT MAINT</span><span class="cs-v warn" id="cs-next">―</span></div>
       </div>
 
       <!-- ===== ターミナルログ（このページ自身の起動ログ） ===== -->
@@ -755,11 +950,11 @@
 <span class="t">[init]</span> display mode ......... <span class="ok">WALLPAPER / FULLSCREEN READY</span>
 <span class="t">[init]</span> clock sync (JST) ..... <span class="ok" id="log-clock">SYNCING…</span>
 <span class="t">[load]</span> snapshot ............. <span class="jp">2026年11月23日（月）時点の公式発表ベース</span>
-<span class="t">[load]</span> modules .............. <span class="ok">6 TITLES LOADED</span> <span class="jp">[黒い砂漠（メイン） / エンドフィールド / ゼンゼロ / 鳴潮 / AION2 / アーキエイジクロニクル]</span>
-<span class="t">[load]</span> deadlines ............ <span class="ok">10 ENTRIES</span> <span class="jp">締切順にソート済み</span>
-<span class="t">[load]</span> rotation ............. <span class="ok">AUTO</span> <span class="jp">モジュール 3ページ / 25秒間隔（締切・カウントダウンは固定表示）</span>
-<span class="t">[load]</span> coupons .............. <span class="ok">8 CODES</span> <span class="jp">黒い砂漠（コピーボタン有効）</span>
-<span class="t">[next]</span> <span class="jp">次回メンテ</span> ............. <span class="wrn" id="log-next">―</span>
+<span class="t">[load]</span> modules .............. <span class="ok" id="log-modules">6 TITLES LOADED</span> <span class="jp" id="log-modules-jp">[黒い砂漠（メイン） / エンドフィールド / ゼンゼロ / 鳴潮 / AION2 / アーキエイジクロニクル]</span>
+<span class="t">[load]</span> deadlines ............ <span class="ok" id="log-deadlines">13 ENTRIES</span> <span class="jp">締切順にソート済み</span>
+<span class="t">[load]</span> rotation ............. <span class="ok">AUTO</span> <span class="jp">モジュール <span id="log-rot">3ページ</span> / 25秒間隔（締切・カウントダウンは固定表示）</span>
+<span class="t">[load]</span> coupons .............. <span class="ok" id="log-coupons">8 CODES 黒い砂漠（コピーボタン有効）</span>
+<span class="t">[next]</span> <span class="jp" id="log-next-label">次回メンテ</span> ............. <span class="wrn" id="log-next">―</span>
 <span class="t">[note]</span> <span class="jp">このログはこのページ自身の表示用です。PC本体の状態（CPU/GPU等）は取得していません。</span>
 <span class="t">[ ok ]</span> <span class="ok">ALL MODULES READY</span> — awaiting input<span class="cursor green" aria-hidden="true"></span></pre>
         <p class="log-note mono">// local boot log — generated from this page's own data only</p>
@@ -770,7 +965,7 @@
         <div class="leftcol">
           <section class="hud gauge-box" aria-label="次回メンテナンスまでのカウントダウン">
             <span class="brk"></span>
-            <div class="hud-head"><span class="idx">MOD-00</span><h2>NEXT MAINTENANCE</h2><span class="tag">~/maintenance</span></div>
+            <div class="hud-head"><span class="idx">MOD-00</span><h2 id="gauge-title">NEXT MAINTENANCE</h2><span class="tag" id="gauge-tag">~/maintenance</span></div>
             <div class="gauge-wrap">
               <svg viewBox="0 0 260 260" aria-hidden="true">
                 <defs>
@@ -791,7 +986,11 @@
                 <circle cx="130" cy="130" r="79" fill="url(#coreGrad)" stroke="rgba(103,232,255,.35)" stroke-width="1"/>
                 <circle cx="130" cy="130" r="71" fill="none" stroke="rgba(103,232,255,.16)" stroke-width="1"/>
               </svg>
+              <span class="gauge-star s1" aria-hidden="true">✦</span>
+              <span class="gauge-star s2" aria-hidden="true">✦</span>
+              <span class="gauge-star s3" aria-hidden="true">✦</span>
               <div class="gauge-center">
+                <span class="gauge-halo" aria-hidden="true"></span>
                 <svg class="gauge-paw" viewBox="0 0 100 100" aria-hidden="true"><g fill="#ff8fab"><ellipse cx="50" cy="67" rx="21" ry="16"/><ellipse cx="23" cy="45" rx="9" ry="12" transform="rotate(-18 23 45)"/><ellipse cx="41" cy="34" rx="9" ry="12" transform="rotate(-6 41 34)"/><ellipse cx="59" cy="34" rx="9" ry="12" transform="rotate(6 59 34)"/><ellipse cx="77" cy="45" rx="9" ry="12" transform="rotate(18 77 45)"/></g></svg>
                 <div class="label" id="gauge-label">MAIN // 黒い砂漠</div>
                 <div class="target" id="gauge-target">黒い砂漠 定期メンテ開始</div>
@@ -799,8 +998,8 @@
                 <div class="when" id="gauge-when">―</div>
               </div>
             </div>
-            <div class="ticks"><span>最大7日</span><span id="gauge-pct">---%</span><span>0</span></div>
-            <div class="gauge-note mono">毎週木曜 08:00〜12:00（JST）で自動計算</div>
+            <div class="ticks"><span id="gauge-max">最大7日</span><span id="gauge-pct">---%</span><span>0</span></div>
+            <div class="gauge-note mono" id="gauge-note">毎週木曜 08:00〜12:00（JST）で自動計算</div>
           </section>
 
           <section class="hud deadlines-panel" aria-label="締切一覧">
@@ -830,7 +1029,7 @@
           <div class="rot-page is-active" data-rot-page>
           <div class="grid">
 
-          <section class="hud game" aria-label="黒い砂漠">
+          <section class="hud game" data-game="bdo" aria-label="黒い砂漠">
             <span class="brk"></span>
             <div class="hud-head"><span class="idx">MOD-02</span><h2>黒い砂漠</h2><span class="main-flag">MAIN</span><span class="tag">~/modules/bdo</span></div>
             <span class="ver">クーポン大量配布中</span>
@@ -854,7 +1053,7 @@
             <p class="src">出典：<a href="https://www.jp.playblackdesert.com/ja-JP/News/Detail?boardNo=7211" target="_blank" rel="noopener">公式「現在使えるクーポンまとめ」（11/23 18:00更新）</a></p>
           </section>
 
-          <section class="hud game" aria-label="アークナイツ エンドフィールド">
+          <section class="hud game" data-game="endfield" aria-label="アークナイツ エンドフィールド">
             <span class="brk"></span>
             <div class="hud-head"><span class="idx">MOD-03</span><h2>エンドフィールド</h2><span class="tag">~/modules/endfield</span></div>
             <span class="ver soon">11/25 新バージョン</span>
@@ -871,7 +1070,7 @@
 
           <div class="rot-page" data-rot-page>
           <div class="grid">
-          <section class="hud game" aria-label="ゼンレスゾーンゼロ">
+          <section class="hud game" data-game="zzz" aria-label="ゼンレスゾーンゼロ">
             <span class="brk"></span>
             <div class="hud-head"><span class="idx">MOD-04</span><h2>ゼンレスゾーンゼロ</h2><span class="tag">~/modules/zzz</span></div>
             <span class="ver">Ver.3.3 開催中</span>
@@ -884,24 +1083,43 @@
             <p class="src">出典：<a href="https://steamcommunity.com/app/4162040?l=japanese" target="_blank" rel="noopener">Steam公式ニュース（HoYoverse告知）</a></p>
           </section>
 
-          <section class="hud game" aria-label="鳴潮">
+          <section class="hud game" data-game="wuwa" aria-label="鳴潮">
             <span class="brk"></span>
             <div class="hud-head"><span class="idx">MOD-05</span><h2>鳴潮</h2><span class="tag">~/modules/wuwa</span></div>
             <span class="ver">Ver.3.8 開催中</span>
             <ul>
               <li>Ver.3.8「旧夢で朽ちゆく小百合花」（11/12配信）。潮汐任務 第四章第五幕が開放</li>
-              <li>前半の限定集音は新★5共鳴者<b>「リリー」</b>＋★5拳銃「ララバイ」、シグリカ・仇遠も復刻中</li>
-              <li>後半は<b>秧秧・玄翎／穂穂／緋雪</b>が登場予定。追憶集音ではツバキ・ロココ・フィービー・ブラントから1名選択可</li>
+              <li>前半の限定集音は新★5共鳴者<b>「リリー」</b>＋★5拳銃「ララバイ」、シグリカ・仇遠も復刻中。<span class="dl">12/3 10:59まで</span></li>
+              <li>後半（12/3 11:00〜）は<b>秧秧・玄翎／穂穂／緋雪</b>が登場予定。追憶集音ではツバキ・ロココ・フィービー・ブラントから1名選択可</li>
               <li>学園ミニイベント「第二ソラリス：題なき夢」や7日間ログイン「過ぎし夢のプレゼント」も実施中</li>
+              <li>Ver.3.8の主なイベントは <span class="dl">12/21 12:59まで</span>。次期Ver.4.0は <span class="dl">12/22 配信</span></li>
+              <li><b>交換コード</b>（ボタンでそのままコピーできます）
+                <div data-wuwa-codes></div>
+                <small>入力場所：ゲーム内 [設定 − その他 − 交換コード]（ユニオンレベル2以上）。報酬はメールへ。コードは予告なく終了する場合があります</small>
+              </li>
             </ul>
             <p class="src">出典：<a href="https://www.4gamer.net/games/634/G063420/20261106056/index_2.html" target="_blank" rel="noopener">4Gamer（KURO GAMES公式発表）</a></p>
+          </section>
+
+          <section class="hud game only-aemeath" data-game="wuwa" aria-label="鳴潮 Ver.4.0 予告">
+            <span class="brk"></span>
+            <div class="hud-head"><span class="idx">MOD-05B</span><h2>鳴潮 Ver.4.0</h2><span class="tag">~/modules/wuwa/next</span></div>
+            <span class="ver soon">12/22 配信「永遠に灯る残り火」</span>
+            <ul>
+              <li>年間大型新章 <b>Ver.4.0「永遠に灯る残り火」</b>が <span class="dl">12/22（火）</span> 配信。新エリアは<b>ネオユニオン</b></li>
+              <li>新キャラ7人の立ち絵が公開済み。前半は<b>アンナ</b>（焦熱・増幅器）、後半は<b>ルシェル</b>（回折・拳銃）が有力</li>
+              <li>ルシェルを狙うなら星声の温存を。Ver.3.8後半は復刻のみで新キャラなし</li>
+              <li>予告特別通信は未発表（例年の間隔では12月上〜中旬の見込み）。公式Xの告知をチェック</li>
+              <li>Ver.3.8のイベント消化と終焉マトリクスは12/22早朝までに</li>
+            </ul>
+            <p class="src">出典：<a href="https://game8.jp/meicho" target="_blank" rel="noopener">ゲームエイト 鳴潮攻略（公式発表まとめ）</a></p>
           </section>
           </div>
           </div>
 
           <div class="rot-page" data-rot-page>
           <div class="grid">
-          <section class="hud game" aria-label="AION2">
+          <section class="hud game" data-game="aion2" aria-label="AION2">
             <span class="brk"></span>
             <div class="hud-head"><span class="idx">MOD-06</span><h2>AION2</h2><span class="tag">~/modules/aion2</span></div>
             <span class="ver">11/18 アプデ適用</span>
@@ -914,7 +1132,7 @@
             <p class="src">出典：<a href="https://aion2.plaync.com/ja-jp/board/update/view?articleId=6afd5b00e96a444182a29de9" target="_blank" rel="noopener">公式 11月18日アップデートノート</a></p>
           </section>
 
-          <section class="hud game" aria-label="アーキエイジクロニクル">
+          <section class="hud game" data-game="aac" aria-label="アーキエイジクロニクル">
             <span class="brk"></span>
             <div class="hud-head"><span class="idx">MOD-07</span><h2>アーキエイジクロニクル</h2><span class="tag">~/modules/aac</span></div>
             <span class="ver">早期アクセス中</span>
@@ -944,17 +1162,43 @@
 
         /* ===== 締切データ（2026-11-23時点） ===== */
         var deadlines = [
-          { t: D("2026-11-25T07:00:00"+JST), label:"エンドフィールド メンテ開始", sub:"ガイド報酬の受け取りもここまで", maint:"start" },
-          { t: D("2026-11-25T07:00:00"+JST), label:"AION2 ルドラ討伐イベント終了", sub:"11/25 定期メンテナンス前まで" },
-          { t: D("2026-11-25T13:00:00"+JST), label:"エンドフィールド メンテ終了予定", sub:"新バージョン「キノコ菌グ！？君との大冒険！」開始", maint:"end" },
+          { t: D("2026-11-25T07:00:00"+JST), label:"エンドフィールド メンテ開始", sub:"ガイド報酬の受け取りもここまで", game:"endfield", maint:"start" },
+          { t: D("2026-11-25T07:00:00"+JST), label:"AION2 ルドラ討伐イベント終了", sub:"11/25 定期メンテナンス前まで", game:"aion2" },
+          { t: D("2026-11-25T13:00:00"+JST), label:"エンドフィールド メンテ終了予定", sub:"新バージョン「キノコ菌グ！？君との大冒険！」開始", game:"endfield", maint:"end" },
           { t: D("2026-11-26T23:59:00"+JST), label:"黒い砂漠 ハイデル宴会クーポン2種", sub:"BEYONDTHEJOURNEY / TYALLADVENTURERS", game:"bdo" },
-          { t: D("2026-11-30T04:59:00"+JST), label:"ゼンゼロ「オバケ屋敷」終了", sub:"イベント報酬の取り忘れ注意" },
-          { t: D("2026-12-01T15:59:00"+JST), label:"ゼンゼロ 第2期変調 終了", sub:"セヴェリアン／ノーマ復刻" },
-          { t: D("2026-12-02T07:00:00"+JST), label:"ゼンゼロ Ver.3.3 終了", sub:"次はVer.3.4" },
+          { t: D("2026-11-30T04:59:00"+JST), label:"ゼンゼロ「オバケ屋敷」終了", sub:"イベント報酬の取り忘れ注意", game:"zzz" },
+          { t: D("2026-12-01T15:59:00"+JST), label:"ゼンゼロ 第2期変調 終了", sub:"セヴェリアン／ノーマ復刻", game:"zzz" },
+          { t: D("2026-12-02T07:00:00"+JST), label:"ゼンゼロ Ver.3.3 終了", sub:"次はVer.3.4", game:"zzz" },
           { t: D("2026-12-03T08:00:00"+JST), label:"黒い砂漠 Master Classクーポン2種", sub:"12/3 定期メンテナンス前まで", game:"bdo", maintProxy:true },
+          { t: D("2026-12-03T10:59:00"+JST), label:"前半集音 終了（リリー）", sub:"リリー／シグリカ／仇遠はここまで。後半は12/3 11:00〜", game:"wuwa" },
           { t: D("2026-12-10T08:00:00"+JST), label:"黒い砂漠 クーポン4種 終了", sub:"JapanBDMCWinner など（12/10 メンテ前）", game:"bdo", maintProxy:true },
-          { t: D("2026-12-16T09:00:00"+JST), label:"AION2 アビスポイントブースト終了", sub:"12/16 定期メンテナンス前まで" }
+          { t: D("2026-12-16T09:00:00"+JST), label:"AION2 アビスポイントブースト終了", sub:"12/16 定期メンテナンス前まで", game:"aion2" },
+          { t: D("2026-12-21T12:59:00"+JST), label:"Ver.3.8 後半集音・主なイベント終了", sub:"秧秧・玄翎／穂穂／緋雪はここまで", game:"wuwa" },
+          { t: D("2026-12-22T11:00:00"+JST), label:"Ver.4.0 配信", sub:"「永遠に灯る残り火」／新エリア ネオユニオン", game:"wuwa" }
         ];
+
+        /* ===== 鳴潮 交換コード（2026-11-23時点・毎晩の自動更新で差し替え） =====
+           予告配信コード（TRAINOFSOULS等）は11/8で終了済みのため含めない */
+        var wuwaCodes = [
+          { code:"WUTHERINGGIFT", exp:"常設（終了日未発表）", reward:"星声×50＋育成素材・貝幣" },
+          { code:"DVME2MOHOQJT", exp:"期限未発表・お早めに", reward:"星声×20＋貝幣×20,000" }
+        ];
+        function renderWuwaCodes(){
+          document.querySelectorAll("[data-wuwa-codes]").forEach(function(box){
+            box.innerHTML = "";
+            wuwaCodes.forEach(function(c){
+              var row = document.createElement("div"); row.className = "coupon";
+              var code = document.createElement("code"); code.textContent = c.code;
+              var btn = document.createElement("button");
+              btn.type = "button"; btn.className = "copybtn";
+              btn.setAttribute("data-copy", c.code); btn.textContent = "コピー";
+              var exp = document.createElement("span"); exp.className = "exp";
+              exp.textContent = c.exp + (c.reward ? "｜" + c.reward : "");
+              row.appendChild(code); row.appendChild(btn); row.appendChild(exp);
+              box.appendChild(row);
+            });
+          });
+        }
 
         var WD = ["日","月","火","水","木","金","土"];
         /* 表示は端末のタイムゾーンに依らず常に日本時間（JST）に固定する */
@@ -984,13 +1228,21 @@
           return d > 0 ? d+"日 " + core : core;
         }
 
+        /* ===== テーマ連動スコープ（AEMEATHのときだけ鳴潮のみ表示） ===== */
+        function hudTheme(){ return document.documentElement.getAttribute("data-theme") || "jarvis"; }
+        function isAemeath(){ return hudTheme() === "aemeath"; }
+        function visibleDeadlines(){
+          if (!isAemeath()) return deadlines;
+          return deadlines.filter(function(d){ return d.game === "wuwa"; });
+        }
+
         /* ===== 締切リスト描画 ===== */
         var listEl = document.getElementById("deadline-list");
         function renderList(){
           var now = new Date();
           var keepScroll = listEl.scrollTop;
           listEl.innerHTML = "";
-          deadlines.forEach(function(item){
+          visibleDeadlines().forEach(function(item){
             var li = document.createElement("li");
             var ms = item.t - now;
             if (ms <= 0) li.className = "done";
@@ -1006,6 +1258,10 @@
             if (item.game === "bdo"){
               var mt = document.createElement("span"); mt.className = "main-tag"; mt.textContent = "MAIN";
               w.appendChild(mt);
+            }
+            if (item.game === "wuwa"){
+              var wt = document.createElement("span"); wt.className = "wuwa-tag"; wt.textContent = "鳴潮";
+              w.appendChild(wt);
             }
             w.appendChild(document.createTextNode(item.label));
             var sm = document.createElement("small"); sm.textContent = item.sub; w.appendChild(sm);
@@ -1027,6 +1283,9 @@
         var logClock = document.getElementById("log-clock");
         var logNext = document.getElementById("log-next");
         var gLabel = document.getElementById("gauge-label");
+        var gTitle = document.getElementById("gauge-title");
+        var gTag = document.getElementById("gauge-tag");
+        var gNote = document.getElementById("gauge-note");
         var CIRC = 615.8, WINDOW = 7*24*3600*1000;
 
         function nextDeadline(now){
@@ -1061,10 +1320,49 @@
           clockEl.textContent = ("0"+j.getUTCHours()).slice(-2)+":"+("0"+j.getUTCMinutes()).slice(-2)+":"+("0"+j.getUTCSeconds()).slice(-2);
           dateEl.textContent = j.getUTCFullYear()+"."+("0"+(j.getUTCMonth()+1)).slice(-2)+"."+("0"+j.getUTCDate()).slice(-2)+" ("+WD[j.getUTCDay()]+") JST";
           if (logClock) logClock.textContent = "OK — " + clockEl.textContent + " JST";
+          var csNext = document.getElementById("cs-next");
+          if (isAemeath()){
+            /* AEMEATH：ゲージは鳴潮の次の締切（データ内の鳴潮分から最も近いもの）を数える */
+            var wList = deadlines.filter(function(d){ return d.game === "wuwa"; });
+            var wNext = null;
+            for (var wi=0; wi<wList.length; wi++){ if (wList[wi].t > now){ wNext = wList[wi]; break; } }
+            if (gTitle) gTitle.textContent = "NEXT DEADLINE";
+            if (gTag) gTag.textContent = "~/wuwa";
+            var gMaxA = document.getElementById("gauge-max");
+            if (gMaxA) gMaxA.textContent = "最大40日";
+            if (gNote) gNote.textContent = "鳴潮の締切から自動計算（AEMEATHテーマ連動）";
+            if (wNext){
+              var wms = wNext.t - now;
+              var wSpan = 40*24*3600*1000; /* バージョン期間（約40日）を目安にリング表示 */
+              var wFrac = Math.max(0, Math.min(1, wms / wSpan));
+              arc.style.strokeDashoffset = String(CIRC * (1 - wFrac));
+              if (gLabel) gLabel.textContent = "✦ WUWA // 鳴潮 — AEMEATH";
+              gTarget.textContent = wNext.label;
+              gCount.textContent = hms(wms);
+              gWhen.textContent = fmtDate(wNext.t) + " まで";
+              gPct.textContent = "残り " + Math.round(wFrac*100) + "%";
+              if (logNext) logNext.textContent = fmtDate(wNext.t) + " 鳴潮 " + wNext.label + "（まで " + remainText(wms) + "）";
+              if (csNext) csNext.textContent = fmtDate(wNext.t) + " 鳴潮";
+            } else {
+              if (gLabel) gLabel.textContent = "✦ WUWA // 鳴潮 — AEMEATH";
+              gTarget.textContent = "鳴潮 次回情報待ち";
+              gCount.textContent = "--:--:--";
+              gWhen.textContent = "次の締切は未登録です";
+              gPct.textContent = "---%";
+              arc.style.strokeDashoffset = "0";
+              if (logNext) logNext.textContent = "鳴潮の次の締切は未登録";
+              if (csNext) csNext.textContent = "―";
+            }
+            return;
+          }
+          if (gTitle) gTitle.textContent = "NEXT MAINTENANCE";
+          if (gTag) gTag.textContent = "~/maintenance";
+          var gMaxB = document.getElementById("gauge-max");
+          if (gMaxB) gMaxB.textContent = "最大7日";
+          if (gNote) gNote.textContent = "毎週木曜 08:00〜12:00（JST）で自動計算";
           var mw = bdoMaintWindow(now);
           var targetDate = mw.target;
           if (logNext) logNext.textContent = fmtDate(mw.start) + "〜12:00 黒い砂漠 定期メンテ" + (mw.during ? "（メンテ中・終了まで " + remainText(targetDate - now) + "）" : "（開始まで " + remainText(targetDate - now) + "）");
-          var csNext = document.getElementById("cs-next");
           if (csNext) csNext.textContent = fmtDate(mw.start) + (mw.during ? " メンテ中" : "");
           var ms = targetDate - now;
           var span = mw.during ? (mw.end - mw.start) : WINDOW;
@@ -1076,7 +1374,7 @@
           gWhen.textContent = fmtDate(targetDate) + (mw.during ? " 終了予定まで" : " 開始まで");
           gPct.textContent = "残り " + Math.round(frac*100) + "%";
         }
-        renderList(); tick();
+        renderWuwaCodes(); renderList(); tick();
         setInterval(tick, 1000);
         setInterval(renderList, 60000);
 
@@ -1146,8 +1444,9 @@
         /* ===== モジュール自動ローテーション（25秒間隔・フェード） ===== */
         (function(){
           var ROT_MS = 25000;
-          var pages = Array.prototype.slice.call(document.querySelectorAll("[data-rot-page]"));
-          if (!pages.length) return;
+          var allPages = Array.prototype.slice.call(document.querySelectorAll("[data-rot-page]"));
+          if (!allPages.length) return;
+          var pages = allPages.slice();
           var dotsWrap = document.getElementById("rot-dots");
           var pageNum = document.getElementById("rot-pagenum");
           var fill = document.getElementById("rot-progress-fill");
@@ -1160,22 +1459,47 @@
           var timer = null;
           var dots = [];
           function pad(n){ return ("0"+n).slice(-2); }
-          pages.forEach(function(_, i){
-            var b = document.createElement("button");
-            b.type = "button";
-            b.textContent = String(i+1);
-            b.setAttribute("aria-label", (i+1) + "ページ目を表示");
-            b.addEventListener("click", function(){ goTo(i); restart(); });
-            dotsWrap.appendChild(b);
-            dots.push(b);
-          });
+          function buildDots(){
+            dotsWrap.innerHTML = "";
+            dots = [];
+            pages.forEach(function(_, i){
+              var b = document.createElement("button");
+              b.type = "button";
+              b.textContent = String(i+1);
+              b.setAttribute("aria-label", (i+1) + "ページ目を表示");
+              b.addEventListener("click", function(){ goTo(i); restart(); });
+              dotsWrap.appendChild(b);
+              dots.push(b);
+            });
+          }
+          /* テーマ連動：AEMEATHのときは鳴潮モジュールのあるページだけを回す */
+          function refreshScope(){
+            var aem = document.documentElement.getAttribute("data-theme") === "aemeath";
+            document.querySelectorAll("section.game[data-game]").forEach(function(sec){
+              var hide = aem && sec.getAttribute("data-game") !== "wuwa";
+              sec.classList.toggle("scope-hidden", !!hide);
+            });
+            pages = allPages.filter(function(pg){
+              var secs = pg.querySelectorAll("section.game");
+              var anyVisible = false;
+              secs.forEach(function(s){ if (!s.classList.contains("scope-hidden") && !s.classList.contains("only-aemeath")) anyVisible = true; if (aem && s.getAttribute("data-game") === "wuwa") anyVisible = true; });
+              pg.style.display = anyVisible ? "" : "none";
+              return anyVisible;
+            });
+            if (!pages.length) pages = allPages.slice();
+            if (current >= pages.length) current = 0;
+            buildDots();
+            render();
+            restart();
+          }
+          window.__refreshRotator = refreshScope;
           function render(){
-            pages.forEach(function(pg, i){
-              var on = i === current;
+            allPages.forEach(function(pg){
+              var on = pages[current] === pg;
               pg.classList.toggle("is-active", on);
               pg.setAttribute("aria-hidden", on ? "false" : "true");
-              if (dots[i]) dots[i].setAttribute("aria-current", on ? "true" : "false");
             });
+            dots.forEach(function(d, i){ d.setAttribute("aria-current", i === current ? "true" : "false"); });
             if (pageNum) pageNum.innerHTML = "PAGE " + pad(current+1) + " <span>/ " + pad(pages.length) + "</span>";
           }
           function startProgress(){
@@ -1227,8 +1551,7 @@
             if (document.hidden){ clearTimeout(timer); }
             else if (!paused){ restart(); }
           });
-          render();
-          restart();
+          refreshScope();
         })();
 
         /* ===== 外部リンクを開く（Wallpaper Engine対策） =====
@@ -1263,19 +1586,41 @@
           }
         });
 
-        /* ===== テーマ切替（JARVIS / CYBERPUNK / CONTROL / CUTE） ===== */
+        /* ===== テーマ切替（AEMEATH / JARVIS / CYBERPUNK / CONTROL / CUTE） =====
+           AEMEATHの間は表示内容も鳴潮だけに絞る。他テーマでは全タイトル表示に戻る。
+           データ自体は全タイトル分を保持したまま、表示側で絞る。 */
         (function(){
           var btns = document.querySelectorAll('[data-theme-btn]');
+          function setText(id, txt){ var el = document.getElementById(id); if (el) el.textContent = txt; }
+          function applyScope(name){
+            var aem = name === 'aemeath';
+            if (window.__refreshRotator) window.__refreshRotator();
+            renderList();
+            tick();
+            setText('cs-titles', aem ? '1（鳴潮）' : '6');
+            setText('cs-deadlines', aem ? '3' : '13');
+            setText('cs-coupons', aem ? '2 CODES' : '8 CODES');
+            setText('cs-rotation', aem ? '1P / 25s' : '3P / 25s');
+            setText('log-modules', aem ? 'WUWA ONLY — AEMEATH連動' : '6 TITLES LOADED');
+            setText('log-modules-jp', aem ? '[鳴潮のみ表示中。他テーマでは全タイトル表示に戻ります]' : '[黒い砂漠（メイン） / エンドフィールド / ゼンゼロ / 鳴潮 / AION2 / アーキエイジクロニクル]');
+            setText('log-deadlines', aem ? '3 ENTRIES（鳴潮のみ）' : '13 ENTRIES');
+            setText('log-coupons', aem ? '2 CODES 鳴潮（コピーボタン有効）' : '8 CODES 黒い砂漠（コピーボタン有効）');
+            setText('log-next-label', aem ? '次回締切' : '次回メンテ');
+            setText('log-rot', aem ? '1ページ' : '3ページ');
+            setText('cs-next-k', aem ? 'NEXT DEADLINE' : 'NEXT MAINT');
+          }
           function applyTheme(name){
             document.documentElement.setAttribute('data-theme', name);
             try{ localStorage.setItem('hud-theme', name); }catch(e){}
             btns.forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-theme-btn')===name ? 'true':'false'); });
+            applyScope(name);
           }
-          var cur = document.documentElement.getAttribute('data-theme') || 'cute';
+          var cur = document.documentElement.getAttribute('data-theme') || 'aemeath';
           btns.forEach(function(b){
             b.setAttribute('aria-pressed', b.getAttribute('data-theme-btn')===cur ? 'true':'false');
             b.addEventListener('click', function(){ applyTheme(b.getAttribute('data-theme-btn')); });
           });
+          applyScope(cur);
           window.__applyHudTheme = applyTheme;
         })();
 
