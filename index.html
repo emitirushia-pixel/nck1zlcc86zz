@@ -858,6 +858,46 @@
         .gauge-center .count{ font-size:20px; }
       }
 
+      /* ===== AEMEATH：イベントスケジュール（ガント形式） ===== */
+      .sched-sec{ grid-column:1 / -1; }
+      .sched-ver{ margin:0 0 6px; font-size:13px; font-weight:700; color:var(--ink); }
+      .sched{ position:relative; margin-top:2px; }
+      .sched-axis{ position:relative; height:32px; margin-left:104px; }
+      .sched-axis .half{ position:absolute; top:0; transform:translateX(-50%); font-size:10.5px; letter-spacing:.14em; color:var(--ink-dim); font-weight:700; white-space:nowrap; }
+      .sched-axis .tick{ position:absolute; top:15px; transform:translateX(-50%); font-family:"Share Tech Mono",monospace; font-size:10.5px; color:var(--ink-faint); white-space:nowrap; }
+      .sched-axis .tick::before{ content:""; position:absolute; left:50%; top:-4px; width:1px; height:4px; background:var(--ink-faint); }
+      .sched-body{ position:relative; }
+      .sched-lines{ position:absolute; left:104px; right:0; top:0; bottom:0; pointer-events:none; }
+      .sched-lines .gl{ position:absolute; top:0; bottom:0; width:1px; background:rgba(207,77,135,.16); }
+      .sched-lines .half-a{ position:absolute; top:0; bottom:0; background:rgba(247,143,184,.08); border-radius:6px; }
+      .sched-lines .half-b{ position:absolute; top:0; bottom:0; background:rgba(167,139,250,.10); border-radius:6px; }
+      .sched-lines .today{ position:absolute; top:-2px; bottom:-2px; width:2px; margin-left:-1px; background:#e5484d; box-shadow:0 0 7px rgba(229,72,77,.65); }
+      .sched-lines .today b{ position:absolute; top:-15px; left:50%; transform:translateX(-50%); font-size:9.5px; color:#e5484d; letter-spacing:.08em; white-space:nowrap; }
+      .sched-row{ display:flex; align-items:center; margin:7px 0; position:relative; }
+      .sched-cat{ width:104px; flex:none; padding-right:10px; font-size:11.5px; font-weight:700; color:var(--ink); line-height:1.4; }
+      .sched-track{ position:relative; flex:1; height:26px; background:rgba(87,42,68,.05); border:1px solid rgba(232,121,168,.25); border-radius:8px; }
+      .sched-bar{ position:absolute; top:3px; height:18px; min-width:14px; border-radius:9px; display:flex; align-items:center; padding:0 9px; font-size:11px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-shadow:0 1px 2px rgba(90,10,40,.35); box-shadow:0 2px 6px rgba(207,77,135,.25); }
+      .sched-bar small{ font-weight:500; font-size:9.5px; opacity:.88; margin-left:6px; }
+      .sched-bar.bar-weapon{ color:#5b3a00; text-shadow:none; }
+      .bar-gacha{ background:linear-gradient(90deg,#f78fb8,#e879a6); }
+      .bar-revival{ background:linear-gradient(90deg,#c4b5fd,#a78bfa); }
+      .bar-weapon{ background:linear-gradient(90deg,#f6c453,#eda93a); }
+      .bar-event{ background:linear-gradient(90deg,#7fc4e8,#5fb6d9); }
+      .sched-note{ margin:10px 0 0; font-size:11.5px; color:var(--ink-faint); line-height:1.65; }
+
+      /* ===== AEMEATH：うろつくエイメス（自作ちびキャラ・画面全体を移動） ===== */
+      .aemeath-walker{ display:none; position:fixed; left:0; top:0; z-index:5; width:clamp(78px,11vh,100px); pointer-events:none; will-change:transform; filter:drop-shadow(0 4px 8px rgba(207,77,135,.25)); }
+      html[data-theme="aemeath"] .aemeath-walker{ display:block; }
+      .aemeath-walker .aem-inner{ transition:transform .18s ease; }
+      .aemeath-walker svg{ display:block; width:100%; height:auto; overflow:visible; }
+      .aemeath-walker .aem-frame{ display:none; }
+      .aemeath-walker .aem-frame.on{ display:block; }
+      .aemeath-walker .aem-tw{ animation:aemTwinkle 1.8s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+      .aem-sparks{ display:none; }
+      html[data-theme="aemeath"] .aem-sparks{ display:block; position:fixed; inset:0; z-index:5; pointer-events:none; }
+      .aem-sparks span{ position:fixed; font-size:13px; line-height:1; pointer-events:none; animation:aemSpark 1.3s ease-out forwards; }
+      @keyframes aemSpark{ 0%{ opacity:.95; transform:translateY(0) scale(.7) rotate(0deg); } 100%{ opacity:0; transform:translateY(18px) scale(1.15) rotate(50deg); } }
+
       /* ===== モーション抑制 ===== */
       @media (prefers-reduced-motion: reduce){
         .cursor,.sys-dot{ animation:none; }
@@ -867,6 +907,7 @@
         .rot-progress i.run{ transition:none; }
         .rot-page,.rot-page.is-active{ transition:none; }
         .gauge-star,.aemeath-decor span{ animation:none; }
+        .aemeath-walker,.aem-sparks{ display:none !important; }
       }
     </style>
   </head>
@@ -903,6 +944,13 @@
       <span style="left:46%;top:5%;font-size:12px;color:#c4b5fd;opacity:.6;animation-delay:.4s">✦</span>
       <span style="right:38%;bottom:4%;font-size:13px;color:#e879a6;opacity:.5;animation-delay:2.7s">✦</span>
     </div>
+    <!-- AEMEATH限定：うろつくエイメス（自作ちびキャラ／公式アート不使用） -->
+    <div class="aemeath-walker" aria-hidden="true">
+      <div class="aem-inner">
+      <svg viewBox="0 0 120 132"><g class="aem-frame on" data-f="idle"><path d="M70 14 C49 14 41 31 43 53 C44 73 39 95 35 107 C34 113 41 115 45 109 C48 104 49 98 50 91 L90 91 C91 99 93 105 96 109 C100 114 106 111 105 105 C101 91 98 73 98 53 C99 31 91 14 70 14 Z" fill="#f49ec2"/><path d="M64 95 L64 108 L64 118" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><path d="M77 95 L77 108 L77 118" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><ellipse cx="64" cy="121" rx="7" ry="4.5" fill="#e879a6"/><ellipse cx="77" cy="121" rx="7" ry="4.5" fill="#e879a6"/><path d="M56 62 C51 69 50 75 51 81" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><path d="M57 59 L83 59 L92 94 C84 100 56 100 48 94 Z" fill="#ffffff"/><path d="M51 91 C59 96 81 96 89 91" fill="none" stroke="#f2aec9" stroke-width="2.5"/><path d="M70 60 L61 54 L61 66 Z" fill="#7fc4e8"/><path d="M70 60 L79 54 L79 66 Z" fill="#7fc4e8"/><circle cx="70" cy="60" r="3" fill="#5fb6d9"/><circle cx="56" cy="62" r="5.5" fill="#ffffff"/><circle cx="84" cy="62" r="5.5" fill="#ffffff"/><path d="M84 62 C92 55 96 49 97 42" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><path class="aem-tw" d="M106 21 C107 25.5 108 26.5 112.5 27.5 C108 28.5 107 29.5 106 34 C105 29.5 104 28.5 99.5 27.5 C104 26.5 105 25.5 106 21 Z" fill="#f6b73c"/><path d="M43 30 C33 26 27 16 28 6 C37 8 44 15 46 24 Z" fill="#8ec9ec"/><path d="M46 37 C38 35 32 28 32 20 C39 21 45 27 47 33 Z" fill="#bfe0f5"/><circle cx="70" cy="38" r="20" fill="#fff0e4"/><path d="M50 37 C49 18 58 9 70 9 C83 9 92 18 91 35 C87 26 84 27 82 20 C79 28 73 30 71 22 C67 30 61 30 59 23 C55 28 52 31 50 37 Z" fill="#fbc6dc"/><path d="M51 30 C47 44 48 59 51 69 C54 60 54 44 53 32 Z" fill="#f9b8d2"/><path d="M89 30 C93 44 92 59 89 69 C86 60 86 44 87 32 Z" fill="#f9b8d2"/><ellipse cx="62" cy="41" rx="2.7" ry="4.4" fill="#cf9420"/><ellipse cx="79" cy="41" rx="2.7" ry="4.4" fill="#cf9420"/><circle cx="62.9" cy="39.3" r="1.1" fill="#fff"/><circle cx="79.9" cy="39.3" r="1.1" fill="#fff"/><ellipse cx="55" cy="48" rx="3.6" ry="2" fill="#f7a8c4" opacity=".6"/><ellipse cx="86" cy="48" rx="3.6" ry="2" fill="#f7a8c4" opacity=".6"/><path d="M68 49.5 Q70.5 51.5 73 49.5" fill="none" stroke="#c96f8e" stroke-width="1.6" stroke-linecap="round"/><path d="M94 15 C95.5 20.5 97 22 102.5 23.5 C97 25 95.5 26.5 94 32 C92.5 26.5 91 25 85.5 23.5 C91 22 92.5 20.5 94 15 Z" fill="#f6b73c"/><ellipse cx="70" cy="6" rx="15" ry="4.5" fill="none" stroke="#f6b73c" stroke-width="3" transform="rotate(-8 70 6)"/></g><g class="aem-frame" data-f="w0"><path d="M70 14 C49 14 41 31 43 53 C44 73 39 95 35 107 C34 113 41 115 45 109 C48 104 49 98 50 91 L90 91 C91 99 93 105 96 109 C100 114 106 111 105 105 C101 91 98 73 98 53 C99 31 91 14 70 14 Z" fill="#f49ec2"/><path d="M63 95 L55 107 L46 113" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><path d="M77 95 L86 106 L94 111" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><ellipse cx="44" cy="116" rx="7" ry="4.5" fill="#e879a6" transform="rotate(22 44 116)"/><ellipse cx="96" cy="114" rx="7" ry="4.5" fill="#e879a6" transform="rotate(-16 96 114)"/><path d="M56 62 C52 68 51 74 53 80" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><path d="M57 59 L83 59 L92 94 C84 100 56 100 48 94 Z" fill="#ffffff"/><path d="M51 91 C59 96 81 96 89 91" fill="none" stroke="#f2aec9" stroke-width="2.5"/><path d="M70 60 L61 54 L61 66 Z" fill="#7fc4e8"/><path d="M70 60 L79 54 L79 66 Z" fill="#7fc4e8"/><circle cx="70" cy="60" r="3" fill="#5fb6d9"/><circle cx="56" cy="62" r="5.5" fill="#ffffff"/><circle cx="84" cy="62" r="5.5" fill="#ffffff"/><path d="M84 62 C91 66 95 71 96 77" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><path d="M43 30 C33 26 27 16 28 6 C37 8 44 15 46 24 Z" fill="#8ec9ec"/><path d="M46 37 C38 35 32 28 32 20 C39 21 45 27 47 33 Z" fill="#bfe0f5"/><circle cx="70" cy="38" r="20" fill="#fff0e4"/><path d="M50 37 C49 18 58 9 70 9 C83 9 92 18 91 35 C87 26 84 27 82 20 C79 28 73 30 71 22 C67 30 61 30 59 23 C55 28 52 31 50 37 Z" fill="#fbc6dc"/><path d="M51 30 C47 44 48 59 51 69 C54 60 54 44 53 32 Z" fill="#f9b8d2"/><path d="M89 30 C93 44 92 59 89 69 C86 60 86 44 87 32 Z" fill="#f9b8d2"/><ellipse cx="62" cy="41" rx="2.7" ry="4.4" fill="#cf9420"/><ellipse cx="79" cy="41" rx="2.7" ry="4.4" fill="#cf9420"/><circle cx="62.9" cy="39.3" r="1.1" fill="#fff"/><circle cx="79.9" cy="39.3" r="1.1" fill="#fff"/><ellipse cx="55" cy="48" rx="3.6" ry="2" fill="#f7a8c4" opacity=".6"/><ellipse cx="86" cy="48" rx="3.6" ry="2" fill="#f7a8c4" opacity=".6"/><path d="M68 49.5 Q70.5 51.5 73 49.5" fill="none" stroke="#c96f8e" stroke-width="1.6" stroke-linecap="round"/><path d="M94 15 C95.5 20.5 97 22 102.5 23.5 C97 25 95.5 26.5 94 32 C92.5 26.5 91 25 85.5 23.5 C91 22 92.5 20.5 94 15 Z" fill="#f6b73c"/><ellipse cx="70" cy="6" rx="15" ry="4.5" fill="none" stroke="#f6b73c" stroke-width="3" transform="rotate(-8 70 6)"/></g><g class="aem-frame" data-f="w1" transform="translate(0 -1.5)"><path d="M70 14 C49 14 41 31 43 53 C44 73 39 95 35 107 C34 113 41 115 45 109 C48 104 49 98 50 91 L90 91 C91 99 93 105 96 109 C100 114 106 111 105 105 C101 91 98 73 98 53 C99 31 91 14 70 14 Z" fill="#f49ec2"/><path d="M63 95 L62 108 L61 118" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><path d="M77 95 L78 108 L79 118" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><ellipse cx="60" cy="121" rx="7" ry="4.5" fill="#e879a6"/><ellipse cx="80" cy="121" rx="7" ry="4.5" fill="#e879a6"/><path d="M56 62 C51 69 50 75 51 81" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><path d="M57 59 L83 59 L92 94 C84 100 56 100 48 94 Z" fill="#ffffff"/><path d="M51 91 C59 96 81 96 89 91" fill="none" stroke="#f2aec9" stroke-width="2.5"/><path d="M70 60 L61 54 L61 66 Z" fill="#7fc4e8"/><path d="M70 60 L79 54 L79 66 Z" fill="#7fc4e8"/><circle cx="70" cy="60" r="3" fill="#5fb6d9"/><circle cx="56" cy="62" r="5.5" fill="#ffffff"/><circle cx="84" cy="62" r="5.5" fill="#ffffff"/><path d="M84 62 C89 69 90 75 89 81" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><path d="M43 30 C33 26 27 16 28 6 C37 8 44 15 46 24 Z" fill="#8ec9ec"/><path d="M46 37 C38 35 32 28 32 20 C39 21 45 27 47 33 Z" fill="#bfe0f5"/><circle cx="70" cy="38" r="20" fill="#fff0e4"/><path d="M50 37 C49 18 58 9 70 9 C83 9 92 18 91 35 C87 26 84 27 82 20 C79 28 73 30 71 22 C67 30 61 30 59 23 C55 28 52 31 50 37 Z" fill="#fbc6dc"/><path d="M51 30 C47 44 48 59 51 69 C54 60 54 44 53 32 Z" fill="#f9b8d2"/><path d="M89 30 C93 44 92 59 89 69 C86 60 86 44 87 32 Z" fill="#f9b8d2"/><ellipse cx="62" cy="41" rx="2.7" ry="4.4" fill="#cf9420"/><ellipse cx="79" cy="41" rx="2.7" ry="4.4" fill="#cf9420"/><circle cx="62.9" cy="39.3" r="1.1" fill="#fff"/><circle cx="79.9" cy="39.3" r="1.1" fill="#fff"/><ellipse cx="55" cy="48" rx="3.6" ry="2" fill="#f7a8c4" opacity=".6"/><ellipse cx="86" cy="48" rx="3.6" ry="2" fill="#f7a8c4" opacity=".6"/><path d="M68 49.5 Q70.5 51.5 73 49.5" fill="none" stroke="#c96f8e" stroke-width="1.6" stroke-linecap="round"/><path d="M94 15 C95.5 20.5 97 22 102.5 23.5 C97 25 95.5 26.5 94 32 C92.5 26.5 91 25 85.5 23.5 C91 22 92.5 20.5 94 15 Z" fill="#f6b73c"/><ellipse cx="70" cy="6" rx="15" ry="4.5" fill="none" stroke="#f6b73c" stroke-width="3" transform="rotate(-8 70 6)"/></g><g class="aem-frame" data-f="w2"><path d="M70 14 C49 14 41 31 43 53 C44 73 39 95 35 107 C34 113 41 115 45 109 C48 104 49 98 50 91 L90 91 C91 99 93 105 96 109 C100 114 106 111 105 105 C101 91 98 73 98 53 C99 31 91 14 70 14 Z" fill="#f49ec2"/><path d="M63 95 L71 105 L80 110" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><path d="M77 95 L70 107 L63 114" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><ellipse cx="82" cy="113" rx="7" ry="4.5" fill="#e879a6" transform="rotate(-18 82 113)"/><ellipse cx="61" cy="117" rx="7" ry="4.5" fill="#e879a6" transform="rotate(18 61 117)"/><path d="M56 62 C49 66 45 71 44 77" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><path d="M57 59 L83 59 L92 94 C84 100 56 100 48 94 Z" fill="#ffffff"/><path d="M51 91 C59 96 81 96 89 91" fill="none" stroke="#f2aec9" stroke-width="2.5"/><path d="M70 60 L61 54 L61 66 Z" fill="#7fc4e8"/><path d="M70 60 L79 54 L79 66 Z" fill="#7fc4e8"/><circle cx="70" cy="60" r="3" fill="#5fb6d9"/><circle cx="56" cy="62" r="5.5" fill="#ffffff"/><circle cx="84" cy="62" r="5.5" fill="#ffffff"/><path d="M84 62 C88 68 89 74 87 80" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><path d="M43 30 C33 26 27 16 28 6 C37 8 44 15 46 24 Z" fill="#8ec9ec"/><path d="M46 37 C38 35 32 28 32 20 C39 21 45 27 47 33 Z" fill="#bfe0f5"/><circle cx="70" cy="38" r="20" fill="#fff0e4"/><path d="M50 37 C49 18 58 9 70 9 C83 9 92 18 91 35 C87 26 84 27 82 20 C79 28 73 30 71 22 C67 30 61 30 59 23 C55 28 52 31 50 37 Z" fill="#fbc6dc"/><path d="M51 30 C47 44 48 59 51 69 C54 60 54 44 53 32 Z" fill="#f9b8d2"/><path d="M89 30 C93 44 92 59 89 69 C86 60 86 44 87 32 Z" fill="#f9b8d2"/><ellipse cx="62" cy="41" rx="2.7" ry="4.4" fill="#cf9420"/><ellipse cx="79" cy="41" rx="2.7" ry="4.4" fill="#cf9420"/><circle cx="62.9" cy="39.3" r="1.1" fill="#fff"/><circle cx="79.9" cy="39.3" r="1.1" fill="#fff"/><ellipse cx="55" cy="48" rx="3.6" ry="2" fill="#f7a8c4" opacity=".6"/><ellipse cx="86" cy="48" rx="3.6" ry="2" fill="#f7a8c4" opacity=".6"/><path d="M68 49.5 Q70.5 51.5 73 49.5" fill="none" stroke="#c96f8e" stroke-width="1.6" stroke-linecap="round"/><path d="M94 15 C95.5 20.5 97 22 102.5 23.5 C97 25 95.5 26.5 94 32 C92.5 26.5 91 25 85.5 23.5 C91 22 92.5 20.5 94 15 Z" fill="#f6b73c"/><ellipse cx="70" cy="6" rx="15" ry="4.5" fill="none" stroke="#f6b73c" stroke-width="3" transform="rotate(-8 70 6)"/></g><g class="aem-frame" data-f="float"><path d="M70 14 C49 14 41 31 43 53 C44 73 39 95 35 107 C34 113 41 115 45 109 C48 104 49 98 50 91 L90 91 C91 99 93 105 96 109 C100 114 106 111 105 105 C101 91 98 73 98 53 C99 31 91 14 70 14 Z" fill="#f49ec2"/><path d="M45 58 C29 64 22 79 24 95 C33 85 40 71 44 62 Z" fill="#f49ec2"/><path d="M64 95 C62 104 61 110 60 117" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><path d="M77 95 C78 103 79 109 81 115" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><ellipse cx="59" cy="120" rx="7" ry="4.5" fill="#e879a6" transform="rotate(10 59 120)"/><ellipse cx="82" cy="118" rx="7" ry="4.5" fill="#e879a6" transform="rotate(-8 82 118)"/><path d="M56 62 C47 64 42 68 39 74" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><path d="M57 59 L83 59 L95 89 C85 96 55 96 45 89 Z" fill="#ffffff"/><path d="M48 86 C58 91 82 91 92 86" fill="none" stroke="#f2aec9" stroke-width="2.5"/><path d="M70 60 L61 54 L61 66 Z" fill="#7fc4e8"/><path d="M70 60 L79 54 L79 66 Z" fill="#7fc4e8"/><circle cx="70" cy="60" r="3" fill="#5fb6d9"/><circle cx="56" cy="62" r="5.5" fill="#ffffff"/><circle cx="84" cy="62" r="5.5" fill="#ffffff"/><path d="M84 62 C93 64 98 68 101 74" fill="none" stroke="#fff0e4" stroke-width="7" stroke-linecap="round"/><path class="aem-tw" d="M31 62 C32 66 33 67 37 68 C33 69 32 70 31 74 C30 70 29 69 25 68 C29 67 30 66 31 62 Z" fill="#f6b73c"/><path class="aem-tw" d="M109 62 C110 66 111 67 115 68 C111 69 110 70 109 74 C108 70 107 69 103 68 C107 67 108 66 109 62 Z" fill="#e879a6"/><path d="M43 30 C33 26 27 16 28 6 C37 8 44 15 46 24 Z" fill="#8ec9ec"/><path d="M46 37 C38 35 32 28 32 20 C39 21 45 27 47 33 Z" fill="#bfe0f5"/><circle cx="70" cy="38" r="20" fill="#fff0e4"/><path d="M50 37 C49 18 58 9 70 9 C83 9 92 18 91 35 C87 26 84 27 82 20 C79 28 73 30 71 22 C67 30 61 30 59 23 C55 28 52 31 50 37 Z" fill="#fbc6dc"/><path d="M51 30 C47 44 48 59 51 69 C54 60 54 44 53 32 Z" fill="#f9b8d2"/><path d="M89 30 C93 44 92 59 89 69 C86 60 86 44 87 32 Z" fill="#f9b8d2"/><ellipse cx="62" cy="41" rx="2.7" ry="4.4" fill="#cf9420"/><ellipse cx="79" cy="41" rx="2.7" ry="4.4" fill="#cf9420"/><circle cx="62.9" cy="39.3" r="1.1" fill="#fff"/><circle cx="79.9" cy="39.3" r="1.1" fill="#fff"/><ellipse cx="55" cy="48" rx="3.6" ry="2" fill="#f7a8c4" opacity=".6"/><ellipse cx="86" cy="48" rx="3.6" ry="2" fill="#f7a8c4" opacity=".6"/><path d="M68 49.5 Q70.5 51.5 73 49.5" fill="none" stroke="#c96f8e" stroke-width="1.6" stroke-linecap="round"/><path d="M94 15 C95.5 20.5 97 22 102.5 23.5 C97 25 95.5 26.5 94 32 C92.5 26.5 91 25 85.5 23.5 C91 22 92.5 20.5 94 15 Z" fill="#f6b73c"/><ellipse cx="70" cy="6" rx="15" ry="4.5" fill="none" stroke="#f6b73c" stroke-width="3" transform="rotate(-8 70 6)"/></g></svg>
+      </div>
+    </div>
+    <div class="aem-sparks" aria-hidden="true"></div>
     <div class="wrap">
 
       <!-- ===== ステータスバー ===== -->
@@ -1119,6 +1167,19 @@
 
           <div class="rot-page" data-rot-page>
           <div class="grid">
+          <section class="hud game only-aemeath sched-sec" data-game="wuwa" aria-label="鳴潮 イベントスケジュール">
+            <span class="brk"></span>
+            <div class="hud-head"><span class="idx">MOD-05C</span><h2>鳴潮 イベントスケジュール</h2><span class="tag">~/modules/wuwa/schedule</span></div>
+            <p class="sched-ver">Ver.3.8「旧夢で朽ちゆく小百合花」 2026/11/12 〜 12/22 メンテ前</p>
+            <div class="sched" id="wuwa-schedule"></div>
+            <p class="sched-note">赤い線が「今日」の位置です。前半は12/3 10:59まで、後半は12/3 11:00〜12/21 12:59。後半の武器集音など、ここに載っていない分の詳細は公式のイベントメモで確認できます。</p>
+            <p class="src">出典：<a href="https://x.com/WW_JP_Official/status/2119739273070969205?a=PKLXncpnt4LipMAwMnA&s=19" target="_blank" rel="noopener">鳴潮公式X「Ver.3.8 イベントメモ」</a>／<a href="https://www.4gamer.net/games/634/G063420/20261106056/index_2.html" target="_blank" rel="noopener">4Gamer（KURO GAMES公式発表）</a></p>
+          </section>
+          </div>
+          </div>
+
+          <div class="rot-page" data-rot-page>
+          <div class="grid">
           <section class="hud game" data-game="aion2" aria-label="AION2">
             <span class="brk"></span>
             <div class="hud-head"><span class="idx">MOD-06</span><h2>AION2</h2><span class="tag">~/modules/aion2</span></div>
@@ -1198,6 +1259,86 @@
               box.appendChild(row);
             });
           });
+        }
+
+        /* ===== 鳴潮 Ver.3.8 イベントスケジュール（ガント形式／公式「イベントメモ」準拠） =====
+           毎晩の自動更新では、この wuwaSchedule の中身（期間・行・バー）を差し替える。
+           日程は公式発表と既存の締切データで確認できる範囲のみ。後半の武器集音など
+           未確認の分は推測で入れず、出典リンク先の公式メモに委ねる。 */
+        var wuwaSchedule = {
+          start: D("2026-11-12T00:00:00"+JST),
+          end: D("2026-12-22T00:00:00"+JST),
+          halfAt: D("2026-12-03T11:00:00"+JST),
+          ticks: ["2026-11-12T00:00:00","2026-12-03T00:00:00","2026-12-08T00:00:00","2026-12-22T00:00:00"],
+          rows: [
+            { cat:"共鳴者集音", cls:"bar-gacha", name:"リリー", sub:"前半", dates:"11/12〜12/3", from:"2026-11-12T00:00:00", to:"2026-12-03T10:59:00" },
+            { cat:"共鳴者集音", cls:"bar-gacha", name:"秧秧・玄翎／穂穂／緋雪", sub:"後半", dates:"12/3〜12/21", from:"2026-12-03T11:00:00", to:"2026-12-21T12:59:00" },
+            { cat:"共鳴者集音（復刻）", cls:"bar-revival", name:"シグリカ／仇遠", sub:"前半", dates:"11/12〜12/3", from:"2026-11-12T00:00:00", to:"2026-12-03T10:59:00" },
+            { cat:"共鳴者集音（復刻）", cls:"bar-revival", name:"追憶集音（ツバキ／ロココ／フィービー／ブラント）", sub:"後半・1名選択", dates:"12/3〜12/21", from:"2026-12-03T11:00:00", to:"2026-12-21T12:59:00" },
+            { cat:"武器集音", cls:"bar-weapon", name:"ララバイ", sub:"前半・リリー モチーフ武器", dates:"11/12〜12/3", from:"2026-11-12T00:00:00", to:"2026-12-03T10:59:00" },
+            { cat:"期間限定イベント", cls:"bar-event", name:"第二ソラリス：題なき夢", sub:"学園ミニイベント", dates:"11/12〜12/21", from:"2026-11-12T00:00:00", to:"2026-12-21T12:59:00" },
+            { cat:"期間限定イベント", cls:"bar-event", name:"過ぎし夢のプレゼント", sub:"7日間ログイン", dates:"11/12〜12/21", from:"2026-11-12T00:00:00", to:"2026-12-21T12:59:00" }
+          ]
+        };
+        function renderSchedule(){
+          var box = document.getElementById("wuwa-schedule");
+          if (!box) return;
+          var S = wuwaSchedule, span = S.end - S.start;
+          function pct(t){ return Math.max(0, Math.min(100, (t - S.start) / span * 100)); }
+          box.innerHTML = "";
+          var axis = document.createElement("div"); axis.className = "sched-axis";
+          var halfPct = pct(S.halfAt);
+          [["前半", halfPct / 2], ["後半", halfPct + (100 - halfPct) / 2]].forEach(function(h){
+            var s = document.createElement("span"); s.className = "half";
+            s.style.left = h[1] + "%"; s.textContent = h[0]; axis.appendChild(s);
+          });
+          S.ticks.forEach(function(ts){
+            var t = D(ts + JST), p = pct(t);
+            var s = document.createElement("span"); s.className = "tick";
+            s.style.left = p + "%";
+            if (p > 97) s.style.transform = "translateX(-92%)";
+            else if (p < 3) s.style.transform = "translateX(-8%)";
+            var j = toJST(t);
+            s.textContent = (j.getUTCMonth() + 1) + "/" + j.getUTCDate();
+            axis.appendChild(s);
+          });
+          box.appendChild(axis);
+          var body = document.createElement("div"); body.className = "sched-body";
+          var lines = document.createElement("div"); lines.className = "sched-lines";
+          var ha = document.createElement("div"); ha.className = "half-a";
+          ha.style.left = "0%"; ha.style.width = halfPct + "%"; lines.appendChild(ha);
+          var hb = document.createElement("div"); hb.className = "half-b";
+          hb.style.left = halfPct + "%"; hb.style.width = (100 - halfPct) + "%"; lines.appendChild(hb);
+          S.ticks.forEach(function(ts){
+            var gl = document.createElement("i"); gl.className = "gl";
+            gl.style.left = pct(D(ts + JST)) + "%"; lines.appendChild(gl);
+          });
+          var now = new Date();
+          if (now >= S.start && now <= S.end){
+            var td = document.createElement("div"); td.className = "today";
+            td.style.left = pct(now) + "%";
+            var tb = document.createElement("b"); tb.textContent = "今日";
+            td.appendChild(tb); lines.appendChild(td);
+          }
+          body.appendChild(lines);
+          S.rows.forEach(function(r){
+            var row = document.createElement("div"); row.className = "sched-row";
+            var cat = document.createElement("div"); cat.className = "sched-cat"; cat.textContent = r.cat;
+            var track = document.createElement("div"); track.className = "sched-track";
+            var bar = document.createElement("div"); bar.className = "sched-bar " + r.cls;
+            var f = D(r.from + JST), tt = D(r.to + JST);
+            bar.style.left = pct(f) + "%";
+            bar.style.width = Math.max(2, pct(tt) - pct(f)) + "%";
+            bar.textContent = r.name;
+            var sm = document.createElement("small");
+            sm.textContent = r.dates + (r.sub ? "｜" + r.sub : "");
+            bar.appendChild(sm);
+            bar.title = r.cat + "：" + r.name + "（" + r.dates + "）";
+            track.appendChild(bar);
+            row.appendChild(cat); row.appendChild(track);
+            body.appendChild(row);
+          });
+          box.appendChild(body);
         }
 
         var WD = ["日","月","火","水","木","金","土"];
@@ -1374,7 +1515,7 @@
           gWhen.textContent = fmtDate(targetDate) + (mw.during ? " 終了予定まで" : " 開始まで");
           gPct.textContent = "残り " + Math.round(frac*100) + "%";
         }
-        renderWuwaCodes(); renderList(); tick();
+        renderWuwaCodes(); renderSchedule(); renderList(); tick();
         setInterval(tick, 1000);
         setInterval(renderList, 60000);
 
@@ -1600,13 +1741,13 @@
             setText('cs-titles', aem ? '1（鳴潮）' : '6');
             setText('cs-deadlines', aem ? '3' : '13');
             setText('cs-coupons', aem ? '2 CODES' : '8 CODES');
-            setText('cs-rotation', aem ? '1P / 25s' : '3P / 25s');
+            setText('cs-rotation', aem ? '2P / 25s' : '3P / 25s');
             setText('log-modules', aem ? 'WUWA ONLY — AEMEATH連動' : '6 TITLES LOADED');
             setText('log-modules-jp', aem ? '[鳴潮のみ表示中。他テーマでは全タイトル表示に戻ります]' : '[黒い砂漠（メイン） / エンドフィールド / ゼンゼロ / 鳴潮 / AION2 / アーキエイジクロニクル]');
             setText('log-deadlines', aem ? '3 ENTRIES（鳴潮のみ）' : '13 ENTRIES');
             setText('log-coupons', aem ? '2 CODES 鳴潮（コピーボタン有効）' : '8 CODES 黒い砂漠（コピーボタン有効）');
             setText('log-next-label', aem ? '次回締切' : '次回メンテ');
-            setText('log-rot', aem ? '1ページ' : '3ページ');
+            setText('log-rot', aem ? '2ページ' : '3ページ');
             setText('cs-next-k', aem ? 'NEXT DEADLINE' : 'NEXT MAINT');
           }
           function applyTheme(name){
@@ -1670,6 +1811,101 @@
             requestAnimationFrame(tick);
           }
           requestAnimationFrame(tick);
+        })();
+
+        /* ===== AEMEATH限定：うろつくエイメス（画面全体を歩く／浮いて移動する） =====
+           pointer-events:none でクリック操作の邪魔はしない。本文に重なる場面は本人の希望で許容。
+           AEMEATHテーマのときだけ表示・移動し、他テーマではCSSで非表示になる。 */
+        (function(){
+          var el = document.querySelector('.aemeath-walker');
+          if (!el) return;
+          if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          var inner = el.querySelector('.aem-inner');
+          var sparksBox = document.querySelector('.aem-sparks');
+          var frames = el.querySelectorAll('.aem-frame');
+          var walkFrames = [], floatFrame = null, idleFrame = null;
+          frames.forEach(function(fr){
+            var k = fr.getAttribute('data-f');
+            if (k === 'float') floatFrame = fr;
+            else if (k === 'idle') idleFrame = fr;
+            else walkFrames.push(fr);
+          });
+          var walkSeq = [0, 1, 2, 1];
+          var cur = null;
+          function show(fr){ if (!fr || cur === fr) return; if (cur) cur.classList.remove('on'); fr.classList.add('on'); cur = fr; }
+          var started = false;
+          var x = 0, y = 0, tx = 0, ty = 0;
+          var mode = 'idle';
+          var idleUntil = 0;
+          var facing = 1;
+          var lastT = performance.now();
+          var sparkAt = 0;
+          function groundY(){ return window.innerHeight - el.offsetHeight - 4; }
+          function pickTarget(){
+            var W = window.innerWidth, w = el.offsetWidth;
+            var air = Math.random() < 0.45;
+            tx = 8 + Math.random() * Math.max(10, W - w - 16);
+            ty = air ? (10 + Math.random() * window.innerHeight * 0.5) : groundY();
+            mode = 'move';
+          }
+          function spawnSpark(cx, cy){
+            if (!sparksBox || sparksBox.childNodes.length > 10) return;
+            var s = document.createElement('span');
+            s.textContent = '✦';
+            s.style.left = (cx + (Math.random() * 36 - 18)) + 'px';
+            s.style.top = cy + 'px';
+            s.style.color = Math.random() < 0.5 ? '#e9a13b' : '#e879a6';
+            sparksBox.appendChild(s);
+            setTimeout(function(){ if (s.parentNode) s.parentNode.removeChild(s); }, 1350);
+          }
+          function tickAem(now){
+            requestAnimationFrame(tickAem);
+            var dt = Math.min(50, now - lastT); lastT = now;
+            if (document.hidden) return;
+            if (document.documentElement.getAttribute('data-theme') !== 'aemeath') return;
+            var w = el.offsetWidth, h = el.offsetHeight;
+            if (!w || !h) return;
+            if (!started){
+              started = true;
+              x = window.innerWidth * 0.25; y = groundY();
+              tx = x; ty = y;
+              idleUntil = now + 1000;
+            }
+            /* 画面サイズが変わっても範囲内に収める */
+            x = Math.max(0, Math.min(x, window.innerWidth - w));
+            y = Math.max(0, Math.min(y, window.innerHeight - h));
+            var floating = false;
+            if (mode === 'idle'){
+              show(idleFrame);
+              if (now >= idleUntil) pickTarget();
+            } else {
+              var dx = tx - x, dy = ty - y;
+              var dist = Math.sqrt(dx * dx + dy * dy);
+              floating = Math.abs(dy) > 26 || y < groundY() - 26;
+              if (dist < 6){
+                mode = 'idle';
+                idleUntil = now + 1400 + Math.random() * 2600;
+                if (Math.random() < 0.3) facing = -facing; /* たまに振り返る */
+                show(idleFrame);
+              } else {
+                var step = Math.min(dist, (floating ? 0.14 : 0.10) * dt);
+                x += dx / dist * step;
+                y += dy / dist * step;
+                if (Math.abs(dx) > 4) facing = dx > 0 ? 1 : -1;
+                if (floating){
+                  show(floatFrame);
+                  if (now - sparkAt > 420){ sparkAt = now; spawnSpark(x + w * 0.5, y + h * 0.78); }
+                } else {
+                  show(walkFrames[walkSeq[Math.floor(now / 130) % walkSeq.length]]);
+                }
+              }
+            }
+            var bob = (mode === 'move' && floating) ? Math.sin(now / 280) * 3 : 0;
+            el.style.transform = 'translate(' + Math.round(x) + 'px,' + Math.round(y + bob) + 'px)';
+            if (inner) inner.style.transform = facing < 0 ? 'scaleX(-1)' : '';
+          }
+          show(idleFrame);
+          requestAnimationFrame(tickAem);
         })();
       })();
     </script>
